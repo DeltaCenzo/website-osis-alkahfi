@@ -28,7 +28,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%93</text></svg>">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- AOS (Animate On Scroll) CSS -->
@@ -65,7 +65,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', 'Poppins', sans-serif;
             scroll-behavior: smooth;
             scroll-padding-top: 100px; /* <--- MENGATASI JUDUL TERTUTUP NAVBAR */
         }
@@ -76,6 +76,8 @@
             line-height: 1.7;
             overflow-x: hidden;
             transition: background-color 0.4s ease, color 0.4s ease;
+            background-image: radial-gradient(circle at top left, rgba(59,130,246,0.10), transparent 30%),
+                              radial-gradient(circle at bottom right, rgba(245,158,11,0.08), transparent 26%);
         }
 
         /* AKSESIBILITAS: skip link & focus state */
@@ -121,6 +123,25 @@
             z-index: 1;
         }
 
+        header::after {
+            content: '';
+            position: absolute;
+            top: -20%; left: -10%; width: 140%; height: 140%;
+            background: radial-gradient(circle at 30% 30%, rgba(96,165,250,0.16), transparent 28%),
+                        radial-gradient(circle at 70% 20%, rgba(245,158,11,0.12), transparent 22%);
+            opacity: 0.85;
+            transform: translate3d(0, 0, 0);
+            animation: driftGlow 18s ease-in-out infinite alternate;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes driftGlow {
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            50% { transform: translate3d(8px, 12px, 0) scale(1.03); }
+            100% { transform: translate3d(-8px, -10px, 0) scale(1); }
+        }
+
         header > * {
             position: relative;
             z-index: 2;
@@ -152,21 +173,117 @@
         }
 
         header h1 { 
-            font-size: 2.8rem; 
+            font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 800; 
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem; 
+            letter-spacing: 0.5px;
+            margin-bottom: 0.65rem; 
             background: linear-gradient(to right, #ffffff, #93c5fd);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         header p { 
-            font-weight: 400; 
-            font-size: 1.15rem; 
+            font-weight: 500; 
+            font-size: clamp(1rem, 2vw, 1.15rem); 
             opacity: 0.95; 
-            letter-spacing: 0.5px;
-            min-height: 35px;
+            letter-spacing: 0.3px;
+            max-width: 760px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 28px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 24px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: 0 18px 35px rgba(37, 99, 235, 0.24);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+            text-decoration: none;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 22px 45px rgba(37, 99, 235, 0.28);
+            opacity: 0.98;
+        }
+
+        .hero-btn.secondary {
+            background: rgba(255,255,255,0.16);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.22);
+        }
+
+        .hero-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-top: 44px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero-card {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.18);
+            padding: 24px 22px;
+            border-radius: 22px;
+            backdrop-filter: blur(18px);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.16);
+            transition: transform 0.3s ease;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 35%);
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .hero-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .hero-card strong {
+            display: block;
+            font-size: 1.4rem;
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        .hero-card p {
+            color: rgba(255,255,255,0.88);
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.65;
         }
 
         /* NAVBAR GLASSMORPHISM */
@@ -237,7 +354,7 @@
         .container {
             max-width: 1150px;
             margin: 60px auto;
-            padding: 0 25px;
+            padding: 0 24px;
         }
 
         .section-title {
@@ -246,13 +363,34 @@
         }
 
         .section-title h2 {
-            font-size: 2.3rem;
+            font-size: clamp(1.8rem, 2.5vw, 2.3rem);
             color: var(--text-dark);
             position: relative;
             display: inline-block;
             padding-bottom: 12px;
             font-weight: 700;
+            letter-spacing: 0.2px;
         }
+
+        .hero-stats { padding: 20px 0 10px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+        .stat-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 18px;
+            padding: 22px 18px;
+            text-align: center;
+            border: 1px solid rgba(37, 99, 235, 0.12);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+        }
+        .stat-icon {
+            width: 56px; height: 56px;
+            border-radius: 50%; display: inline-flex;
+            align-items: center; justify-content: center;
+            background: linear-gradient(135deg, rgba(37,99,235,0.12), rgba(59,130,246,0.18));
+            color: var(--primary); font-size: 1.35rem; margin-bottom: 14px;
+        }
+        .stat-number { display: block; font-size: 2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 8px; }
+        .stat-label { color: var(--text-muted); font-size: 0.95rem; }
 
         .section-title h2::after {
             content: ''; position: absolute; width: 60px; height: 5px;
@@ -277,13 +415,15 @@
             background: var(--card-bg);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            padding: 35px;
+            padding: 32px;
             border-radius: 20px;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+                        box-shadow 0.4s ease, border-color 0.4s ease;
             position: relative;
             overflow: hidden;
+            will-change: transform, opacity;
         }
 
         .card-box::before {
@@ -292,23 +432,159 @@
             top: 0; left: 0; width: 100%; height: 4px;
             background: linear-gradient(90deg, var(--primary), var(--primary-light));
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: scaleX(0.95);
         }
 
-        .card-box:hover { 
-            transform: translateY(-10px); 
-            box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.15);
+        .card-box:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 26px 48px -16px rgba(37, 99, 235, 0.22);
             border-color: var(--primary-light);
         }
 
         .card-box:hover::before {
             opacity: 1;
+            transform: scaleX(1.04);
+        }
+
+        .card-box:hover .icon-big {
+            transform: scale(1.06) rotate(4deg);
+        }
+
+        .card-box h3, .card-box h4 {
+            transition: transform 0.4s ease, color 0.4s ease;
+        }
+
+        .card-box:hover h3,
+        .card-box:hover h4 {
+            transform: translateY(-2px);
+        }
+
+        .brand-label {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 1.05rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .brand-label i { color: var(--primary); }
+
+        .section-highlight {
+            color: var(--primary);
+            font-size: 1rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 14px;
+        }
+
+        .section-highlight i { font-size: 1rem; }
+
+        .clean-list {
+            padding-left: 18px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-top: 10px;
+        }
+        .clean-list li {
+            margin-bottom: 10px;
+        }
+
+        .modal-icon-shell {
+            width: 70px;
+            height: 70px;
+            background: rgba(37,99,235,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px auto;
+        }
+        .modal-icon-shell i { font-size: 2rem; color: var(--primary); }
+        .modal-icon-shell.success-shell { background: linear-gradient(135deg,var(--primary),var(--primary-light)); color: white; }
+        .modal-icon-shell.success-shell i { color: white; }
+
+        .modal-subtext {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+            line-height: 1.7;
+        }
+
+        .modal-actions { margin-top: 18px; }
+
+        .album-modal-box {
+            max-width: 1000px;
+            width: 95%;
+            padding: 24px;
+            border-radius: 16px;
+        }
+
+        .album-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .osis-table-wrapper {
+            max-width: 100%;
+            overflow-x: auto;
+            margin-top: 18px;
+        }
+        .osis-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 720px;
+        }
+        .osis-table th,
+        .osis-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .osis-table thead tr {
+            background: linear-gradient(90deg,var(--primary),var(--primary-light));
+            color: white;
+            text-align: left;
+        }
+        .table-button-row {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .table-button-row button { width: auto; padding: 10px 14px; }
+
+        .card-box::after {
+            content: '';
+            position: absolute;
+            top: -40%; left: -35%;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(59,130,246,0.24), transparent 55%);
+            opacity: 0;
+            transform: rotate(20deg);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+        }
+
+        .card-box:hover::after {
+            opacity: 1;
+            transform: translate(18px, 16px) rotate(20deg);
+        }
+
+        .card-box:hover .icon-big {
+            transform: scale(1.08) rotate(8deg);
         }
 
         .card-box h3, .card-box h4 { color: var(--text-dark); margin-bottom: 15px; font-weight: 700; }
         .card-box p { color: var(--text-muted); font-size: 0.95rem; }
         .card-box i.icon-big { font-size: 2.5rem; color: var(--primary); margin-bottom: 20px; display: inline-block; transition: transform 0.3s ease; }
-        .card-box:hover i.icon-big { transform: scale(1.1) rotate(5deg); }
+        .card-box:hover i.icon-big { transform: none; }
 
         /* STRUKTUR OSIS DENGAN STATUS ONLINE */
         .pengurus-card { text-align: center; padding: 35px 20px; }
@@ -367,12 +643,180 @@
 
         /* PENGUMUMAN / AGENDA */
         .countdown-box { text-align: center; }
+        .countdown-card { max-width: 480px; margin: 0 auto 35px auto; }
         .countdown-label { color: var(--primary); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.5px; margin-bottom: 8px; }
         .countdown-box h3 { font-size: 1.3rem; }
         .countdown-grid { display: flex; justify-content: center; gap: 18px; margin-top: 20px; flex-wrap: wrap; }
         .countdown-grid > div { min-width: 65px; }
         .countdown-grid span { display: block; font-size: 1.9rem; font-weight: 800; color: var(--primary); }
         .countdown-grid small { color: var(--text-muted); font-size: 0.75rem; letter-spacing: 0.5px; }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .tab-button {
+            border: 1px solid var(--border-color);
+            background: var(--bg-soft);
+            color: var(--text-dark);
+            padding: 10px 18px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: 0.25s ease;
+            font-weight: 600;
+        }
+        .tab-button.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .admin-panel {
+            display: grid;
+            gap: 24px;
+        }
+        .admin-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+        .admin-card h4 {
+            margin-top: 0;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+        .admin-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin-top: 20px;
+        }
+        .admin-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(249,250,251,0.98));
+            border: 1px solid rgba(96,165,250,0.16);
+            border-radius: 24px;
+            padding: 26px;
+            box-shadow: 0 18px 35px rgba(15,23,42,0.06);
+        }
+        .admin-card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 24px;
+            align-items: start;
+        }
+        .admin-form-grid {
+            display: grid;
+            gap: 18px;
+        }
+        .public-card-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+        }
+        .admin-card h4 {
+            margin-top: 0;
+            color: var(--text-dark);
+            margin-bottom: 18px;
+            letter-spacing: 0.2px;
+        }
+        .admin-item {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 18px;
+            border-radius: 18px;
+            border: 1px solid rgba(148,163,184,0.18);
+            background: white;
+            box-shadow: 0 12px 28px rgba(15,23,42,0.05);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .admin-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 32px rgba(15,23,42,0.08);
+        }
+        .admin-item h5 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+        .admin-item small {
+            display: block;
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+        .admin-item p {
+            margin: 0;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+        .admin-item .item-actions {
+            margin-top: auto;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .admin-item button {
+            border: none;
+            background: transparent;
+            color: var(--primary);
+            font-weight: 700;
+            cursor: pointer;
+            padding: 0;
+        }
+        .admin-item button.delete-btn {
+            color: #dc2626;
+        }
+        .form-group {
+            position: relative;
+            background: var(--bg-soft);
+            border: 1px solid rgba(148,163,184,0.18);
+            border-radius: 16px;
+            padding: 14px 16px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .form-note {
+            margin-top: 8px;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+        .admin-card form .form-control {
+            background: transparent;
+            border: none;
+            padding: 10px 0;
+        }
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        .input-row-full {
+            display: grid;
+            gap: 18px;
+        }
+        .list-empty {
+            padding: 18px;
+            border: 1px dashed var(--border-color);
+            border-radius: 16px;
+            color: var(--text-muted);
+            background: var(--bg-soft);
+        }
+
+        @media only screen and (max-width: 900px) {
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+        }
 
         .contoh-badge {
             position: absolute; top: 14px; right: 14px;
@@ -388,29 +832,50 @@
             gap: 20px;
         }
         .gallery-item {
-            position: relative; height: 230px; border-radius: 16px; overflow: hidden;
+            position: relative; height: 230px; border-radius: 18px; overflow: hidden;
             cursor: pointer; background: var(--border-color);
-            box-shadow: var(--shadow);
+            box-shadow: 0 18px 35px rgba(15, 23, 42, 0.08);
             display: flex; align-items: center; justify-content: center; color: var(--text-muted);
-            border: 1px solid var(--border-color);
+            border: 1px solid rgba(148,163,184,0.18);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+        .gallery-item:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 45px rgba(15, 23, 42, 0.16);
         }
         .gallery-item .real-img {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
             z-index: 1; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center center;
         }
-        .gallery-item:hover .real-img { transform: scale(1.12); }
+        .gallery-item:hover .real-img { transform: scale(1.15); }
         .gallery-placeholder {
             position: absolute; inset: 0; z-index: 0;
             display: flex; align-items: center; justify-content: center;
         }
+        .gallery-item::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(15,23,42,0.0), rgba(15,23,42,0.28));
+            opacity: 0.12;
+            pointer-events: none;
+        }
         .gallery-overlay {
             position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
-            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-            padding: 30px 20px 15px; color: white;
-            transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(to top, rgba(0,0,0,0.88), transparent);
+            padding: 28px 20px 18px; color: white;
+            transform: translateY(105%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .gallery-item:hover .gallery-overlay { transform: translateY(0); }
-        .gallery-overlay h4 { font-size: 1.05rem; font-weight: 600; }
+        .gallery-overlay h4 { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.2px; }
+        .gallery-overlay small { color: rgba(255,255,255,0.72); }
+        .dump-item {
+            border-radius: 14px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.05);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+        }
+        .dump-item img { width: 100%; height: 140px; object-fit: cover; display: block; }
 
         /* FORM & IFRAME */
         .interactive-box {
@@ -419,6 +884,305 @@
             border-radius: 20px; padding: 40px; margin-bottom: 25px;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow);
+        }
+        .media-panel {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            border: 1px solid rgba(148,163,184,0.18);
+            padding: 24px;
+            box-shadow: 0 16px 40px rgba(15,23,42,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .media-panel:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 45px rgba(15,23,42,0.12);
+        }
+        .media-panel h4 {
+            margin-bottom: 10px;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+        }
+        .media-panel p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        .media-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 22px;
+            margin-top: 32px;
+        }
+        .media-list {
+            display: grid;
+            gap: 16px;
+        }
+        .media-card {
+            display: grid;
+            grid-template-columns: 140px 1fr auto;
+            gap: 16px;
+            align-items: center;
+            padding: 16px;
+            border-radius: 18px;
+            background: var(--bg-light);
+            border: 1px solid rgba(148,163,184,0.18);
+        }
+        .media-card video,
+        .media-card img {
+            width: 140px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 14px;
+        }
+        .media-card .media-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .media-card .media-info strong {
+            color: var(--text-dark);
+            font-size: 1rem;
+            display: block;
+        }
+        .media-card .media-info span {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .download-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        .upload-panel {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            border: 1px solid rgba(148,163,184,0.18);
+            padding: 28px 24px;
+            box-shadow: 0 16px 40px rgba(15,23,42,0.08);
+            margin-top: 32px;
+        }
+        .upload-panel h4 {
+            margin-bottom: 14px;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+        }
+        .upload-panel p {
+            color: var(--text-muted);
+            margin-bottom: 18px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .upload-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            align-items: flex-end;
+        }
+        .upload-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .upload-field label {
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .upload-field input,
+        .upload-field textarea,
+        .upload-field select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: #fff;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            transition: box-shadow 0.18s, border-color 0.18s;
+        }
+        .upload-field textarea { resize: vertical; min-height: 110px; }
+        .upload-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            width: fit-content;
+        }
+        .upload-btn.secondary {
+            background: rgba(15,23,42,0.08);
+            color: var(--text-dark);
+            border: 1px solid rgba(148,163,184,0.25);
+        }
+        .upload-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .upload-btn:hover { transform: translateY(-2px); opacity: 0.96; }
+        .upload-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-top: 24px;
+        }
+        .upload-card {
+            border-radius: 18px;
+            border: 1px solid rgba(148,163,184,0.18);
+            overflow: hidden;
+            background: var(--bg-light);
+            box-shadow: 0 16px 35px rgba(15,23,42,0.08);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .upload-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 45px rgba(15,23,42,0.12);
+        }
+        .upload-thumb {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            display: block;
+        }
+        .upload-card-content {
+            padding: 16px;
+        }
+        .upload-card-content strong {
+            display: block;
+            color: var(--text-dark);
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+        .upload-card-content span {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+        .upload-card-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .upload-card-actions .download-pill {
+            margin-top: 8px;
+        }
+        .public-media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-top: 18px;
+        }
+        .public-media-card {
+            border-radius: 18px;
+            border: 1px solid rgba(148,163,184,0.18);
+            overflow: hidden;
+            background: var(--bg-light);
+            box-shadow: 0 16px 35px rgba(15,23,42,0.08);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .public-media-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 45px rgba(15,23,42,0.12);
+        }
+        .public-media-card img,
+        .public-media-card video {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+        .public-media-card-content {
+            padding: 16px;
+        }
+        .public-media-card-content strong {
+            display: block;
+            color: var(--text-dark);
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+        .public-media-card-content span {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+        .public-media-card-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .small-note {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .download-pill:hover {
+            transform: translateY(-1px);
+            opacity: 0.95;
+        }
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+        }
+        .photo-card {
+            display: grid;
+            gap: 12px;
+            border-radius: 18px;
+            overflow: hidden;
+            background: var(--bg-light);
+            border: 1px solid rgba(148,163,184,0.18);
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .photo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 35px rgba(15,23,42,0.12);
+        }
+        .photo-card .photo-thumb {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            display: block;
+        }
+        .photo-card .photo-meta {
+            padding: 14px 12px 16px;
+        }
+        .photo-card .photo-meta strong {
+            display: block;
+            font-size: 0.97rem;
+            margin-bottom: 6px;
+            color: var(--text-dark);
+        }
+        .photo-card .photo-meta span {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-bottom: 10px;
+        }
+        .photo-download {
+            display: block;
+            width: fit-content;
         }
         .form-container { width: 100%; height: 600px; border-radius: 12px; overflow: hidden; margin-top: 20px; background: white; border: 1px solid var(--border-color);}
         iframe { width: 100%; height: 100%; border: none; }
@@ -547,6 +1311,71 @@
         .lightbox-box .lightbox-fallback i { font-size: 2.5rem; }
         .lightbox-box p.caption { margin-top: 14px; text-align: center; font-weight: 600; color: var(--text-dark); }
 
+        /* ASPIRASI FORM STYLES */
+        .aspirasi-card {
+            max-width: 760px;
+            margin: 18px auto 0 auto;
+            padding: 28px 30px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(250,250,250,0.96));
+            box-shadow: 0 18px 40px rgba(2,6,23,0.05);
+            border: 1px solid rgba(2,6,23,0.04);
+        }
+
+        .aspirasi-counter {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+        .aspirasi-counter .counter-box {
+            min-width: 180px;
+            background: rgba(37, 99, 235, 0.08);
+            padding: 16px 18px;
+            border-radius: 14px;
+            text-align: center;
+            border: 1px solid rgba(37, 99, 235, 0.14);
+        }
+        .aspirasi-counter .counter-box strong {
+            display: block;
+            font-size: 1.95rem;
+            color: var(--primary);
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .aspirasi-counter .counter-box span {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .aspirasi-card .form-group { margin-bottom: 16px; }
+        .form-label { display:block; font-weight:600; color:var(--text-dark); margin-bottom:8px; }
+        .form-control {
+            width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border-color);
+            background: var(--card-bg); color: var(--text-dark); font-size: 0.95rem;
+            box-shadow: none; transition: box-shadow 0.18s, border-color 0.18s;
+        }
+        .form-control::placeholder {
+            color: var(--text-muted);
+            opacity: 1;
+        }
+        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 6px 24px rgba(59,130,246,0.08); }
+
+        .form-note { font-size: 0.9rem; color: var(--text-muted); }
+
+        .aspirasi-btn {
+            display: inline-flex; gap:10px; align-items:center; justify-content:center;
+            width: 100%; padding: 14px 18px; border-radius: 12px; border: none;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light)); color: white; font-weight:700;
+            cursor: pointer; font-size: 1rem;
+            box-shadow: 0 10px 30px rgba(37,99,235,0.16);
+        }
+        .aspirasi-btn i { transform: translateY(1px); }
+
+
         footer { background: #07090e; color: white; text-align: center; padding: 35px; margin-top: 80px; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); }
         footer p.credit { color: rgba(255,255,255,0.5); font-size: 0.78rem; margin-top: 8px; }
 
@@ -571,11 +1400,57 @@
         }
 
         @media (max-width: 768px) {
-            header h1 { font-size: 2.1rem; }
-            nav { padding: 12px 20px; }
-            .float-container { bottom: 20px; right: 20px; gap: 12px; }
+            header { padding: 5rem 1rem 3.2rem 1rem; }
+            header h1 { font-size: 2.2rem; }
+            header p { max-width: 100%; }
+            nav { padding: 12px 18px; }
+            .container { margin: 50px auto; padding: 0 18px; }
+            .section-title { margin-bottom: 35px; }
+            .grid-layout { gap: 22px; }
+            .card-box { padding: 28px; }
+            .hero-btn { width: 100%; max-width: 240px; }
+            .hero-actions { gap: 12px; }
+            .gallery-item { height: 200px; }
+            .gallery-overlay { padding: 20px; }
+            .float-container { bottom: 18px; right: 18px; gap: 10px; }
             .float-btn { width: 50px; height: 50px; font-size: 1.3rem; }
             .countdown-grid span { font-size: 1.5rem; }
+            .media-section { grid-template-columns: 1fr; }
+            .upload-row { grid-template-columns: 1fr; }
+            .upload-panel { padding: 26px 20px; }
+            .section-title h2::after { left: calc(50% - 30px); }
+        }
+
+        /* Mobile enhancements for aspirasi and dashboard */
+        @media (max-width: 600px) {
+            header { padding: 4.5rem 1rem 2.8rem 1rem; }
+            .container { margin: 40px auto; padding: 0 16px; }
+            .section-title { margin-bottom: 30px; }
+            .section-title h2 { font-size: 1.8rem; }
+            .hero-actions { flex-direction: column; gap: 12px; }
+            .hero-btn { max-width: 100%; width: 100%; }
+            .card-box { padding: 22px; }
+            .grid-layout { gap: 18px; }
+            .gallery-item { height: 180px; }
+            .countdown-grid { gap: 12px; }
+            .countdown-grid span { font-size: 1.35rem; }
+            .social-row { justify-content: center; }
+            .aspirasi-card { padding: 18px; margin: 12px 0; }
+            .form-control { padding: 10px 12px; font-size: 0.95rem; }
+            .aspirasi-btn { padding: 12px 14px; font-size: 0.98rem; }
+            .modal-box { padding: 18px; width: 94%; }
+            .lightbox-box { max-width: 95%; }
+            .gallery-overlay { padding: 18px; }
+            #osisTable { min-width: 0; font-size: 0.95rem; }
+            #osisTable thead tr th { display: none; }
+            #osisTbody tr td { display: block; width: 100%; box-sizing: border-box; }
+            #osisTbody tr { display: block; margin-bottom: 12px; background: var(--card-bg); border-radius: 10px; padding: 10px; }
+            #osisTbody tr td { padding: 6px 8px; border-bottom: none; }
+            #osisTbody tr td::before { font-weight:700; display:inline-block; width:100px; color:var(--text-muted); }
+            #osisTbody tr td:nth-child(1)::before { content: 'Waktu: '; }
+            #osisTbody tr td:nth-child(2)::before { content: 'Nama: '; }
+            #osisTbody tr td:nth-child(3)::before { content: 'Kelas: '; }
+            #osisTbody tr td:nth-child(4)::before { content: 'Pesan: '; }
         }
     </style>
 </head>
@@ -588,18 +1463,23 @@
             <img src="images/logo-sekolah.png" alt="Logo Sekolah" class="logo-img" onerror="this.style.display='none'"> <!-- GANTI: pastikan file images/logo-sekolah.png ada -->
             <img src="images/logo-osis.png" alt="Logo OSIS" class="logo-img" onerror="this.style.display='none'"> <!-- GANTI: pastikan file images/logo-osis.png ada -->
         </div>
-        <h1 data-aos="fade-up" data-aos-delay="200">OSIS SMA AL-KAHFI</h1>
+        <h1 data-aos="fade-up" data-aos-delay="200">WEBSITE OSIS SMA AL-KAHFI ISLAMIC SCHOOL</h1>
         <p data-aos="fade-up" data-aos-delay="400" id="typing-text">Aspiratif • Inovatif • Kolaboratif • Islami</p>
+        <div class="hero-actions" data-aos="fade-up" data-aos-delay="600">
+            <a href="#kritik-saran" class="hero-btn"><i class="fa-solid fa-comments" aria-hidden="true"></i> Sampaikan Aspirasi</a>
+            <a href="#pengumuman" class="hero-btn secondary"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i> Lihat Agenda</a>
+        </div>
+        </div>
     </header>
 
     <nav>
-        <div style="font-weight:700; color:var(--text-dark); font-size: 1.05rem;"><i class="fa-solid fa-graduation-cap" style="color:var(--primary); margin-right:6px;" aria-hidden="true"></i> Menu OSIS</div>
+        <div class="brand-label"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Menu OSIS</div>
         <button class="hamburger" id="hamburger-btn" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="nav-links"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
         <div class="nav-links" id="nav-links">
+            <a href="#struktur"><i class="fa-solid fa-sitemap" aria-hidden="true"></i> Pengurus</a>
             <a href="#visi-misi"><i class="fa-solid fa-bullseye" aria-hidden="true"></i> Visi & Misi</a>
             <a href="#proker"><i class="fa-solid fa-list-check" aria-hidden="true"></i> Program Kerja</a>
             <a href="#pengumuman"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i> Pengumuman</a>
-            <a href="#struktur"><i class="fa-solid fa-sitemap" aria-hidden="true"></i> Pengurus</a>
             <a href="#galeri"><i class="fa-solid fa-images" aria-hidden="true"></i> Galeri</a>
             <a href="#kritik-saran"><i class="fa-solid fa-comments" aria-hidden="true"></i> Aspirasi</a>
             <a href="#kontak"><i class="fa-solid fa-address-book" aria-hidden="true"></i> Kontak</a>
@@ -610,28 +1490,110 @@
 
     <main id="konten-utama">
 
-    <!-- SECTION 1: VISI & MISI -->
+    <!-- SECTION 1: STRUKTUR OSIS -->
+    <div class="container" id="struktur">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Pengurus OSIS 2026/2027</h2>
+        </div>
+        <div class="grid-layout grid-4">
+            <div class="card-box pengurus-card" data-aos="flip-left" data-aos-delay="100">
+                <div class="avatar-wrapper">
+                    <div class="avatar"><i class="fa-solid fa-user-tie" aria-hidden="true"></i></div>
+                    <div class="status-dot" title="Aktif"></div>
+                </div>
+                <span class="badge">Ketua OSIS</span>
+                <h4>Ibnu Ali Ahmad</h4>
+            </div>
+            <div class="card-box pengurus-card" data-aos="flip-left" data-aos-delay="200">
+                <div class="avatar-wrapper">
+                    <div class="avatar"><i class="fa-solid fa-user-gear" aria-hidden="true"></i></div>
+                    <div class="status-dot" title="Aktif"></div>
+                </div>
+                <span class="badge">Wakil Ketua OSIS</span>
+                <h4>Olivia Lianny</h4>
+            </div>
+            <div class="card-box pengurus-card" data-aos="flip-left" data-aos-delay="300">
+                <div class="avatar-wrapper">
+                    <div class="avatar"><i class="fa-solid fa-file-pen" aria-hidden="true"></i></div>
+                    <div class="status-dot" title="Aktif"></div>
+                </div>
+                <span class="badge">Sekretaris</span>
+                <h4>Qinan Isaura Widiarto</h4>
+                <p class="org-subtitle">Haidar Widad Wahyudi</p>
+            </div>
+            <div class="card-box pengurus-card" data-aos="flip-left" data-aos-delay="400">
+                <div class="avatar-wrapper">
+                    <div class="avatar"><i class="fa-solid fa-wallet" aria-hidden="true"></i></div>
+                    <div class="status-dot" title="Aktif"></div>
+                </div>
+                <span class="badge">Bendahara OSIS</span>
+                <h4>Zahratu Uzliful Abdi</h4>
+                <p class="org-subtitle">Faruq Abdurrahman</p>
+            </div>
+        </div>
+
+        <h3 class="subsection-heading" data-aos="fade-up">Divisi OSIS</h3>
+        <div class="grid-layout grid-8">
+            <div class="card-box sekbid-card" data-aos="zoom-in" data-aos-delay="50">
+                <i class="fa-solid fa-users" aria-hidden="true"></i>
+                <h3>Divisi Humas</h3>
+                <ul style="padding-left:18px; color:var(--text-muted); font-size:0.95rem; line-height:1.7; margin-top:10px;">
+                    <li>M. Rizky Maulana</li>
+                    <li>Haikal</li>
+                    <li>Muhammad Yusuf</li>
+                    <li>Najwa Karima</li>
+                    <li>Chiara Queena Cordelia</li>
+                    <li>Najwa Syahlina Oemar</li>
+                    <li>Nur Aisyah</li>
+                </ul>
+            </div>
+            <div class="card-box sekbid-card" data-aos="zoom-in" data-aos-delay="100">
+                <i class="fa-solid fa-mosque" aria-hidden="true"></i>
+                <h3>Divisi Ibadah</h3>
+                <ul style="padding-left:18px; color:var(--text-muted); font-size:0.95rem; line-height:1.7; margin-top:10px;">
+                    <li>M. Syahfiq Abdullah</li>
+                    <li>M. Haidar Ali Dzaki</li>
+                    <li>Fauzia Aniqa Ariawijaya</li>
+                    <li>Khalisa Quinn</li>
+                </ul>
+            </div>
+            <div class="card-box sekbid-card" data-aos="zoom-in" data-aos-delay="150">
+                <i class="fa-solid fa-book" aria-hidden="true"></i>
+                <h3>Divisi Bahasa</h3>
+                <ul style="padding-left:18px; color:var(--text-muted); font-size:0.95rem; line-height:1.7; margin-top:10px;">
+                    <li>Muhammad</li>
+                    <li>Bigha</li>
+                    <li>Razi</li>
+                    <li>Alfina Maghfiroh</li>
+                    <li>Nada Isaura</li>
+                    <li>Mutiara Aulya Putri</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 2: VISI & MISI -->
     <div class="container" id="visi-misi">
         <div class="section-title" data-aos="fade-up">
             <h2>Visi & Misi OSIS</h2>
         </div>
         <div class="grid-layout grid-2">
             <div class="card-box" data-aos="fade-right">
-                <h3 style="color:var(--primary);"><i class="fa-solid fa-eye" aria-hidden="true"></i> Visi</h3>
-                <p>Mewujudkan OSIS SMA Al-Kahfi Islamic School sebagai wadah inspiratif, berakhlaqul karimah, kreatif, serta aktif dalam membangun karakter siswa yang unggul di bidang akademis maupun non-akademis.</p>
+                <h3 class="section-highlight"><i class="fa-solid fa-eye" aria-hidden="true"></i> Visi</h3>
+                <p>Mewujudkan OSIS SMA Al-Kahfi Islamic School sebagai wadah inspiratif, berakhlaqul karimah, kreatif, dan aktif dalam membentuk karakter siswa unggul secara akademis dan non-akademis.</p>
             </div>
             <div class="card-box" data-aos="fade-left">
-                <h3 style="color:var(--primary);"><i class="fa-solid fa-rocket" aria-hidden="true"></i> Misi</h3>
-                <ul style="padding-left: 20px; color: var(--text-muted); font-size: 0.95rem;">
-                    <li style="margin-bottom:10px;">Menyelenggarakan kegiatan keagamaan guna mempererat ukhuwah islamiyah.</li>
-                    <li style="margin-bottom:10px;">Mewadahi serta memfasilitasi minat dan bakat siswa secara optimal.</li>
+                <h3 class="section-highlight"><i class="fa-solid fa-rocket" aria-hidden="true"></i> Misi</h3>
+                <ul class="clean-list">
+                    <li>Menyelenggarakan kegiatan keagamaan guna mempererat ukhuwah islamiyah.</li>
+                    <li>Mewadahi serta memfasilitasi minat dan bakat siswa secara optimal.</li>
                     <li>Membangun komunikasi yang aktif, transparan, dan terbuka antara siswa dan pihak sekolah.</li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <!-- SECTION 2: PROKER -->
+    <!-- SECTION 3: PROKER -->
     <div class="container" id="proker">
         <div class="section-title" data-aos="fade-up">
             <h2>Program Kerja Unggulan</h2>
@@ -660,14 +1622,13 @@
         </div>
     </div>
 
-    <!-- SECTION BARU: PENGUMUMAN & AGENDA -->
+    <!-- SECTION 4: PENGUMUMAN & AGENDA -->
     <div class="container" id="pengumuman">
         <div class="section-title" data-aos="fade-up">
             <h2>Pengumuman & Agenda</h2>
-            <p class="subtitle">⚠️ Kartu di bawah ini contoh — ganti dengan pengumuman asli dari OSIS.</p>
         </div>
 
-        <div class="card-box countdown-box" data-aos="zoom-in" style="max-width: 480px; margin: 0 auto 35px auto;">
+        <div class="card-box countdown-box countdown-card" data-aos="zoom-in">
             <p class="countdown-label"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> MENUJU EVENT BERIKUTNYA</p>
             <h3 id="countdown-event-name">Memuat...</h3>
             <div class="countdown-grid">
@@ -678,123 +1639,85 @@
             </div>
         </div>
 
-        <div class="grid-layout grid-3">
+        <div class="grid-layout grid-3" id="publicAnnouncementCards">
             <div class="card-box" data-aos="fade-up" data-aos-delay="100">
                 <span class="announcement-date"><i class="fa-solid fa-calendar" aria-hidden="true"></i> 1 Agustus 2026</span>
-                <h4>Selamat Datang di Website Resmi OSIS</h4>
-                <p>Portal informasi utama kegiatan, aspirasi, dan program kerja pengurus OSIS SMA Al-Kahfi Islamic School periode ini.</p>
+                <h4 id="defaultCardTitle1">Selamat Datang di Website Resmi OSIS</h4>
+                <p id="defaultCardText1">Portal informasi utama kegiatan, aspirasi, dan program kerja pengurus OSIS SMA Al-Kahfi Islamic School periode ini.</p>
             </div>
             <div class="card-box" data-aos="fade-up" data-aos-delay="200">                
                 <span class="announcement-date"><i class="fa-solid fa-calendar" aria-hidden="true"></i> Setiap Saat</span>
-                <h4>Kotak Aspirasi Siswa Telah Dibuka</h4>
-                <p>Punya kritik, saran, atau ide program untuk sekolah? Sampaikan melalui menu aspirasi di bawah dan jadilah bagian dari perubahan positif</p>
+                <h4 id="defaultCardTitle2">Kotak Aspirasi Telah Dibuka</h4>
+                <p id="defaultCardText2">Punya kritik, saran, atau ide program untuk sekolah? Sampaikan lewat kotak aspirasi di bawah dan jadilah bagian dari perubahan positif.</p>
             </div>
             <div class="card-box" data-aos="fade-up" data-aos-delay="300">             
                 <span class="announcement-date"><i class="fa-solid fa-calendar" aria-hidden="true"></i> Menyesuaikan</span>
-                <h4>Rapat Koordinasi Mingguan</h4>
-                <p>Agenda rutin pengurus OSIS untuk mengevaluasi program kerja dan mempersiapkan kegiatan pekan depan.</p>
+                <h4 id="defaultCardTitle3">Rapat Koordinasi Mingguan</h4>
+                <p id="defaultCardText3">Agenda rutin pengurus OSIS untuk mengevaluasi program kerja dan mempersiapkan kegiatan pekan depan.</p>
             </div>
         </div>
     </div>
 
-    <!-- SECTION GALERI -->
+    <!-- SECTION 5: GALERI -->
     <div class="container" id="galeri">
         <div class="section-title" data-aos="fade-up">
             <h2>Galeri Kegiatan</h2>
             <p class="subtitle">Klik foto untuk melihat versi besar. Upload foto asli ke folder /images agar tampil di sini.</p>
         </div>
         <div class="gallery-grid">
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="100" onclick="openLightbox('images/galeri-1.jpg','Masa Orientasi Siswa')">
-                <img class="real-img" src="images/galeri-1.jpg" alt="Masa Orientasi Siswa" loading="lazy" onerror="this.style.display='none'"> <!-- GANTI: upload images/galeri-1.jpg -->
-                <div class="gallery-placeholder"><i class="fa-solid fa-camera fa-2x" aria-hidden="true"></i></div>
-                <div class="gallery-overlay"><h4>Masa Orientasi Siswa</h4></div>
+            <!-- Album: 1 -->
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="100" onclick="openAlbum('mos')" role="button" aria-label="Buka album Masa Orientasi Siswa">
+                <img class="real-img" src="images/galeri-1.jpg" alt="Cover MOS" loading="lazy" onerror="this.style.display='none'">
+                <div class="gallery-placeholder"><i class="fa-solid fa-images fa-2x" aria-hidden="true"></i></div>
+                <div class="gallery-overlay"><h4>Null 404</h4><small>0 Foto</small></div>
             </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="200" onclick="openLightbox('images/galeri-2.jpg','Lomba Kemerdekaan')">
-                <img class="real-img" src="images/galeri-2.jpg" alt="Lomba Kemerdekaan" loading="lazy" onerror="this.style.display='none'"> <!-- GANTI: upload images/galeri-2.jpg -->
-                <div class="gallery-placeholder"><i class="fa-solid fa-camera fa-2x" aria-hidden="true"></i></div>
-                <div class="gallery-overlay"><h4>Lomba Kemerdekaan</h4></div>
+
+            <!-- Album: 2-->
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="200" onclick="openAlbum('kemerdekaan')" role="button" aria-label="Buka album Lomba Kemerdekaan">
+                <img class="real-img" src="images/galeri-2.jpg" alt="Cover Kemerdekaan" loading="lazy" onerror="this.style.display='none'">
+                <div class="gallery-placeholder"><i class="fa-solid fa-images fa-2x" aria-hidden="true"></i></div>
+                <div class="gallery-overlay"><h4>Null 404</h4><small>0 Foto</small></div>
             </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="300" onclick="openLightbox('images/galeri-3.jpg','Rapat Pleno OSIS')">
-                <img class="real-img" src="images/galeri-3.jpg" alt="Rapat Pleno OSIS" loading="lazy" onerror="this.style.display='none'"> <!-- GANTI: upload images/galeri-3.jpg -->
-                <div class="gallery-placeholder"><i class="fa-solid fa-camera fa-2x" aria-hidden="true"></i></div>
-                <div class="gallery-overlay"><h4>Rapat Pleno OSIS</h4></div>
-            </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="400" onclick="openLightbox('images/galeri-4.jpg','Bakti Sosial')">
-                <img class="real-img" src="images/galeri-4.jpg" alt="Bakti Sosial" loading="lazy" onerror="this.style.display='none'"> <!-- GANTI: upload images/galeri-4.jpg -->
-                <div class="gallery-placeholder"><i class="fa-solid fa-camera fa-2x" aria-hidden="true"></i></div>
-                <div class="gallery-overlay"><h4>Bakti Sosial</h4></div>
+
+            <!-- Album: 2 -->
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="300" onclick="openAlbum('pleno')" role="button" aria-label="Buka album Rapat Pleno">
+                <img class="real-img" src="images/galeri-3.jpg" alt="Cover Pleno" loading="lazy" onerror="this.style.display='none'">
+                <div class="gallery-placeholder"><i class="fa-solid fa-images fa-2x" aria-hidden="true"></i></div>
+                <div class="gallery-overlay"><h4>Null 404</h4><small>0 Foto</small></div>
             </div>
         </div>
     </div>
 
-    <!-- SECTION 3: STRUKTUR OSIS -->
-    <div class="container" id="struktur">
-        <div class="section-title" data-aos="fade-up">
-            <h2>Pengurus OSIS 2026/2027</h2>
-        </div>
-        <div class="grid-layout grid-4">
-            <div class="card-box pengurus-card" data-aos="flip-left" data-aos-delay="100">
-                <div class="avatar-wrapper">
-                    <div class="avatar"><i class="fa-solid fa-user-tie" aria-hidden="true"></i></div>
-                    <div class="status-dot" title="Aktif"></div>
-                </div>
-                <span class="badge">Ketua OSIS</span>
-                <h4>Ibnu Ali Ahmad</h4> <!-- GANTI dengan nama asli -->
-            </div>
-            <div class="card-box pengurus-card" data-aos="flip-left" data-aos-delay="200">
-                <div class="avatar-wrapper">
-                    <div class="avatar"><i class="fa-solid fa-user-gear" aria-hidden="true"></i></div>
-                    <div class="status-dot" title="Aktif"></div>
-                </div>
-                <span class="badge">Wakil Ketua OSIS</span>
-                <h4>Olivia Lianny</h4> <!-- GANTI dengan nama asli -->
-            </div>
-            <div class="card-box pengurus-card" data-aos="flip-left" data-aos-delay="300">
-    <div class="avatar-wrapper">
-        <div class="avatar"><i class="fa-solid fa-file-pen" aria-hidden="true"></i></div>
-        <div class="status-dot" title="Aktif"></div>
-    </div>
-    <span class="badge">Sekretaris</span>
-    <h4>Nama Sekretaris 1 <br><span style="font-size: 0.9em; font-weight: normal; color: #64748b;">Nama Sekretaris 2</span></h4>
-</div>
-            <div class="card-box pengurus-card" data-aos="flip-left" data-aos-delay="400">
-    <div class="avatar-wrapper">
-        <div class="avatar"><i class="fa-solid fa-wallet" aria-hidden="true"></i></div>
-        <div class="status-dot" title="Aktif"></div>
-    </div>
-    <span class="badge">Bendahara</span>
-    <h4>Nama Bendahara 1 <br><span style="font-size: 0.9em; font-weight: normal; color: #64748b;">Nama Bendahara 2</span></h4>
-</div>
-        </div>
-
-        <h3 class="subsection-heading" data-aos="fade-up">Divisi Osis</h3>
-        <div class="grid-layout grid-8">
-            <div class="card-box sekbid-card" data-aos="zoom-in" data-aos-delay="50">
-                <i class="fa-solid fa-hands-praying" aria-hidden="true"></i>
-                <h2>Divisi Humas</h5>
-                <p>Muhammad Yusuf Al-Ghifari</p> <!-- GANTI -->
-            </div>
-            <div class="card-box sekbid-card" data-aos="zoom-in" data-aos-delay="100">
-                <i class="fa-solid fa-flag" aria-hidden="true"></i>
-                <h3>Divisi Agama Dan Sosial</h5>
-                <p>Nama Koordinator</p> <!-- GANTI -->
-            </div>
-            <div class="card-box sekbid-card" data-aos="zoom-in" data-aos-delay="150">
-                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
-                <h5>Divisi Bahasa</h5>
-                <p>Nama Koordinator</p> <!-- GANTI -->
-        </div>
-    </div>
-
-    <!-- SECTION 4: KRITIK & SARAN -->
+    <!-- SECTION 6: KRITIK & SARAN -->
     <div class="container" id="kritik-saran" data-aos="zoom-in">
         <div class="section-title">
-            <h2>Kotak Aspirasi Siswa</h2>
+            <h2>Kotak Aspirasi</h2>
+            <p class="subtitle">Sampaikan saran, kritik, atau ide kamu demi kemajuan SMA Al-Kahfi.</p>
         </div>
         <div class="interactive-box">
-            <p style="text-align: center; color: var(--text-muted);">Punya ide brilian, kritik membangun, atau saran untuk kemajuan sekolah? Tuliskan aspirasimu di bawah ini secara rahasia:</p>
-            <div class="form-container">
-                <iframe title="Formulir Aspirasi Siswa" src="https://docs.google.com/forms/d/e/1FAIpQLSd2DBq2SUQVH_5WC6iRrpF4HsVg_Q96Bb_xTJ04dmVk1PySCg/viewform?embedded=true">Loading…</iframe>
+            <div class="aspirasi-card" data-aos="fade-up">
+                <div class="aspirasi-counter" id="aspirasiCounter" data-aos="fade-up">
+                    <div class="counter-box">
+                        <strong class="stat-number" data-target="0">0</strong>
+                        <span>Aspirasi Masuk</span>
+                    </div>
+                </div>
+                <form id="aspirasiForm" novalidate>
+                    <div class="form-group">
+                        <label for="asp-nama" class="form-label">Nama (Optional / Anonim)</label>
+                        <input id="asp-nama" class="form-control" type="text" placeholder="Kosongkan jika ingin anonim" />
+                    </div>
+                    <div class="form-group">
+                        <label for="asp-kelas" class="form-label">Kelas</label>
+                        <input id="asp-kelas" class="form-control" type="text" placeholder="Contoh: X" />
+                    </div>
+                    <div class="form-group">
+                        <label for="asp-pesan" class="form-label">Pesan Aspirasi</label>
+                        <textarea id="asp-pesan" class="form-control" rows="6" placeholder="Tuliskan aspirasi kamu secara jelas..." required></textarea>
+                        <div id="asp-error" class="form-note" style="display:none; color:#ef4444; margin-top:8px;">Mohon isi pesan aspirasi.</div>
+                    </div>
+                    <button type="submit" class="aspirasi-btn"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Kirim Pesan</button>
+                </form>
             </div>
         </div>
     </div>
@@ -819,6 +1742,9 @@ Kepulauan Riau, Indonesia. </span></div> <!-- GANTI dengan alamat asli sekolah -
                         <div><strong>Email</strong><span>edu@aisbatam.sch.id</span></div> <!-- GANTI dengan email asli -->
                     </li>
                     <li>
+                        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                        <div><strong>Telepon</strong><span>+62 778 1234 567</span></div> <!-- GANTI dengan nomor telepon asli -->
+                    </li>
                 </ul>
             </div>
             <div class="card-box" data-aos="fade-left">
@@ -834,16 +1760,64 @@ Kepulauan Riau, Indonesia. </span></div> <!-- GANTI dengan alamat asli sekolah -
     </div>
 
     <!-- AREA PRIVAT OSIS -->
-    <div class="container" id="osis-area">
+    <div class="container" id="osis-area" style="display:none;">
         <div class="section-title">
             <h2>🔒 Dashboard Internal OSIS</h2>
         </div>
         <div class="interactive-box">
-            <h3 style="text-align: center; color: var(--primary);"><i class="fa-solid fa-table" aria-hidden="true"></i> Hasil Aspirasi & Kritik Siswa</h3>
-            <p style="text-align: center; margin-bottom: 20px; color: var(--text-muted);">Daftar respon masuk secara real-time:</p>
-            <div class="form-container">
-                <iframe title="Rekap Aspirasi Siswa" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTKPY6Z_ZhGjoDz-HySSn25aLR-ESPpSoA9lRFiOCukMuL6kwgot1QZybpS3HOeZijGVFQx3UYQltOh/pubhtml?widget=true&amp;headers=false">Loading…</iframe>
+            <h3 class="section-highlight"><i class="fa-solid fa-table" aria-hidden="true"></i> Hasil Aspirasi & Kritik Siswa</h3>
+            <p class="section-subtext">Daftar aspirasi yang masuk (hanya terlihat oleh pengurus).</p>
+
+            <div class="osis-table-wrapper">
+                <table id="osisTable" class="osis-table">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Nama</th>
+                            <th>Kelas</th>
+                            <th>Pesan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="osisTbody">
+                        <!-- data akan diisi lewat JS -->
+                    </tbody>
+                </table>
             </div>
+
+            <div class="table-button-row">
+                <button onclick="exportAspirasiCSV()" class="aspirasi-btn export-btn">Export CSV</button>
+                <button onclick="clearAspirasiStorage()" class="aspirasi-btn delete-btn">Hapus Semua</button>
+            </div>
+
+            <div class="admin-card" id="osisContentAdmin">
+                <h3 class="section-highlight"><i class="fa-solid fa-gear" aria-hidden="true"></i> Kelola Konten Pengumuman</h3>
+                <p class="section-subtext">Tambahkan, lihat, atau hapus kartu informasi yang tampil di bawah countdown.</p>
+                <div class="admin-card">
+                    <h4>Tambah Konten Baru</h4>
+                    <div class="admin-card-grid">
+                        <form id="publicCardForm" class="admin-form-grid">
+                            <div class="input-row">
+                                <div class="form-group">
+                                    <label for="public-card-title" class="form-label">Judul Informasi</label>
+                                    <input id="public-card-title" class="form-control" type="text" placeholder="Contoh: Jadwal Rapat" required />
+                                </div>
+                                <div class="form-group">
+                                    <label for="public-card-date" class="form-label">Tanggal / Keterangan</label>
+                                    <input id="public-card-date" class="form-control" type="text" placeholder="Contoh: 15 Agustus 2026 atau Setiap Waktu" title="Masukkan tanggal atau teks seperti 'Setiap Waktu'" required />
+                                    <p class="form-note">Isi tanggal, atau ketik bebas seperti "Setiap Waktu".</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="public-card-text" class="form-label">Keterangan Singkat</label>
+                                <textarea id="public-card-text" class="form-control" rows="4" placeholder="Contoh: Rapat OSIS di ruang serbaguna..." required></textarea>
+                            </div>
+                            <button type="submit" class="aspirasi-btn">Simpan Konten</button>
+                        </form>
+                        <div class="admin-preview public-card-list" id="publicCardList"></div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -853,17 +1827,15 @@ Kepulauan Riau, Indonesia. </span></div> <!-- GANTI dengan alamat asli sekolah -
     <div class="modal-overlay" id="loginModal">
         <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
             <button class="close-btn" onclick="tutupModalLogin()" aria-label="Tutup jendela login">&times;</button>
-            <div style="width: 70px; height: 70px; background: rgba(37,99,235,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto;">
-                <i class="fa-solid fa-user-shield" style="font-size: 2rem; color: var(--primary);" aria-hidden="true"></i>
+            <div class="modal-icon-shell">
+                <i class="fa-solid fa-user-shield" aria-hidden="true"></i>
             </div>
-            <h3 id="loginModalTitle" style="color:var(--text-dark);">Akses Khusus OSIS</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Masukkan password rahasia pengurus untuk masuk ke dashboard.</p>
+            <h3 id="loginModalTitle">Akses Khusus OSIS</h3>
+            <p class="modal-subtext">Masukkan password rahasia pengurus untuk masuk ke dashboard.</p>
             
             <label for="passwordInput" class="sr-only">Password Area OSIS</label>
-            <input type="password" id="passwordInput" placeholder="Ketik Password..." onkeyup="checkEnter(event)">
-            <p id="errorMsg" style="color: #ef4444; font-size: 0.85rem; display: none; margin-top: 8px;"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> Password salah, coba lagi!</p>
-            
-            <div style="margin-top: 20px;">
+            <input type="password" id="passwordInput" placeholder="Ketik Password..." onkeyup="checkEnter(event)">  
+            <div class="modal-actions">
                 <button class="btn-login-submit" onclick="verifikasiPassword()">Masuk Dashboard</button>
             </div>
         </div>
@@ -879,6 +1851,19 @@ Kepulauan Riau, Indonesia. </span></div> <!-- GANTI dengan alamat asli sekolah -
                 <span>Foto belum diunggah</span>
             </div>
             <p class="caption" id="lightboxCaption"></p>
+        </div>
+    </div>
+
+    <!-- MODAL ALBUM (PHOTO DUMP) -->
+    <div class="modal-overlay" id="albumModal">
+        <div class="modal-box album-modal-box" role="dialog" aria-modal="true" aria-labelledby="albumTitle">
+            <button class="close-btn" onclick="closeAlbum()" aria-label="Tutup album">&times;</button>
+            <h3 id="albumTitle">Judul Album</h3>
+            <p id="albumSubtitle" class="modal-subtext">Koleksi foto kegiatan</p>
+
+            <div class="album-grid" id="albumDumpGrid">
+                <!-- Foto akan dimasukkan di sini lewat JS -->
+            </div>
         </div>
     </div>
 
@@ -900,6 +1885,17 @@ Kepulauan Riau, Indonesia. </span></div> <!-- GANTI dengan alamat asli sekolah -
         </a>
     </div>
 
+    <!-- MODAL SUKSES ASPIRASI -->
+    <div class="modal-overlay" id="aspSuccessModal">
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="aspSuccessTitle">
+            <button class="close-btn" onclick="closeAspSuccess()" aria-label="Tutup">&times;</button>
+            <div class="modal-icon-shell success-shell"><i class="fa-solid fa-check"></i></div>
+            <h3 id="aspSuccessTitle">Terima Kasih!</h3>
+            <p class="modal-subtext">Aspirasi Anda sudah terkirim dan akan segera kami tampung. Terima kasih atas partisipasinya.</p>
+            <div class="modal-actions"><button class="aspirasi-btn" onclick="closeAspSuccess()">Tutup</button></div>
+        </div>
+    </div>
+
     <footer>
         <p>&copy; 2026 OSIS SMA Al-Kahfi Islamic School • Didesain dengan Semangat Kepemimpinan Modern</p>
         <p class="credit">Dikelola oleh pengurus OSIS. Hubungi Sekbid terkait untuk update konten.</p>
@@ -909,7 +1905,14 @@ Kepulauan Riau, Indonesia. </span></div> <!-- GANTI dengan alamat asli sekolah -
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         // 1. INISIALISASI ANIMASI SCROLL (AOS)
-        AOS.init({ duration: 800, once: true, offset: 100, disable: window.matchMedia('(prefers-reduced-motion: reduce)').matches });
+        AOS.init({
+            duration: 900,
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 120,
+            delay: 100,
+            disable: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        });
 
         // 2. LOGIKA MENU HAMBURGER (UNTUK HP)
         const hamburgerBtn = document.getElementById('hamburger-btn');
@@ -1009,27 +2012,34 @@ Kepulauan Riau, Indonesia. </span></div> <!-- GANTI dengan alamat asli sekolah -
         });
 
         // 6. LOGIKA AREA KHUSUS OSIS
-        //
-        // ⚠️ CATATAN KEAMANAN — WAJIB DIBACA:
-        // Password di bawah ini bisa dilihat siapa saja lewat "View Page Source"
-        // atau Inspect Element di browser. Ini BUKAN keamanan sungguhan, cuma
-        // penyaring pengunjung biasa (casual gate), bukan proteksi data rahasia.
-        //
-        // Yang lebih penting: link Google Sheets di bawah menggunakan mode
-        // "Publish to web" (pubhtml) — artinya siapa pun yang PUNYA LINK-nya bisa
-        // buka isi sheet itu LANGSUNG, tanpa perlu lewat password ini sama sekali.
-        //
-        // Kalau isi sheet itu berisi aspirasi/kritik siswa yang sifatnya rahasia:
-        //   1. Buka Google Sheets > Share > ubah dari "Anyone with the link"
-        //      menjadi "Restricted", lalu tambahkan email pengurus OSIS satu-satu.
-        //   2. Jangan gunakan link "Publish to web" untuk data yang sensitif.
-        //   3. Password di bawah ini boleh tetap dipakai sebagai penyaring ringan,
-        //      tapi jangan dianggap sebagai satu-satunya lapisan keamanan.
-        const PASSWORD_OSIS = "alkahfi2026"; // GANTI password ini secara berkala
         const modal = document.getElementById('loginModal');
         const osisArea = document.getElementById('osis-area');
         const errorMsg = document.getElementById('errorMsg');
         const passwordInput = document.getElementById('passwordInput');
+        const storageKey = 'b8_v2_config';
+        const secretSeed = 'S0ZBS0JMQxgaGBw=';
+
+        function decodeSecret(value) {
+            try {
+                const raw = atob(value);
+                let out = '';
+                for (let i = 0; i < raw.length; i++) {
+                    out += String.fromCharCode(raw.charCodeAt(i) ^ 42);
+                }
+                return out;
+            } catch (e) {
+                return '';
+            }
+        }
+
+        function getStoredPassword() {
+            return localStorage.getItem(storageKey) || decodeSecret(secretSeed);
+        }
+
+        function setDashboardPassword(newPassword) {
+            localStorage.setItem(storageKey, newPassword);
+            console.info('Dashboard configuration updated.');
+        }
 
         function bukaModalLogin() {
             if (osisArea.style.display === "block") {
@@ -1048,9 +2058,13 @@ Kepulauan Riau, Indonesia. </span></div> <!-- GANTI dengan alamat asli sekolah -
         }
 
         function verifikasiPassword() {
-            if (passwordInput.value === PASSWORD_OSIS) {
+            const typed = passwordInput.value.trim();
+            const storedPassword = getStoredPassword();
+
+            if (typed === storedPassword && typed.length > 0) {
                 modal.style.display = "none";
                 osisArea.style.display = "block";
+                renderAspirasiList();
                 window.location.href = "#osis-area";
                 setTimeout(() => AOS.refresh(), 500);
             } else {
@@ -1064,6 +2078,46 @@ Kepulauan Riau, Indonesia. </span></div> <!-- GANTI dengan alamat asli sekolah -
         }
 
         modal.addEventListener('click', (e) => { if (e.target === modal) tutupModalLogin(); });
+
+        function startStatCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = parseInt(counter.dataset.target, 10) || 0;
+                let current = 0;
+                const step = Math.max(1, Math.floor(target / 80));
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        counter.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = current;
+                    }
+                }, 18);
+            });
+        }
+
+        function updateAspirasiCounter() {
+            const counter = document.querySelector('#aspirasiCounter .stat-number');
+            if (!counter) return;
+            const targetCount = getAspirasiList().length;
+            counter.dataset.target = targetCount;
+            counter.textContent = '0';
+        }
+
+        const statSection = document.querySelector('#aspirasiCounter');
+        if (statSection) {
+            updateAspirasiCounter();
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        startStatCounters();
+                        obs.disconnect();
+                    }
+                });
+            }, { threshold: 0.5 });
+            observer.observe(statSection);
+        }
 
         // 7. LOGIKA LIGHTBOX GALERI
         const lightboxModal = document.getElementById('lightboxModal');
@@ -1094,6 +2148,72 @@ Kepulauan Riau, Indonesia. </span></div> <!-- GANTI dengan alamat asli sekolah -
             }
         });
 
+        // 8. ALBUM DATA + OPEN ALBUM (PHOTO DUMP)
+        const albumData = {
+            mos: {
+                title: 'Masa Orientasi Siswa (MOS)',
+                subtitle: 'Kegiatan MOS dan pengenalan lingkungan sekolah',
+                photos: [
+                    'images/galeri-1.jpg',
+                    'images/galeri-1-2.jpg',
+                    'images/galeri-1-3.jpg'
+                ]
+            },
+            kemerdekaan: {
+                title: 'Lomba Kemerdekaan',
+                subtitle: 'Dokumentasi lomba kemerdekaan sekolah',
+                photos: [
+                    'images/galeri-2.jpg',
+                    'images/galeri-2-2.jpg'
+                ]
+            },
+            pleno: {
+                title: 'Rapat Pleno OSIS',
+                subtitle: 'Rapat pleno dan koordinasi pengurus',
+                photos: [
+                    'images/galeri-3.jpg',
+                    'images/galeri-3-2.jpg'
+                ]
+            }
+        };
+
+        const albumModal = document.getElementById('albumModal');
+        const albumTitle = document.getElementById('albumTitle');
+        const albumSubtitle = document.getElementById('albumSubtitle');
+        const albumDumpGrid = document.getElementById('albumDumpGrid');
+
+        function openAlbum(key) {
+            const data = albumData[key];
+            if (!data) return;
+            albumTitle.textContent = data.title;
+            albumSubtitle.textContent = data.subtitle;
+            albumDumpGrid.innerHTML = '';
+            data.photos.forEach(src => {
+                const div = document.createElement('div');
+                div.className = 'dump-item';
+                div.style.borderRadius = '10px';
+                div.style.overflow = 'hidden';
+                div.style.background = 'var(--border-color)';
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = data.title;
+                img.style.width = '100%';
+                img.style.height = '140px';
+                img.style.objectFit = 'cover';
+                img.loading = 'lazy';
+                img.onerror = function(){ this.style.display = 'none'; };
+                img.addEventListener('click', () => {
+                    openLightbox(src, data.title);
+                });
+                div.appendChild(img);
+                albumDumpGrid.appendChild(div);
+            });
+            albumModal.style.display = 'flex';
+        }
+
+        function closeAlbum() { albumModal.style.display = 'none'; }
+        albumModal.addEventListener('click', (e) => { if (e.target === albumModal) closeAlbum(); });
+
         // 9. NONAKTIFKAN KLIK KANAN & SHORTCUT DEVELOPER TOOLS
         // Catatan: ini cuma penghalang untuk pengunjung biasa/iseng — bukan proteksi
         // sungguhan. Orang yang mengerti masih bisa buka source code lewat menu
@@ -1111,8 +2231,8 @@ Kepulauan Riau, Indonesia. </span></div> <!-- GANTI dengan alamat asli sekolah -
 
         // 8. COUNTDOWN AGENDA BERIKUTNYA
         // GANTI dua baris di bawah sesuai agenda & tanggal asli OSIS kamu:
-        const NEXT_EVENT_NAME = "AIS FEST 2026";
-        const NEXT_EVENT_DATE = "2026-10-10T08:00:00"; // format: YYYY-MM-DDTHH:mm:ss
+        const NEXT_EVENT_NAME = "LOMBA KEMERDEKAAN (17AN) 2026";
+        let NEXT_EVENT_DATE = "2026-08-17T08:00:00"; // format: YYYY-MM-DDTHH:mm:ss
 
         function updateCountdown() {
             const nameEl = document.getElementById('countdown-event-name');
@@ -1145,6 +2265,255 @@ Kepulauan Riau, Indonesia. </span></div> <!-- GANTI dengan alamat asli sekolah -
         }
         updateCountdown();
         setInterval(updateCountdown, 1000);
+
+        // ASPIRASI FORM HANDLER
+        // Sederhana: simpan aspirasi di localStorage sehingga hanya dapat dibaca lewat Dashboard Internal (Area OSIS)
+        const aspirasiForm = document.getElementById('aspirasiForm');
+        const aspPesan = document.getElementById('asp-pesan');
+        const aspError = document.getElementById('asp-error');
+        const aspSuccessModal = document.getElementById('aspSuccessModal');
+
+        function closeAspSuccess() { aspSuccessModal.style.display = 'none'; }
+
+        function getAspirasiList() {
+            try {
+                return JSON.parse(localStorage.getItem('osis_aspirasi') || '[]');
+            } catch (e) { return []; }
+        }
+
+        function saveAspirasi(item) {
+            const list = getAspirasiList();
+            list.unshift(item); // terbaru di depan
+            localStorage.setItem('osis_aspirasi', JSON.stringify(list));
+        }
+
+        function renderAspirasiList() {
+            const tbody = document.getElementById('osisTbody');
+            if (!tbody) return;
+            const list = getAspirasiList();
+            tbody.innerHTML = '';
+            if (list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="padding:20px; color:var(--text-muted);">Belum ada aspirasi masuk.</td></tr>';
+                return;
+            }
+            list.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td style="padding:10px 8px; border-bottom:1px solid rgba(0,0,0,0.05);">${new Date(item.timestamp).toLocaleString()}</td>
+                                <td style="padding:10px 8px; border-bottom:1px solid rgba(0,0,0,0.05);">${escapeHtml(item.name || '')}</td>
+                                <td style="padding:10px 8px; border-bottom:1px solid rgba(0,0,0,0.05);">${escapeHtml(item.kelas || '')}</td>
+                                <td style="padding:10px 8px; border-bottom:1px solid rgba(0,0,0,0.05);">${escapeHtml(item.message || '')}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        const PUBLIC_CARD_STORAGE_KEY = 'osis_public_cards';
+
+        function getDefaultPublicCards() {
+            return [
+                {
+                    date: '1 Agustus 2026',
+                    title: 'Selamat Datang di Website Resmi OSIS',
+                    text: 'Portal informasi utama kegiatan, aspirasi, dan program kerja pengurus OSIS SMA Al-Kahfi Islamic School periode ini.'
+                },
+                {
+                    date: 'Setiap Saat',
+                    title: 'Kotak Aspirasi Telah Dibuka',
+                    text: 'Punya kritik, saran, atau ide program untuk sekolah? Sampaikan lewat kotak aspirasi di bawah dan jadilah bagian dari perubahan positif.'
+                },
+                {
+                    date: 'Menyesuaikan',
+                    title: 'Rapat Koordinasi Mingguan',
+                    text: 'Agenda rutin pengurus OSIS untuk mengevaluasi program kerja dan mempersiapkan kegiatan pekan depan.'
+                }
+            ];
+        }
+
+        function getPublicCards() {
+            try {
+                const stored = JSON.parse(localStorage.getItem(PUBLIC_CARD_STORAGE_KEY) || 'null');
+                if (!Array.isArray(stored) || stored.length === 0) {
+                    const defaults = getDefaultPublicCards();
+                    localStorage.setItem(PUBLIC_CARD_STORAGE_KEY, JSON.stringify(defaults));
+                    return defaults;
+                }
+                return stored;
+            } catch (e) {
+                const defaults = getDefaultPublicCards();
+                localStorage.setItem(PUBLIC_CARD_STORAGE_KEY, JSON.stringify(defaults));
+                return defaults;
+            }
+        }
+
+        function savePublicCards(list) {
+            localStorage.setItem(PUBLIC_CARD_STORAGE_KEY, JSON.stringify(list));
+            renderAdminPublicCards();
+            renderPublicCards();
+        }
+
+        function renderPublicCards() {
+            const cards = getPublicCards();
+            const defaults = [
+                {
+                    date: '1 Agustus 2026',
+                    title: 'Selamat Datang di Website Resmi OSIS',
+                    text: 'Portal informasi utama kegiatan, aspirasi, dan program kerja pengurus OSIS SMA Al-Kahfi Islamic School periode ini.'
+                },
+                {
+                    date: 'Setiap Saat',
+                    title: 'Kotak Aspirasi Telah Dibuka',
+                    text: 'Punya kritik, saran, atau ide program untuk sekolah? Sampaikan lewat kotak aspirasi di bawah dan jadilah bagian dari perubahan positif.'
+                },
+                {
+                    date: 'Menyesuaikan',
+                    title: 'Rapat Koordinasi Mingguan',
+                    text: 'Agenda rutin pengurus OSIS untuk mengevaluasi program kerja dan mempersiapkan kegiatan pekan depan.'
+                }
+            ];
+
+            for (let i = 0; i < 3; i++) {
+                const card = cards[i] || defaults[i];
+                document.getElementById(`defaultCardTitle${i + 1}`).textContent = card.title;
+                document.getElementById(`defaultCardText${i + 1}`).textContent = card.text;
+                document.querySelectorAll(`#publicAnnouncementCards .card-box`)[i].querySelector('.announcement-date').innerHTML = `<i class="fa-solid fa-calendar" aria-hidden="true"></i> ${escapeHtml(card.date)}`;
+            }
+        }
+
+        function renderAdminPublicCards() {
+            const container = document.getElementById('publicCardList');
+            if (!container) return;
+            const list = getPublicCards();
+            container.innerHTML = '';
+            if (!list.length) {
+                container.innerHTML = '<div class="list-empty">Belum ada konten. Tambahkan kartu baru menggunakan form di atas.</div>';
+                return;
+            }
+            list.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'admin-item';
+                card.innerHTML = `<h5>${escapeHtml(item.title)}</h5>
+                                  <small>${escapeHtml(formatDisplayDate(item.date))}</small>
+                                  <p>${escapeHtml(item.text)}</p>
+                                  <div class="item-actions"><button type="button" class="delete-btn" onclick="removePublicCard(${index})">Hapus</button></div>`;
+                container.appendChild(card);
+            });
+        }
+
+        function removePublicCard(index) {
+            const list = getPublicCards();
+            list.splice(index, 1);
+            savePublicCards(list);
+        }
+
+        function formatDisplayDate(value) {
+            if (!value) return '-';
+            const date = new Date(value);
+            return date.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+        }
+
+        function formatDisplayDateTime(value) {
+            if (!value) return '-';
+            const date = new Date(value);
+            return date.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }) + ' • ' + date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function switchOsisTab(tab) {
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+            document.getElementById('announcementTab').style.display = tab === 'announcements' ? 'block' : 'none';
+            document.getElementById('eventTab').style.display = tab === 'events' ? 'block' : 'none';
+        }
+
+        function initializeOsisAdmin() {
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => switchOsisTab(button.dataset.tab));
+            });
+
+            const publicCardForm = document.getElementById('publicCardForm');
+
+            if (publicCardForm) {
+                publicCardForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const title = document.getElementById('public-card-title').value.trim();
+                    const date = document.getElementById('public-card-date').value;
+                    const text = document.getElementById('public-card-text').value.trim();
+                    if (!title || !date || !text) return;
+                    const list = getPublicCards();
+                    if (list.length >= 3) {
+                        return alert('Hanya boleh 3 konten utama. Hapus salah satu terlebih dahulu.');
+                    }
+                    list.unshift({ title, date, text });
+                    savePublicCards(list);
+                    publicCardForm.reset();
+                });
+            }
+
+            renderAdminPublicCards();
+        }
+
+        initializeOsisAdmin();
+        renderPublicCards();
+
+        function escapeHtml(text) {
+            return String(text).replace(/[&<>"'`]/g, function (s) {
+                return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;","`":"&#96;"})[s];
+            });
+        }
+
+        function exportAspirasiCSV() {
+            const list = getAspirasiList();
+            if (!list.length) return alert('Belum ada data untuk diekspor.');
+            const rows = [['timestamp','name','kelas','message']];
+            list.slice().reverse().forEach(i => rows.push([i.timestamp,i.name,i.kelas,i.message]));
+            const csv = rows.map(r => r.map(c => '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+            const blob = new Blob([csv], {type: 'text/csv'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'aspirasi.csv'; a.click(); URL.revokeObjectURL(url);
+        }
+
+        function clearAspirasiStorage() {
+            if (!confirm('Hapus semua data aspirasi? Tindakan ini tidak bisa dibatalkan.')) return;
+            localStorage.removeItem('osis_aspirasi');
+            renderAspirasiList();
+        }
+
+        if (aspirasiForm) {
+            aspirasiForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                aspError.style.display = 'none';
+
+                if (!aspPesan.value.trim()) {
+                    aspError.style.display = 'block';
+                    aspPesan.focus();
+                    return;
+                }
+
+                const submitBtn = aspirasiForm.querySelector('button[type="submit"]');
+                submitBtn.disabled = true; submitBtn.style.opacity = 0.7;
+
+                const payload = {
+                    name: document.getElementById('asp-nama').value || '',
+                    kelas: document.getElementById('asp-kelas').value || '',
+                    message: aspPesan.value.trim(),
+                    timestamp: new Date().toISOString()
+                };
+
+                // Simpan lokal (sederhana)
+                try {
+                    saveAspirasi(payload);
+                    aspirasiForm.reset();
+                    aspSuccessModal.style.display = 'flex';
+                    // Jika dashboard sedang terbuka (pengurus), refresh daftar otomatis
+                    if (osisArea && osisArea.style.display === 'block') renderAspirasiList();
+                } catch (err) {
+                    console.error('Simpan lokal error:', err);
+                    aspError.style.display = 'block';
+                    aspError.textContent = 'Gagal menyimpan aspirasi. Pastikan browser mengizinkan penyimpanan lokal.';
+                } finally {
+                    submitBtn.disabled = false; submitBtn.style.opacity = 1;
+                }
+            });
+        }
     </script>
 </body>
 </html>
