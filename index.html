@@ -232,6 +232,75 @@
             border: 1px solid rgba(255,255,255,0.22);
         }
 
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            margin-bottom: 18px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.24);
+            color: #e0f2fe;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            backdrop-filter: blur(10px);
+        }
+
+        .showcase-strip {
+            margin-top: -24px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .feature-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 22px 44px rgba(15, 23, 42, 0.12);
+        }
+
+        .feature-card i {
+            font-size: 1.45rem;
+            color: var(--primary);
+            background: rgba(37, 99, 235, 0.1);
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .feature-card h4 {
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .feature-card p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.94rem;
+            line-height: 1.7;
+        }
+
         .hero-card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -1469,7 +1538,6 @@
             <a href="#kritik-saran" class="hero-btn"><i class="fa-solid fa-comments" aria-hidden="true"></i> Sampaikan Aspirasi</a>
             <a href="#pengumuman" class="hero-btn secondary"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i> Lihat Agenda</a>
         </div>
-        </div>
     </header>
 
     <nav>
@@ -1580,14 +1648,16 @@
         <div class="grid-layout grid-2">
             <div class="card-box" data-aos="fade-right">
                 <h3 class="section-highlight"><i class="fa-solid fa-eye" aria-hidden="true"></i> Visi</h3>
-                <p>Mewujudkan OSIS SMA Al-Kahfi Islamic School sebagai wadah inspiratif, berakhlaqul karimah, kreatif, dan aktif dalam membentuk karakter siswa unggul secara akademis dan non-akademis.</p>
+                <p>Mewujudkan OSIS yang aktif, dekat dengan siswa, berkarakter, dan bertanggung jawab dalam menciptakan lingkungan sekolah yang positif serta berlandaskan nilai-nilai Islam.</p>
             </div>
             <div class="card-box" data-aos="fade-left">
                 <h3 class="section-highlight"><i class="fa-solid fa-rocket" aria-hidden="true"></i> Misi</h3>
                 <ul class="clean-list">
-                    <li>Menyelenggarakan kegiatan keagamaan guna mempererat ukhuwah islamiyah.</li>
-                    <li>Mewadahi serta memfasilitasi minat dan bakat siswa secara optimal.</li>
-                    <li>Membangun komunikasi yang aktif, transparan, dan terbuka antara siswa dan pihak sekolah.</li>
+                    <li>Membangun komunikasi terbuka antara OSIS dan siswa melalui wadah aspirasi dan interaksi.</li>
+                    <li>Mendorong siswa untuk aktif menyampaikan ide, pendapat, dan evaluasi.</li>
+                    <li>Mengembangkan kegiatan positif, kreatif, dan bermanfaat bagi siswa.</li>
+                    <li>Menumbuhkan kepedulian serta akhlak mulia.</li>
+                    <li>Melakukan evaluasi dan perbaikan agar OSIS semakin responsif dan berdampak.</li>
                 </ul>
             </div>
         </div>
@@ -1600,24 +1670,24 @@
         </div>
         <div class="grid-layout grid-4">
             <div class="card-box" data-aos="zoom-in" data-aos-delay="100">
-                <i class="fa-solid fa-mosque icon-big" aria-hidden="true"></i>
-                <h4>AIS FEST</h4>
-                <p>Lomba keagamaan dan kebudayaan antar kelas untuk mempererat tali silaturahmi.</p>
+                <i class="fa-solid fa-calendar-days icon-big" style="color: #2563eb;" aria-hidden="true"></i>
+                <h4>Ais Fair</h4>
+                <p>Ais Fair adalah agenda tahunan unggulan yang menghadirkan wadah edukatif, kompetitif, dan kreatif melalui serangkaian perlombaan serta kegiatan interaktif bagi seluruh siswa</p>
             </div>
             <div class="card-box" data-aos="zoom-in" data-aos-delay="200">
-                <i class="fa-solid fa-trophy icon-big" style="color: #f59e0b;" aria-hidden="true"></i>
-                <h4>Classmeeting & Sports</h4>
-                <p>Ajang kompetisi olahraga dan e-sports seru sehabis ujian semester selesai.</p>
+                <i class="fa-solid fa-rocket icon-big" style="color: #f59e0b;" aria-hidden="true"></i>
+                <h4>Level Up</h4>
+                <p>Program untuk menghadirkan event-event baru di sekolah yang menarik, kreatif, dan sesuai dengan minat siswa agar suasana sekolah lebih aktif dan beragam.</p>
             </div>
             <div class="card-box" data-aos="zoom-in" data-aos-delay="300">
                 <i class="fa-solid fa-hand-holding-heart icon-big" style="color: #10b981;" aria-hidden="true"></i>
-                <h4>Al-Kahfi Peduli</h4>
-                <p>Kegiatan sosial bakti masyarakat dan penggalangan dana kemanusiaan.</p>
+                <h4>Osis Care</h4>
+                <p>Program kerja osis yg berfokus pada kegiatan sosial sebagai bentuk kepedulian terhadap masyarakat melalui aksi berbagi yang dilaksanakan pada momen-momen tertentu.</p>
             </div>
             <div class="card-box" data-aos="zoom-in" data-aos-delay="400">
-                <i class="fa-solid fa-graduation-cap icon-big" style="color: #8b5cf6;" aria-hidden="true"></i>
-                <h4>Webinar Kepemimpinan</h4>
-                <p>Pelatihan soft skill dan public speaking keren untuk seluruh siswa/siswi.</p>
+                <i class="fa-solid fa-person-chalkboard icon-big" style="color: #8b5cf6;" aria-hidden="true"></i>
+                <h4>QR Code Aspirasi</h4>
+                <p>QR Code Kotak Saran Anonim di tiap kelas. Semua keluhan & ide siswa dijamin dibahas dan direspon bersama Pembina OSIS maksimal dalam 3 hari.</p>
             </div>
         </div>
     </div>
@@ -1662,28 +1732,27 @@
     <div class="container" id="galeri">
         <div class="section-title" data-aos="fade-up">
             <h2>Galeri Kegiatan</h2>
-            <p class="subtitle">Klik foto untuk melihat versi besar. Upload foto asli ke folder /images agar tampil di sini.</p>
         </div>
         <div class="gallery-grid">
             <!-- Album: 1 -->
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="100" onclick="openAlbum('mos')" role="button" aria-label="Buka album Masa Orientasi Siswa">
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="100" onclick="openAlbum('mos')" role="button" aria-label="Buka album 1">
                 <img class="real-img" src="images/galeri-1.jpg" alt="Cover MOS" loading="lazy" onerror="this.style.display='none'">
                 <div class="gallery-placeholder"><i class="fa-solid fa-images fa-2x" aria-hidden="true"></i></div>
-                <div class="gallery-overlay"><h4>Null 404</h4><small>0 Foto</small></div>
+                <div class="gallery-overlay"><h4></h4><small></small></div>
             </div>
 
             <!-- Album: 2-->
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="200" onclick="openAlbum('kemerdekaan')" role="button" aria-label="Buka album Lomba Kemerdekaan">
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="200" onclick="openAlbum('kemerdekaan')" role="button" aria-label="Buka album 2">
                 <img class="real-img" src="images/galeri-2.jpg" alt="Cover Kemerdekaan" loading="lazy" onerror="this.style.display='none'">
                 <div class="gallery-placeholder"><i class="fa-solid fa-images fa-2x" aria-hidden="true"></i></div>
-                <div class="gallery-overlay"><h4>Null 404</h4><small>0 Foto</small></div>
+                <div class="gallery-overlay"><h4></h4><small></small></div>
             </div>
 
-            <!-- Album: 2 -->
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="300" onclick="openAlbum('pleno')" role="button" aria-label="Buka album Rapat Pleno">
+            <!-- Album: 3 -->
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="300" onclick="openAlbum('pleno')" role="button" aria-label="Buka album 3">
                 <img class="real-img" src="images/galeri-3.jpg" alt="Cover Pleno" loading="lazy" onerror="this.style.display='none'">
                 <div class="gallery-placeholder"><i class="fa-solid fa-images fa-2x" aria-hidden="true"></i></div>
-                <div class="gallery-overlay"><h4>Null 404</h4><small>0 Foto</small></div>
+                <div class="gallery-overlay"><h4></h4><small></small></div>
             </div>
         </div>
     </div>
@@ -2151,8 +2220,8 @@ Kepulauan Riau, Indonesia. </span></div> <!-- GANTI dengan alamat asli sekolah -
         // 8. ALBUM DATA + OPEN ALBUM (PHOTO DUMP)
         const albumData = {
             mos: {
-                title: 'Masa Orientasi Siswa (MOS)',
-                subtitle: 'Kegiatan MOS dan pengenalan lingkungan sekolah',
+                title: '',
+                subtitle: '',
                 photos: [
                     'images/galeri-1.jpg',
                     'images/galeri-1-2.jpg',
@@ -2160,16 +2229,16 @@ Kepulauan Riau, Indonesia. </span></div> <!-- GANTI dengan alamat asli sekolah -
                 ]
             },
             kemerdekaan: {
-                title: 'Lomba Kemerdekaan',
-                subtitle: 'Dokumentasi lomba kemerdekaan sekolah',
+                title: '',
+                subtitle: '',
                 photos: [
                     'images/galeri-2.jpg',
                     'images/galeri-2-2.jpg'
                 ]
             },
             pleno: {
-                title: 'Rapat Pleno OSIS',
-                subtitle: 'Rapat pleno dan koordinasi pengurus',
+                title: '',
+                subtitle: '',
                 photos: [
                     'images/galeri-3.jpg',
                     'images/galeri-3-2.jpg'
