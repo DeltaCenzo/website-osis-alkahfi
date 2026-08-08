@@ -1,0 +1,54 @@
+{
+  "name": "OSIS SMA Al-Kahfi Islamic School",
+  "short_name": "OSIS Al-Kahfi",
+  "description": "Portal OSIS SMA Al-Kahfi Islamic School untuk agenda, pengumuman, galeri, dan aspirasi siswa.",
+  "id": "./",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "lang": "id-ID",
+  "categories": [
+    "education",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Kotak Aspirasi",
+      "short_name": "Aspirasi",
+      "url": "./index.html#kritik-saran",
+      "icons": [
+        {
+          "src": "./icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Pengumuman & Agenda",
+      "short_name": "Agenda",
+      "url": "./index.html#pengumuman",
+      "icons": [
+        {
+          "src": "./icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
