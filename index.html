@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="id">
+<html lang="id" data-aspirasi-integration="google-sheets-v2">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -3617,6 +3617,128 @@
         const passwordInput = document.getElementById('passwordInput');
         const loginSubmitBtn = document.getElementById('loginSubmitBtn');
 
+        // =============================================================
+        // ASPIRASI API v2 — Google Apps Script / Google Sheets
+        // GANTI URL DI BAWAH INI DENGAN WEB APP URL YANG BERAKHIR /exec
+        // =============================================================
+        const ASPIRASI_API_URL = 'https://script.google.com/macros/s/AKfycbzQM8KdNCWvhWoyohJa5zfUDT42uxayG-6XVK7f1vU9UA0hRiDF50LItX8927kIvAlXew/exec';
+        const ASPIRASI_SESSION_KEY = 'osis_aspirasi_admin_session_v2';
+        const ASPIRASI_REQUEST_TIMEOUT_MS = 25000;
+
+        let aspirasiRemoteCache = [];
+        let aspirasiAdminToken = sessionStorage.getItem(ASPIRASI_SESSION_KEY) || '';
+        let aspirasiRemoteLoading = false;
+
+        function getAspirasiApiUrl() {
+            const url = String(ASPIRASI_API_URL || '').trim();
+            if (!url || url.includes('GANTI_DENGAN_URL')) {
+                throw new Error('URL Google Apps Script belum dimasukkan di index.html.');
+            }
+            if (!url.endsWith('/exec')) {
+                console.warn('[Aspirasi] Web App URL sebaiknya berakhiran /exec.');
+            }
+            return url;
+        }
+
+        async function aspirasiApi(action, payload = {}) {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), ASPIRASI_REQUEST_TIMEOUT_MS);
+            const body = new URLSearchParams();
+            body.set('action', action);
+            Object.entries(payload).forEach(([key, value]) => {
+                body.set(key, value == null ? '' : String(value));
+            });
+
+            try {
+                const response = await fetch(getAspirasiApiUrl(), {
+                    method: 'POST',
+                    body,
+                    signal: controller.signal,
+                    redirect: 'follow',
+                    credentials: 'omit'
+                });
+                if (!response.ok) throw new Error(`Server aspirasi merespons HTTP ${response.status}.`);
+                const result = await response.json();
+                if (!result || result.success !== true) {
+                    throw new Error(result?.message || 'Permintaan ke server aspirasi gagal.');
+                }
+                return result;
+            } catch (error) {
+                if (error?.name === 'AbortError') {
+                    throw new Error('Server aspirasi terlalu lama merespons. Coba lagi.');
+                }
+                throw error;
+            } finally {
+                clearTimeout(timeout);
+            }
+        }
+
+        function setAspirasiAdminToken(token) {
+            aspirasiAdminToken = String(token || '');
+            if (aspirasiAdminToken) sessionStorage.setItem(ASPIRASI_SESSION_KEY, aspirasiAdminToken);
+            else sessionStorage.removeItem(ASPIRASI_SESSION_KEY);
+        }
+
+        function normalizeAspiration(item) {
+            const copy = { ...(item || {}) };
+            if (!copy.id) copy.id = '';
+            if (!['unread', 'processing', 'done'].includes(copy.status)) copy.status = 'unread';
+            if (!['high', 'normal', 'low'].includes(copy.priority)) copy.priority = 'normal';
+            if (typeof copy.internalNote !== 'string') copy.internalNote = '';
+            if (typeof copy.category !== 'string' || !copy.category) copy.category = 'Lainnya';
+            if (typeof copy.name !== 'string' || !copy.name) copy.name = 'Anonim';
+            if (typeof copy.kelas !== 'string' || !copy.kelas) copy.kelas = '-';
+            if (typeof copy.message !== 'string') copy.message = '';
+            if (typeof copy.timestamp !== 'string') copy.timestamp = String(copy.timestamp || '');
+            return copy;
+        }
+
+        function showAspirasiTableLoading(message = 'Memuat data aspirasi dari Google Sheets...') {
+            const tbody = document.getElementById('osisTbody');
+            if (!tbody) return;
+            tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:28px;"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>&nbsp; ${escapeHtml(message)}</td></tr>`;
+        }
+
+        function showAspirasiTableError(message) {
+            const tbody = document.getElementById('osisTbody');
+            if (!tbody) return;
+            tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:28px;"><strong>Data aspirasi belum dapat dimuat.</strong><br><br>${escapeHtml(message || 'Terjadi kesalahan.')}</td></tr>`;
+        }
+
+        async function refreshAspirasiFromServer({ showLoading = true } = {}) {
+            if (!aspirasiAdminToken) throw new Error('Sesi admin belum tersedia. Silakan login kembali.');
+            if (aspirasiRemoteLoading) return aspirasiRemoteCache;
+            aspirasiRemoteLoading = true;
+            if (showLoading) showAspirasiTableLoading();
+            try {
+                const result = await aspirasiApi('list', { token: aspirasiAdminToken });
+                aspirasiRemoteCache = Array.isArray(result.data) ? result.data.map(normalizeAspiration) : [];
+                renderAspirasiList();
+                if (typeof updateQuickActionsV13 === 'function') updateQuickActionsV13();
+                return aspirasiRemoteCache;
+            } catch (error) {
+                if (/sesi admin|kedaluwarsa|token/i.test(error.message || '')) setAspirasiAdminToken('');
+                showAspirasiTableError(error.message);
+                throw error;
+            } finally {
+                aspirasiRemoteLoading = false;
+            }
+        }
+
+        async function refreshPublicAspirasiCount() {
+            try {
+                const result = await aspirasiApi('count');
+                const total = Math.max(0, Number(result.total) || 0);
+                const publicCounter = document.querySelector('#aspirasiCounter .stat-number');
+                if (publicCounter) {
+                    publicCounter.dataset.target = String(total);
+                    publicCounter.textContent = String(total);
+                }
+            } catch (error) {
+                console.warn('[Aspirasi] Gagal mengambil jumlah aspirasi:', error.message);
+            }
+        }
+
         const AUTH_STORAGE_KEY = 'osis_auth_v3_preview';
         const LEGACY_STORAGE_KEY = 'b8_v2_config_preview';
         const LOGIN_GUARD_STORAGE_KEY = 'osis_login_guard_preview_v1';
@@ -3897,40 +4019,55 @@
 
             loginSubmitBtn.disabled = true;
             loginSubmitBtn.style.opacity = '0.7';
+            loginSubmitBtn.textContent = 'Memverifikasi...';
             errorMsg.style.display = 'none';
 
             try {
-                const valid = await verifyStoredPassword(typed);
-                if (valid) {
-                    resetLoginGuard();
-                    setLoginControlsLocked(false);
-                    modal.style.display = 'none';
-                    passwordInput.value = '';
-                    passwordInput.style.borderColor = '';
-                    osisArea.style.display = 'block';
-                    renderAspirasiList();
-                    window.location.href = '#osis-area';
-                    setTimeout(() => window.AOS?.refresh?.(), 500);
-                } else {
-                    const result = registerFailedLoginAttempt();
+                // Verifikasi password di backend, bukan localStorage browser.
+                const result = await aspirasiApi('login', { password: typed });
+                setAspirasiAdminToken(result.token);
+
+                resetLoginGuard();
+                setLoginControlsLocked(false);
+                modal.style.display = 'none';
+                passwordInput.value = '';
+                passwordInput.style.borderColor = '';
+                osisArea.style.display = 'block';
+                window.location.href = '#osis-area';
+                setTimeout(() => window.AOS?.refresh?.(), 350);
+
+                // Dashboard langsung dibuka. Loading hanya tampil di tabel aspirasi.
+                showAspirasiTableLoading();
+                try {
+                    await refreshAspirasiFromServer({ showLoading: false });
+                    showAppToast('Dashboard terhubung ke Google Sheets.');
+                } catch (loadError) {
+                    console.error('[Aspirasi] Login berhasil tetapi data gagal dimuat:', loadError);
+                    showAppToast('Login berhasil, tetapi data aspirasi belum dapat dimuat.');
+                }
+            } catch (error) {
+                console.error('[Aspirasi] Login gagal:', error);
+                const isWrongPassword = /password salah/i.test(error.message || '');
+                if (isWrongPassword) {
+                    const guardResult = registerFailedLoginAttempt();
                     passwordInput.value = '';
                     passwordInput.style.borderColor = '#ef4444';
-
-                    if (!result.locked) {
-                        errorMsg.textContent = 'Password salah. Silakan coba lagi.';
+                    if (!guardResult.locked) {
+                        errorMsg.textContent = `Password salah. Sisa percobaan: ${guardResult.remainingAttempts}.`;
                         errorMsg.style.display = 'block';
                         passwordInput.focus();
                     }
+                } else {
+                    errorMsg.textContent = error.message || 'Tidak dapat terhubung ke server login.';
+                    errorMsg.style.display = 'block';
+                    passwordInput.focus();
                 }
-            } catch (error) {
-                console.error('Verifikasi login gagal:', error);
-                errorMsg.textContent = 'Browser tidak dapat memverifikasi password. Gunakan HTTPS atau localhost.';
-                errorMsg.style.display = 'block';
             } finally {
                 if (!isLoginLocked()) {
                     loginSubmitBtn.disabled = false;
                     loginSubmitBtn.style.opacity = '1';
                     loginSubmitBtn.style.cursor = '';
+                    loginSubmitBtn.textContent = 'Masuk Dashboard';
                 }
             }
         }
@@ -4946,54 +5083,28 @@
         }
 
         function getAspirasiList() {
-            try {
-                const parsed = JSON.parse(localStorage.getItem(ASPIRASI_STORAGE_KEY) || '[]');
-                if (!Array.isArray(parsed)) return [];
-                let changed = false;
-                const allowedCategories = [
-                    'Fasilitas Sekolah',
-                    'Kebersihan & Lingkungan',
-                    'Kegiatan OSIS',
-                    'Akademik & Pembelajaran',
-                    'Keamanan & Ketertiban',
-                    'Kantin & Konsumsi',
-                    'Teknologi & Wi-Fi',
-                    'Kesehatan & UKS',
-                    'Sarana Ibadah',
-                    'Saran Umum',
-                    'Lainnya'
-                ];
-                const legacyCategoryMap = {
-                    'Fasilitas': 'Fasilitas Sekolah',
-                    'Kegiatan': 'Kegiatan OSIS',
-                    'Kebersihan': 'Kebersihan & Lingkungan',
-                    'Akademik': 'Akademik & Pembelajaran'
-                };
-                const normalized = parsed.map(item => {
-                    const copy = { ...item };
-                    if (!copy.id) { copy.id = newAspirasiId(); changed = true; }
-                    if (!['unread','processing','done'].includes(copy.status)) { copy.status = 'unread'; changed = true; }
-                    if (legacyCategoryMap[copy.category]) { copy.category = legacyCategoryMap[copy.category]; changed = true; }
-                    if (!allowedCategories.includes(copy.category)) { copy.category = 'Lainnya'; changed = true; }
-                    if (!['high','normal','low'].includes(copy.priority)) { copy.priority = 'normal'; changed = true; }
-                    if (typeof copy.internalNote !== 'string') { copy.internalNote = ''; changed = true; }
-                    return copy;
-                });
-                if (changed) localStorage.setItem(ASPIRASI_STORAGE_KEY, JSON.stringify(normalized));
-                return normalized;
-            } catch (e) { return []; }
+            return aspirasiRemoteCache.map(normalizeAspiration);
         }
 
+        // Cache lokal hanya dipakai untuk merender data yang sudah diambil dari Google Sheets.
+        // Fungsi ini tidak lagi menulis aspirasi ke localStorage.
         function saveAspirasiList(list) {
-            localStorage.setItem(ASPIRASI_STORAGE_KEY, JSON.stringify(list));
+            aspirasiRemoteCache = Array.isArray(list) ? list.map(normalizeAspiration) : [];
             renderAspirasiList();
         }
 
-        function saveAspirasi(item) {
-            const list = getAspirasiList();
-            list.unshift({ id: newAspirasiId(), status: 'unread', priority: 'normal', internalNote: '', category: 'Saran Umum', ...item });
-            localStorage.setItem(ASPIRASI_STORAGE_KEY, JSON.stringify(list));
-            updateAspirasiCounters();
+        async function saveAspirasi(item) {
+            const result = await aspirasiApi('submit', {
+                nama: item.name || 'Anonim',
+                kelas: item.kelas || '-',
+                kategori: item.category || 'Saran Umum',
+                aspirasi: item.message || ''
+            });
+            await refreshPublicAspirasiCount();
+            if (aspirasiAdminToken && osisArea?.style.display === 'block') {
+                await refreshAspirasiFromServer({ showLoading: false });
+            }
+            return result;
         }
 
         function getStatusMeta(status) {
@@ -5016,8 +5127,11 @@
             Object.entries(ids).forEach(([id,key]) => { const el=document.getElementById(id); if(el) el.textContent=counts[key]; });
             const totalText = document.getElementById('dashTotalAspTextV12'); if (totalText) totalText.textContent = `${counts.total} total aspirasi`;
             const high = document.getElementById('dashHighPriorityAspV12'); if (high) high.textContent = list.filter(i => i.priority === 'high' && i.status !== 'done').length;
-            const publicCounter = document.querySelector('#aspirasiCounter .stat-number');
-            if (publicCounter) { publicCounter.dataset.target = counts.total; publicCounter.textContent = counts.total; }
+            // Counter publik diambil dari endpoint count agar tetap benar sebelum admin login.
+            if (aspirasiAdminToken) {
+                const publicCounter = document.querySelector('#aspirasiCounter .stat-number');
+                if (publicCounter) { publicCounter.dataset.target = counts.total; publicCounter.textContent = counts.total; }
+            }
         }
 
         function getPriorityMeta(priority) {
@@ -5043,7 +5157,7 @@
 
             tbody.innerHTML = '';
             if (!list.length) {
-                tbody.innerHTML = '<tr class="empty-row-v12"><td colspan="9"><div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-message"></i></span><strong>Tidak ada aspirasi yang cocok</strong><small>Tidak ada hasil.</small></div></div></td></tr>';
+                tbody.innerHTML = '<tr class="empty-row-v12"><td colspan="9"><div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-message"></i></span><strong>Belum ada aspirasi</strong><small>Data dari Google Sheets akan muncul di sini.</small></div></div></td></tr>';
                 updateAspirasiCounters();
                 return;
             }
@@ -5091,28 +5205,62 @@
             if (modal) modal.style.display = 'none';
         }
 
-        function saveAspirasiDetail() {
+        async function saveAspirasiDetail() {
             const id = document.getElementById('asp-detail-id')?.value;
             if (!id) return;
+            if (!aspirasiAdminToken) return setInlineMessage('aspDetailMessage', 'Sesi admin tidak tersedia. Silakan login ulang.', 'error');
+
             const patch = {
+                id,
                 category: document.getElementById('asp-detail-category').value,
                 priority: document.getElementById('asp-detail-priority').value,
                 status: document.getElementById('asp-detail-status').value,
                 internalNote: document.getElementById('asp-detail-note').value.trim()
             };
-            saveAspirasiList(getAspirasiList().map(item => item.id === id ? {...item, ...patch} : item));
-            setInlineMessage('aspDetailMessage','Perubahan tersimpan.','success');
-            setTimeout(closeAspirasiDetail, 450);
+
+            const button = document.getElementById('saveAspDetailBtn');
+            if (button) { button.disabled = true; button.style.opacity = '0.7'; }
+            setInlineMessage('aspDetailMessage', 'Menyimpan ke Google Sheets...');
+            try {
+                await aspirasiApi('update', { token: aspirasiAdminToken, ...patch });
+                await refreshAspirasiFromServer({ showLoading: false });
+                setInlineMessage('aspDetailMessage', 'Perubahan tersimpan di Google Sheets.', 'success');
+                showAppToast('Perubahan aspirasi berhasil disimpan.');
+                setTimeout(closeAspirasiDetail, 450);
+            } catch (error) {
+                console.error('[Aspirasi] Update gagal:', error);
+                setInlineMessage('aspDetailMessage', 'Gagal menyimpan: ' + error.message, 'error');
+            } finally {
+                if (button) { button.disabled = false; button.style.opacity = '1'; }
+            }
         }
 
-        function updateAspirasiStatus(id, status) {
-            const list = getAspirasiList().map(item => item.id === id ? { ...item, status } : item);
-            saveAspirasiList(list);
+        async function updateAspirasiStatus(id, status) {
+            const item = getAspirasiList().find(x => x.id === id);
+            if (!item || !aspirasiAdminToken) return;
+            await aspirasiApi('update', {
+                token: aspirasiAdminToken,
+                id,
+                category: item.category,
+                priority: item.priority,
+                status,
+                internalNote: item.internalNote || ''
+            });
+            await refreshAspirasiFromServer({ showLoading: false });
         }
 
-        function deleteAspirasi(id) {
-            if (!confirm('Hapus aspirasi ini?')) return;
-            saveAspirasiList(getAspirasiList().filter(item => item.id !== id));
+        async function deleteAspirasi(id) {
+            if (!confirm('Hapus aspirasi ini dari Google Sheets?')) return;
+            try {
+                await aspirasiApi('delete', { token: aspirasiAdminToken, id });
+                aspirasiRemoteCache = aspirasiRemoteCache.filter(item => item.id !== id);
+                renderAspirasiList();
+                await refreshPublicAspirasiCount();
+                showAppToast('Aspirasi berhasil dihapus.');
+            } catch (error) {
+                console.error('[Aspirasi] Hapus gagal:', error);
+                showAppToast('Gagal menghapus aspirasi: ' + error.message);
+            }
         }
 
         function newAnnouncementId() {
@@ -5370,11 +5518,19 @@
             const a = document.createElement('a'); a.href=url; a.download='aspirasi-osis.csv'; a.click(); URL.revokeObjectURL(url);
         }
 
-        function clearAspirasiStorage() {
-            if (!confirm('Hapus SEMUA data aspirasi? Tindakan ini tidak bisa dibatalkan.')) return;
-            localStorage.removeItem(ASPIRASI_STORAGE_KEY);
-            renderAspirasiList();
-            showAppToast('Semua aspirasi berhasil dihapus.');
+        async function clearAspirasiStorage() {
+            if (!confirm('Hapus SEMUA aspirasi dari Google Sheets? Tindakan ini tidak bisa dibatalkan.')) return;
+            if (!confirm('Konfirmasi sekali lagi: seluruh data aspirasi akan dihapus permanen. Lanjutkan?')) return;
+            try {
+                await aspirasiApi('clear', { token: aspirasiAdminToken });
+                aspirasiRemoteCache = [];
+                renderAspirasiList();
+                await refreshPublicAspirasiCount();
+                showAppToast('Semua aspirasi berhasil dihapus dari Google Sheets.');
+            } catch (error) {
+                console.error('[Aspirasi] Hapus semua gagal:', error);
+                showAppToast('Gagal menghapus semua aspirasi: ' + error.message);
+            }
         }
 
         // Backup and restore
@@ -5403,7 +5559,7 @@
                 const payload = JSON.parse(await file.text());
                 if (!payload || !payload.data) throw new Error('Format backup tidak dikenali.');
                 if (!confirm('Restore akan mengganti data OSIS pada browser ini. Lanjutkan?')) return;
-                if (Array.isArray(payload.data.aspirations)) localStorage.setItem(ASPIRASI_STORAGE_KEY, JSON.stringify(payload.data.aspirations));
+                // Aspirasi tersimpan di Google Sheets dan tidak direstore ke localStorage.
                 if (Array.isArray(payload.data.announcements)) localStorage.setItem(PUBLIC_CARD_STORAGE_KEY, JSON.stringify(payload.data.announcements));
                 if (payload.data.nextEvent?.name && payload.data.nextEvent?.datetime) localStorage.setItem(EVENT_STORAGE_KEY, JSON.stringify(payload.data.nextEvent));
                 if (['light','dark'].includes(payload.data.theme)) {
@@ -5451,22 +5607,27 @@
         // Password
         async function handlePasswordChange(e) {
             e.preventDefault();
-            const current=document.getElementById('current-password').value;
-            const next=document.getElementById('new-password').value;
-            const confirmNext=document.getElementById('confirm-password').value;
-            setInlineMessage('passwordChangeMessage','Memverifikasi password...');
-            if (next.length < 12) return setInlineMessage('passwordChangeMessage','Password baru minimal 12 karakter.','error');
-            if (next !== confirmNext) return setInlineMessage('passwordChangeMessage','Konfirmasi password baru tidak sama.','error');
+            const current = document.getElementById('current-password').value;
+            const next = document.getElementById('new-password').value;
+            const confirmNext = document.getElementById('confirm-password').value;
+            setInlineMessage('passwordChangeMessage', 'Memverifikasi password saat ini...');
+            if (next.length < 12) return setInlineMessage('passwordChangeMessage', 'Password baru minimal 12 karakter.', 'error');
+            if (next !== confirmNext) return setInlineMessage('passwordChangeMessage', 'Konfirmasi password baru tidak sama.', 'error');
             try {
-                if (!(await verifyStoredPassword(current))) return setInlineMessage('passwordChangeMessage','Password saat ini salah.','error');
-                await setDashboardPassword(next);
+                const reauth = await aspirasiApi('login', { password: current });
+                setInlineMessage('passwordChangeMessage', 'Mengganti password backend...');
+                await aspirasiApi('changePassword', { token: reauth.token, newPassword: next });
+                setAspirasiAdminToken('');
+                aspirasiRemoteCache = [];
                 resetLoginGuard();
                 document.getElementById('passwordChangeForm').reset();
-                setInlineMessage('passwordChangeMessage','Password berhasil diganti. Gunakan password baru saat login berikutnya.','success');
-                showAppToast('Password berhasil diganti.');
+                setInlineMessage('passwordChangeMessage', 'Password berhasil diganti. Silakan login ulang.', 'success');
+                showAppToast('Password berhasil diganti. Silakan login ulang.');
+                osisArea.style.display = 'none';
+                setTimeout(bukaModalLogin, 500);
             } catch (err) {
                 console.error(err);
-                setInlineMessage('passwordChangeMessage','Gagal mengganti password pada perangkat ini.','error');
+                setInlineMessage('passwordChangeMessage', 'Gagal mengganti password: ' + err.message, 'error');
             }
         }
 
@@ -5887,33 +6048,52 @@
         initializeV13Ux();
         renderPublicCards();
         updateAspirasiCounters();
+        refreshPublicAspirasiCount();
 
         if (aspirasiForm) {
-            aspirasiForm.addEventListener('submit', function(e) {
+            aspirasiForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                aspError.style.display='none';
-                if (!aspPesan.value.trim()) { aspError.style.display='block'; aspPesan.focus(); return; }
-                const submitBtn=aspirasiForm.querySelector('button[type="submit"]');
-                submitBtn.disabled=true; submitBtn.style.opacity=.7;
-                const payload={
-                    name:document.getElementById('asp-nama').value.trim(),
-                    kelas:document.getElementById('asp-kelas').value.trim(),
-                    category:document.getElementById('asp-category').value,
-                    message:aspPesan.value.trim(),
-                    timestamp:new Date().toISOString()
+                aspError.style.display = 'none';
+                if (!aspPesan.value.trim()) {
+                    aspError.style.display = 'block';
+                    aspPesan.focus();
+                    return;
+                }
+
+                const submitBtn = aspirasiForm.querySelector('button[type="submit"]');
+                const originalHtml = submitBtn?.innerHTML || '';
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.style.opacity = '.7';
+                    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Mengirim...';
+                }
+
+                const payload = {
+                    name: document.getElementById('asp-nama').value.trim() || 'Anonim',
+                    kelas: document.getElementById('asp-kelas').value.trim() || '-',
+                    category: document.getElementById('asp-category').value || 'Saran Umum',
+                    message: aspPesan.value.trim()
                 };
+
                 try {
-                    saveAspirasi(payload); aspirasiForm.reset(); aspSuccessModal.style.display='flex';
-                    showAppToast('Aspirasi berhasil dikirim.');
-                    if (osisArea?.style.display === 'block') renderAspirasiList();
+                    await saveAspirasi(payload);
+                    aspirasiForm.reset();
+                    aspSuccessModal.style.display = 'flex';
+                    showAppToast('Aspirasi berhasil dikirim ke Google Sheets.');
                 } catch (err) {
-                    console.error('Simpan lokal error:',err);
-                    aspError.style.display='block'; aspError.textContent='Gagal menyimpan aspirasi. Pastikan browser mengizinkan penyimpanan lokal.';
-                } finally { submitBtn.disabled=false; submitBtn.style.opacity=1; }
+                    console.error('[Aspirasi] Kirim gagal:', err);
+                    aspError.style.display = 'block';
+                    aspError.textContent = 'Gagal mengirim aspirasi: ' + err.message;
+                } finally {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = '1';
+                        submitBtn.innerHTML = originalHtml;
+                    }
+                }
             });
         }
         </script>
 
-    <script src="./aspirasi-config.js"></script>
 </body>
 </html>
