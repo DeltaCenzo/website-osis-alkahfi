@@ -3439,7 +3439,7 @@
 
     <div class="modal-overlay" id="pwaInstallModal">
         <div class="modal-box pwa-install-modal" role="dialog" aria-modal="true" aria-labelledby="pwaInstallTitle">
-            <button class="close-btn" id="closePwaInstallModal" aria-label="Tutup">&times;</button>
+            <button class="close-btn" id="closePwaInstallModal" aria-label="Tutup panduan install">&times;</button>
             <div class="modal-icon-shell"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i></div>
             <h3 id="pwaInstallTitle">Install Aplikasi OSIS</h3>
             <p class="modal-subtext" id="pwaInstallText">Tambahkan website OSIS ke layar utama agar dapat dibuka seperti aplikasi.</p>
@@ -3522,46 +3522,59 @@
         });
 
         // Hero
-        const words = ["Aspiratif • Inovatif • Kolaboratif • Islami", "Membangun Generasi Unggul & Berkarakter", "Bersama OSIS, Kita Wujudkan Perubahan Positif!"];
-        let i = 0;
-        let timer;
+        const words = [
+            "Aspiratif • Inovatif • Kolaboratif • Islami",
+            "Membangun Generasi Unggul & Berkarakter",
+            "Bersama OSIS, Kita Wujudkan Perubahan Positif!"
+        ];
+        const typingText = document.getElementById('typing-text');
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let typingWordIndex = 0;
+        let typingCharIndex = 0;
+        let typingDeleting = false;
+        let typingTimer = null;
 
-        function typingEffect() {
-            if (reduceMotion) { document.getElementById('typing-text').textContent = words[0]; return; }
-            let word = words[i].split("");
-            var loopTyping = function() {
-                if (word.length > 0) {
-                    document.getElementById('typing-text').innerHTML += word.shift();
-                } else {
-                    setTimeout(deletingEffect, 3000);
-                    return false;
+        function runHeroTyping() {
+            if (!typingText) return;
+
+            if (reduceMotion) {
+                typingText.textContent = words[0];
+                return;
+            }
+
+            const currentWord = words[typingWordIndex];
+
+            if (!typingDeleting) {
+                typingCharIndex++;
+                typingText.textContent = currentWord.slice(0, typingCharIndex);
+
+                if (typingCharIndex >= currentWord.length) {
+                    typingDeleting = true;
+                    typingTimer = window.setTimeout(runHeroTyping, 3000);
+                    return;
                 }
-                timer = setTimeout(loopTyping, 70);
-            };
-            loopTyping();
+
+                typingTimer = window.setTimeout(runHeroTyping, 70);
+                return;
+            }
+
+            typingCharIndex--;
+            typingText.textContent = currentWord.slice(0, typingCharIndex);
+
+            if (typingCharIndex <= 0) {
+                typingDeleting = false;
+                typingWordIndex = (typingWordIndex + 1) % words.length;
+                typingTimer = window.setTimeout(runHeroTyping, 500);
+                return;
+            }
+
+            typingTimer = window.setTimeout(runHeroTyping, 40);
         }
 
-        function deletingEffect() {
-            let word = words[i].split("");
-            var loopDeleting = function() {
-                if (word.length > 0) {
-                    word.pop();
-                    document.getElementById('typing-text').innerHTML = word.join("");
-                } else {
-                    if (words.length > (i + 1)) {
-                        i++;
-                    } else {
-                        i = 0;
-                    }
-                    setTimeout(typingEffect, 500);
-                    return false;
-                }
-                timer = setTimeout(loopDeleting, 40);
-            };
-            loopDeleting();
+        if (typingText) {
+            typingText.textContent = reduceMotion ? words[0] : "";
+            runHeroTyping();
         }
-        typingEffect();
 
         // Theme
         const themeToggle = document.getElementById('theme-toggle');

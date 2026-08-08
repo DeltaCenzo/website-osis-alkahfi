@@ -1,4 +1,4 @@
-const CACHE_NAME = 'osis-alkahfi-pwa-v17-clean';
+const CACHE_NAME = 'osis-alkahfi-pwa-v18-hero-typing-fix';
 const CORE_ASSETS = [
   './', './index.html', './404.html', './manifest.webmanifest', './gallery-config.js',
   './icons/icon-192.png', './icons/icon-512.png'
