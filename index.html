@@ -1,15 +1,5 @@
 <!DOCTYPE html>
-<!--
-  ===================================================================
-  CATATAN UNTUK PENGURUS OSIS (baca sebelum publish):
-  1. Cari semua tulisan "GANTI:" di file ini — itu tempat yang harus
-     diisi dengan data asli (nama, nomor WA, foto, dsb).
-  2. Galeri kegiatan dikelola dari Area OSIS dan tersimpan di Google Drive.
-     Folder /images tetap dipakai untuk logo dan aset website.
-  3. WAJIB baca catatan keamanan di bagian <script> soal "Area OSIS"
-     sebelum menaruh data rahasia di sana.
-  ===================================================================
--->
+
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -24,23 +14,21 @@
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="apple-touch-icon" href="./icons/icon-192.png">
 
-    <!-- Open Graph (biar rapi kalau link dibagikan ke WA/Instagram) -->
     <meta property="og:title" content="OSIS SMA Al-Kahfi Islamic School">
     <meta property="og:description" content="Aspiratif • Inovatif • Kolaboratif • Islami — Website resmi OSIS SMA Al-Kahfi Islamic School.">
     <meta property="og:type" content="website">
-    <!-- GANTI: og:image sebaiknya diisi link foto gedung sekolah / logo -->
 
-    <!-- PWA / app icon. Boleh diganti dengan logo resmi sekolah nanti. -->
+    
     <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Google Fonts -->
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- AOS (Animate On Scroll) CSS -->
+    
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
@@ -78,7 +66,7 @@
             box-sizing: border-box;
             font-family: 'Inter', 'Poppins', sans-serif;
             scroll-behavior: smooth;
-            scroll-padding-top: 100px; /* <--- MENGATASI JUDUL TERTUTUP NAVBAR */
+            scroll-padding-top: 100px;
         }
 
         body {
@@ -91,7 +79,7 @@
                               radial-gradient(circle at bottom right, rgba(245,158,11,0.08), transparent 26%);
         }
 
-        /* AKSESIBILITAS: skip link & focus state */
+        /* Accessibility */
         .skip-link {
             position: absolute; left: -999px; top: 0;
             background: var(--primary); color: white;
@@ -114,7 +102,7 @@
             }
         }
 
-        /* HEADER DENGAN ANIMASI GRADASI BERGERAK */
+        /* Header */
         header {
             position: relative;
             background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 58, 138, 0.9)), 
@@ -366,7 +354,7 @@
             line-height: 1.65;
         }
 
-        /* NAVBAR GLASSMORPHISM */
+        /* Navigation */
         nav {
             background: var(--nav-bg);
             backdrop-filter: blur(16px);
@@ -430,7 +418,7 @@
         }
         .nav-overlay.active { display: block; }
 
-        /* CONTAINER UMUM */
+        /* Layout */
         .container {
             max-width: 1150px;
             margin: 60px auto;
@@ -484,7 +472,7 @@
             font-size: 0.95rem;
         }
 
-        /* CARDS DENGAN EFEK KACA (GLASSMORPHISM) */
+        /* Cards */
         .grid-layout { display: grid; gap: 30px; }
         .grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
         .grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
@@ -666,7 +654,7 @@
         .card-box i.icon-big { font-size: 2.5rem; color: var(--primary); margin-bottom: 20px; display: inline-block; transition: transform 0.3s ease; }
         .card-box:hover i.icon-big { transform: none; }
 
-        /* STRUKTUR OSIS DENGAN STATUS ONLINE */
+        /* Organization */
         .pengurus-card { text-align: center; padding: 35px 20px; }
         .avatar-wrapper {
             position: relative;
@@ -715,13 +703,13 @@
             margin: 55px 0 30px 0;
         }
 
-        /* SEKBID (koordinator seksi bidang) — kartu lebih kecil */
+        /* Divisions */
         .sekbid-card { text-align: center; padding: 24px 16px; }
         .sekbid-card i { font-size: 1.8rem; color: var(--primary); margin-bottom: 12px; }
         .sekbid-card h5 { font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; min-height: 40px; }
         .sekbid-card p { font-size: 0.8rem; margin: 0; }
 
-        /* PENGUMUMAN / AGENDA */
+        /* Announcements */
         .countdown-box { text-align: center; }
         .countdown-card { max-width: 480px; margin: 0 auto 35px auto; }
         .countdown-label { color: var(--primary); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.5px; margin-bottom: 8px; }
@@ -768,13 +756,7 @@
             color: var(--text-dark);
             margin-bottom: 16px;
         }
-        .admin-preview {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 18px;
-            margin-top: 20px;
-        }
-        .admin-card {
+.admin-card {
             background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(249,250,251,0.98));
             border: 1px solid rgba(96,165,250,0.16);
             border-radius: 24px;
@@ -897,16 +879,9 @@
                 grid-template-columns: 1fr;
             }
         }
+.announcement-date { color: var(--primary); font-weight: 600; font-size: 0.8rem; margin-bottom: 8px; display: block; }
 
-        .contoh-badge {
-            position: absolute; top: 14px; right: 14px;
-            background: var(--accent); color: white; font-size: 0.68rem;
-            font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px;
-        }
-        .announcement-date { color: var(--primary); font-weight: 600; font-size: 0.8rem; margin-bottom: 8px; display: block; }
-
-
-        /* DASHBOARD OSIS V2 - preview improvement */
+        /* Dashboard */
         .dashboard-summary {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -1018,7 +993,7 @@
             .dashboard-tabs .tab-button { flex: 0 0 auto; }
         }
 
-        /* GALERI FOTO */
+        /* Gallery */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -1070,7 +1045,7 @@
         }
         .dump-item img { width: 100%; height: 140px; object-fit: cover; display: block; }
 
-        /* FORM & IFRAME */
+        /* Forms */
         .interactive-box {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -1232,13 +1207,7 @@
             margin-bottom: 10px;
         }
         .upload-btn:hover { transform: translateY(-2px); opacity: 0.96; }
-        .upload-preview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 18px;
-            margin-top: 24px;
-        }
-        .upload-card {
+.upload-card {
             border-radius: 18px;
             border: 1px solid rgba(148,163,184,0.18);
             overflow: hidden;
@@ -1382,7 +1351,7 @@
         
         #osis-area { display: none; }
 
-        /* KONTAK & SOSIAL MEDIA */
+        /* Contact */
         .kontak-info-list { list-style: none; }
         .kontak-info-list li { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; }
         .kontak-info-list i { color: var(--primary); font-size: 1.2rem; margin-top: 3px; width: 20px; }
@@ -1400,7 +1369,7 @@
         .social-pill:hover { background: var(--primary); color: white; transform: translateY(-3px); }
         .social-pill i { font-size: 1.1rem; }
 
-        /* FLOATING BUTTONS PREMIUM */
+        /* Floating actions */
         .float-container {
             position: fixed;
             bottom: 30px;
@@ -1428,8 +1397,7 @@
             transform: scale(1.15) translateY(-5px); 
             box-shadow: 0 15px 30px rgba(0,0,0,0.35);
         }
-        
-        
+
         .theme-float-btn { 
             background: var(--secondary); 
             color: var(--bg-light);
@@ -1449,7 +1417,7 @@
             transform: scale(1);
         }
 
-        /* MODAL (LOGIN & LIGHTBOX) PREMIUM */
+        /* Modals */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);
@@ -1503,7 +1471,7 @@
         .lightbox-box .lightbox-fallback i { font-size: 2.5rem; }
         .lightbox-box p.caption { margin-top: 14px; text-align: center; font-weight: 600; color: var(--text-dark); }
 
-        /* ASPIRASI FORM STYLES */
+        /* Aspirations */
         .aspirasi-card {
             max-width: 760px;
             margin: 18px auto 0 auto;
@@ -1567,7 +1535,6 @@
         }
         .aspirasi-btn i { transform: translateY(1px); }
 
-
         footer { background: #07090e; color: white; text-align: center; padding: 35px; margin-top: 80px; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); }
         footer p.credit { color: rgba(255,255,255,0.5); font-size: 0.78rem; margin-top: 8px; }
 
@@ -1576,7 +1543,7 @@
             overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
         }
 
-        /* RESPONSIVE */
+        /* Responsive */
         @media (max-width: 900px) {
             .nav-links { display: none; flex-direction: column; width: 100%; align-items: stretch; }
             .nav-links a, .nav-links button { text-align: center; }
@@ -1613,7 +1580,7 @@
             .section-title h2::after { left: calc(50% - 30px); }
         }
 
-        /* Mobile enhancements for aspirasi and dashboard */
+        /* Mobile */
         @media (max-width: 600px) {
             header { padding: 4.5rem 1rem 2.8rem 1rem; }
             .container { margin: 40px auto; padding: 0 16px; }
@@ -1645,10 +1612,7 @@
             #osisTbody tr td:nth-child(4)::before { content: 'Pesan: '; }
         }
 
-
-        /* ==========================================================
-           MOBILE-FIRST DASHBOARD + PWA (Option A + I)
-           ========================================================== */
+        
         button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
         .pwa-install-trigger { cursor: pointer; font-family: inherit; }
         .pwa-install-trigger:not([hidden]) { display: inline-flex; }
@@ -1732,20 +1696,7 @@
         .admin-item { border-radius: 16px; }
 
         .pwa-install-modal { max-width: 450px; }
-        .pwa-install-steps {
-            display: grid; gap: 9px; margin-top: 16px; text-align: left;
-        }
-        .pwa-install-step {
-            display:flex; align-items:flex-start; gap:11px;
-            padding:11px 12px; border-radius:13px;
-            background:var(--bg-soft); border:1px solid var(--border-color);
-            color:var(--text-muted); font-size:.9rem; line-height:1.45;
-        }
-        .pwa-install-step b {
-            flex:0 0 26px; width:26px; height:26px; display:grid; place-items:center;
-            border-radius:50%; background:var(--primary); color:white; font-size:.75rem;
-        }
-        .pwa-toast {
+.pwa-toast {
             position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom));
             transform: translate(-50%, 18px); z-index: 4000;
             max-width: min(92vw, 460px); padding: 11px 16px; border-radius: 999px;
@@ -1811,7 +1762,7 @@
             .dashboard-panel { padding-top: 2px; }
             .dashboard-panel > .section-highlight { font-size:.96rem; }
             .dashboard-toolbar { gap:9px; margin:12px 0; }
-            .form-control { font-size:16px; } /* mencegah auto zoom Safari iPhone */
+            .form-control { font-size:16px; }
             .table-button-row, .backup-actions, .qr-actions { display:grid; grid-template-columns:1fr; }
             .table-button-row button, .backup-actions button, .qr-actions button { width:100% !important; }
             #osisTbody tr { border-radius:16px; padding:12px; box-shadow:0 10px 24px rgba(15,23,42,.055); }
@@ -1826,9 +1777,7 @@
             .pwa-toast { border-radius:14px; width:calc(100% - 28px); }
         }
 
-
-
-        /* GALERI MANAGER */
+        /* Gallery manager */
         .gallery-item { width: 100%; font: inherit; text-align: left; padding: 0; }
         .gallery-overlay { pointer-events: none; }
         .gallery-overlay h4 { margin: 0 0 4px; color: white; }
@@ -1953,8 +1902,7 @@
             .gallery-upload-zone { padding: 17px; }
         }
 
-
-        /* GALERI EXPERIENCE V8 */
+        /* Gallery viewer */
         #galeri .section-title { margin-bottom: 26px; }
         #galeri .section-title .subtitle { max-width: 680px; margin: 8px auto 0; }
         .gallery-summary {
@@ -2075,7 +2023,7 @@
         .dump-item:hover::after, .dump-item:focus-visible::after { opacity: 1; transform: translateY(0); }
         .dump-item:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
 
-        /* Immersive photo viewer */
+        /* Photo viewer */
         #lightboxModal.gallery-viewer-overlay {
             padding: 0; background: rgba(2,6,23,.94); backdrop-filter: blur(18px);
             align-items: stretch; justify-content: stretch;
@@ -2167,8 +2115,7 @@
             .gallery-swipe-hint { display: none; }
         }
 
-    
-        /* V9: announcement, aspiration, gallery-manager, PWA update, mobile performance */
+        
         .announcement-card-v9 { position: relative; overflow: hidden; }
         .announcement-card-v9.is-pinned { border-color: color-mix(in srgb, var(--primary) 44%, var(--border-color)); }
         .announcement-meta-v9 { display:flex; flex-wrap:wrap; gap:7px; align-items:center; margin-bottom:12px; }
@@ -2247,9 +2194,7 @@
             .gallery-admin-photo-actions { grid-template-columns:1fr; }
         }
 
-
-
-        /* V10: Aspirasi category expansion + consistent dark theme */
+        
         .aspirasi-card {
             background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.96));
             border-color: var(--border-color);
@@ -2307,9 +2252,8 @@
             .aspirasi-card textarea.form-control { min-height: 150px; }
             .aspirasi-counter .counter-box { min-width: 150px; }
         }
-    
 
-        /* V11: announcement manager */
+        /* Announcement manager */
         #announcementsTab .section-subtext { max-width: 780px; }
         .announcement-section-head-v11 {
             display:flex; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:18px;
@@ -2354,8 +2298,7 @@
         #announcementsTab .form-control::placeholder { color:color-mix(in srgb,var(--text-muted) 85%,transparent); }
         #announcementsTab select.form-control option { background:var(--bg-light); color:var(--text-dark); }
         .announcement-field-wide-v11 { grid-column:1/-1; }
-        .announcement-field-help-v11 { display:block; margin-top:5px; color:var(--text-muted); font-size:.72rem; line-height:1.35; }
-        .announcement-text-label-v11 { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.announcement-text-label-v11 { display:flex; align-items:center; justify-content:space-between; gap:10px; }
         .announcement-text-label-v11 label { margin-bottom:0!important; }
         .announcement-text-label-v11 span { color:var(--text-muted); font-size:.72rem; font-weight:700; white-space:nowrap; }
         #public-card-text { min-height:116px; resize:vertical; line-height:1.55; }
@@ -2466,9 +2409,7 @@
             .announcement-card-actions-v11 > * { flex:1 1 calc(50% - 7px); }
         }
 
-
-
-        /* V12: Command Center, struktur tanpa foto, dark audit, empty states, toast */
+        
         .command-stats-v12 {
             display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:16px;
         }
@@ -2503,7 +2444,7 @@
         .command-actions-v12 button span { min-width:0; font-size:.8rem; font-weight:800; line-height:1.25; }
         .command-actions-v12 button small { display:block; margin-top:3px; color:var(--text-muted); font-size:.66rem; font-weight:600; }
 
-        /* Struktur organisasi tanpa foto */
+        /* Organization cards */
         .leadership-grid-v12 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
         .leadership-card-v12 { position:relative; overflow:hidden; min-width:0; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:16px; padding:24px; border:1px solid var(--border-color); border-radius:24px; background:var(--card-bg); box-shadow:var(--shadow); }
         .leadership-card-v12.primary { border-color:color-mix(in srgb,var(--primary) 34%,var(--border-color)); }
@@ -2534,21 +2475,21 @@
         .division-members-v12 li { position:relative; padding-left:15px; color:var(--text-muted); font-size:.78rem; line-height:1.45; }
         .division-members-v12 li::before { content:''; position:absolute; left:1px; top:.62em; width:5px; height:5px; border-radius:50%; background:var(--primary); }
 
-        /* Reusable empty state */
+        /* Empty states */
         .empty-state-v12 { grid-column:1/-1; width:100%; min-height:150px; display:grid; place-items:center; text-align:center; padding:26px 18px; border:1px dashed var(--border-color); border-radius:18px; background:var(--bg-soft); color:var(--text-muted); }
         .empty-state-v12 .empty-icon-v12 { width:44px; height:44px; display:grid; place-items:center; margin:0 auto 10px; border-radius:14px; background:color-mix(in srgb,var(--primary) 10%,transparent); color:var(--primary); font-size:1.05rem; }
         .empty-state-v12 strong { display:block; color:var(--text-dark); font-size:.9rem; margin-bottom:4px; }
         .empty-state-v12 small { display:block; max-width:360px; margin:auto; color:var(--text-muted); font-size:.75rem; line-height:1.45; }
         tr.empty-row-v12 td { padding:0!important; border:0!important; }
 
-        /* Generic app toast */
+        /* Toast */
         .pwa-toast { display:flex; align-items:center; justify-content:center; gap:9px; border-radius:15px; background:#0f172a; }
         .pwa-toast i { color:#93c5fd; }
         .pwa-toast.toast-success i { color:#6ee7b7; }
         .pwa-toast.toast-error i { color:#fca5a5; }
         .pwa-toast.toast-warning i { color:#fcd34d; }
 
-        /* Dark mode audit */
+        /* Dark theme */
         [data-theme="dark"] .dashboard-shell,
         [data-theme="dark"] .leadership-card-v12,
         [data-theme="dark"] .division-card-v12,
@@ -2603,9 +2544,7 @@
             .leadership-copy-v12 p { display:none; }
         }
 
-
-
-        /* V13+: smart actions, contact polish, micro-interactions, accessibility */
+        
         .section-kicker-v13 { display:block; margin-bottom:6px; color:var(--primary); font-size:.72rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
 
         .command-actions-v13 { grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -2645,7 +2584,7 @@
         .footer-bottom-v13 { display:flex; justify-content:space-between; gap:16px; margin-top:20px; padding-top:17px; border-top:1px solid rgba(255,255,255,.09); }
         .footer-v13 .credit { margin-top:0; }
 
-        /* Subtle interaction feedback. Disabled for reduced motion/perf-lite below. */
+        /* Interaction */
         @media (hover:hover) and (pointer:fine) {
             .contact-card-v13, .leadership-card-v12, .division-card-v12, .command-stat-v12 { transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
             .contact-card-v13:hover, .leadership-card-v12:hover, .division-card-v12:hover, .command-stat-v12:hover { transform:translateY(-2px); border-color:color-mix(in srgb,var(--primary) 30%,var(--border-color)); }
@@ -2653,7 +2592,7 @@
         }
         button:active, a.hero-btn:active, .contact-action-v13:active, .social-channel-v13:not(.is-disabled):active { transform:scale(.98); }
 
-        /* Accessibility improvements */
+        /* Accessibility */
         button, [role="button"], .contact-action-v13, .social-channel-v13 { touch-action:manipulation; }
         .dashboard-tabs .tab-button { min-height:44px; }
         .contact-action-v13 { min-width:44px; }
@@ -2692,14 +2631,13 @@
     </style>
 </head>
 <body id="top">
-    <!-- V15: bottom navigation removed; hamburger navigation remains the mobile menu. -->
 
     <a href="#konten-utama" class="skip-link">Langsung ke konten utama</a>
 
     <header>
         <div class="logo-container" data-aos="zoom-in" data-aos-duration="1000">
-            <img src="images/logo-sekolah.png" alt="Logo Sekolah" class="logo-img" onerror="this.style.display='none'"> <!-- GANTI: pastikan file images/logo-sekolah.png ada -->
-            <img src="images/logo-osis.png" alt="Logo OSIS" class="logo-img" onerror="this.style.display='none'"> <!-- GANTI: pastikan file images/logo-osis.png ada -->
+            <img src="images/logo-sekolah.png" alt="Logo Sekolah" class="logo-img" onerror="this.style.display='none'"> 
+            <img src="images/logo-osis.png" alt="Logo OSIS" class="logo-img" onerror="this.style.display='none'"> 
         </div>
         <h1 data-aos="fade-up" data-aos-delay="200">WEBSITE OSIS SMA AL-KAHFI ISLAMIC SCHOOL</h1>
         <p data-aos="fade-up" data-aos-delay="400" id="typing-text">Aspiratif • Inovatif • Kolaboratif • Islami</p>
@@ -2727,7 +2665,6 @@
     <div class="nav-overlay" id="nav-overlay"></div>
     <main id="konten-utama">
 
-    <!-- SECTION 1: STRUKTUR OSIS -->
     <div class="container" id="struktur">
         <div class="section-title" data-aos="fade-up">
             <h2>Pengurus OSIS 2026/2027</h2>
@@ -2813,7 +2750,6 @@
         </div>
     </div>
 
-    <!-- SECTION 2: VISI & MISI -->
     <div class="container" id="visi-misi">
         <div class="section-title" data-aos="fade-up">
             <h2>Visi & Misi OSIS</h2>
@@ -2836,7 +2772,6 @@
         </div>
     </div>
 
-    <!-- SECTION 3: PROKER -->
     <div class="container" id="proker">
         <div class="section-title" data-aos="fade-up">
             <h2>Program Kerja Unggulan</h2>
@@ -2865,7 +2800,6 @@
         </div>
     </div>
 
-    <!-- SECTION 4: PENGUMUMAN & AGENDA -->
     <div class="container" id="pengumuman">
         <div class="section-title" data-aos="fade-up">
             <h2>Pengumuman & Agenda</h2>
@@ -2901,7 +2835,6 @@
         </div>
     </div>
 
-    <!-- SECTION 5: GALERI -->
     <div class="container" id="galeri">
         <div class="section-title" data-aos="fade-up">
             <h2>Galeri Kegiatan</h2>
@@ -2911,7 +2844,6 @@
         <div class="gallery-grid" id="galleryGrid" aria-live="polite"></div>
     </div>
 
-    <!-- SECTION 6: KRITIK & SARAN -->
     <div class="container" id="kritik-saran" data-aos="zoom-in">
         <div class="section-title">
             <h2>Kotak Aspirasi</h2>
@@ -2932,7 +2864,7 @@
                     </div>
                     <div class="form-group">
                         <label for="asp-kelas" class="form-label">Kelas</label>
-                        <input id="asp-kelas" class="form-control" type="text" placeholder="Contoh: X" />
+                        <input id="asp-kelas" class="form-control" type="text" placeholder="Masukkan kelas" />
                     </div>
                     <div class="form-group">
                         <label for="asp-category" class="form-label">Kategori</label>
@@ -2961,7 +2893,6 @@
         </div>
     </div>
 
-    <!-- SECTION BARU: KONTAK & SOSIAL MEDIA -->
     <section class="container contact-section-v13" id="kontak" aria-labelledby="contactTitleV13">
         <div class="section-title" data-aos="fade-up">
             <span class="section-kicker-v13">Terhubung dengan OSIS</span>
@@ -3017,7 +2948,6 @@
         </div>
     </section>
 
-    <!-- AREA PRIVAT OSIS -->
     <div class="container" id="osis-area" style="display:none;">
         <div class="section-title dashboard-title">
             <h2>Dashboard Internal OSIS</h2>
@@ -3105,7 +3035,7 @@
 
             <section class="dashboard-panel active" id="aspirationsTab" data-panel="aspirations">
                 <h3 class="section-highlight"><i class="fa-solid fa-table" aria-hidden="true"></i> Hasil Aspirasi & Kritik Siswa</h3>
-                <p class="section-subtext">Cari aspirasi, ubah status, atau hapus satu per satu.</p>
+                <p class="section-subtext">Kelola aspirasi siswa.</p>
                 <div class="dashboard-toolbar v9-filter-grid">
                     <input id="asp-search" class="form-control" type="search" placeholder="Cari nama, kelas, pesan, atau catatan..." aria-label="Cari aspirasi">
                     <select id="asp-status-filter" class="form-control" aria-label="Filter status aspirasi">
@@ -3151,7 +3081,7 @@
                 <div class="announcement-section-head-v11">
                     <div>
                         <h3 class="section-highlight"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i> Kelola Pengumuman</h3>
-                        <p class="section-subtext">Buat, jadwalkan, pin, edit, dan cari pengumuman tanpa membuat dashboard terasa penuh.</p>
+                        <p class="section-subtext">Kelola pengumuman publik.</p>
                     </div>
                     <button id="newAnnouncementBtn" type="button" class="secondary-action announcement-new-btn-v11"><i class="fa-solid fa-plus"></i> Pengumuman Baru</button>
                 </div>
@@ -3178,7 +3108,7 @@
                             <div class="announcement-fields-v11">
                                 <div class="form-group announcement-field-wide-v11">
                                     <label for="public-card-title" class="form-label">Judul Pengumuman</label>
-                                    <input id="public-card-title" class="form-control" type="text" maxlength="90" placeholder="Contoh: Rapat Koordinasi OSIS" required>
+                                    <input id="public-card-title" class="form-control" type="text" maxlength="90" placeholder="Judul pengumuman" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="public-card-category" class="form-label">Kategori</label>
@@ -3195,8 +3125,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="public-card-date" class="form-label">Label yang Ditampilkan</label>
-                                    <input id="public-card-date" class="form-control" type="text" maxlength="40" placeholder="Contoh: 15 Agustus 2026">
-                                    <small class="announcement-field-help-v11">Opsional. Bisa juga ditulis “Setiap Saat”.</small>
+                                    <input id="public-card-date" class="form-control" type="text" maxlength="40" placeholder="Tanggal atau keterangan">
                                 </div>
                                 <div class="form-group">
                                     <label for="public-card-start" class="form-label">Mulai Tayang</label>
@@ -3219,12 +3148,12 @@
                                 <label class="announcement-toggle-v11">
                                     <input id="public-card-pinned" type="checkbox">
                                     <span class="announcement-toggle-icon-v11"><i class="fa-solid fa-thumbtack"></i></span>
-                                    <span><strong>Pin di atas</strong><small>Prioritaskan di halaman publik</small></span>
+                                    <span><strong>Pin di atas</strong><small>Prioritas tampilan</small></span>
                                 </label>
                                 <label class="announcement-toggle-v11">
                                     <input id="public-card-active" type="checkbox" checked>
                                     <span class="announcement-toggle-icon-v11"><i class="fa-solid fa-eye"></i></span>
-                                    <span><strong>Aktif</strong><small>Boleh tampil jika masuk masa tayang</small></span>
+                                    <span><strong>Aktif</strong><small>Status publikasi</small></span>
                                 </label>
                             </div>
 
@@ -3277,7 +3206,7 @@
 
             <section class="dashboard-panel" id="galleryTab" data-panel="gallery">
                 <h3 class="section-highlight"><i class="fa-brands fa-google-drive" aria-hidden="true"></i> Kelola Galeri</h3>
-                <p class="section-subtext">Foto galeri disimpan di Google Drive dan dapat langsung ditampilkan kepada pengunjung.</p>
+                <p class="section-subtext">Kelola album dan dokumentasi kegiatan.</p>
 
                 <div class="gallery-admin-card gallery-admin-stack" style="margin-bottom:20px;">
                     <h4>Google Drive</h4>
@@ -3305,11 +3234,11 @@
                         </div>
                         <div class="form-group">
                             <label for="galleryAlbumTitle">Judul Album</label>
-                            <input id="galleryAlbumTitle" class="form-control" type="text" placeholder="Contoh: Lomba Kemerdekaan">
+                            <input id="galleryAlbumTitle" class="form-control" type="text" placeholder="Nama album">
                         </div>
                         <div class="form-group">
                             <label for="galleryAlbumSubtitle">Keterangan</label>
-                            <input id="galleryAlbumSubtitle" class="form-control" type="text" placeholder="Contoh: 17 Agustus 2026">
+                            <input id="galleryAlbumSubtitle" class="form-control" type="text" placeholder="Keterangan album">
                         </div>
                         <div class="gallery-admin-actions">
                             <button id="saveGalleryAlbumBtn" type="button" class="aspirasi-btn"><i class="fa-solid fa-floppy-disk"></i> Simpan Album</button>
@@ -3325,7 +3254,7 @@
                         <h4>Tambah Foto</h4>
                         <label class="gallery-upload-zone" for="galleryPhotoInput">
                             <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
-                            <span><strong>Pilih Foto dari HP</strong><span>Bisa pilih beberapa foto sekaligus</span></span>
+                            <span><strong>Pilih Foto</strong><span>Galeri kegiatan</span></span>
                         </label>
                         <input id="galleryPhotoInput" type="file" accept="image/*" multiple hidden>
                         <div id="galleryPendingPreview" class="gallery-file-preview"></div>
@@ -3357,7 +3286,7 @@
 
             <section class="dashboard-panel" id="eventTab" data-panel="event">
                 <h3 class="section-highlight"><i class="fa-solid fa-calendar-days"></i> Atur Countdown Event</h3>
-                <div class="dashboard-note">Perubahan disimpan di browser ini dan langsung mengubah countdown pada halaman publik.</div>
+                
                 <form id="eventForm" class="admin-form-grid">
                     <div class="dashboard-grid-2">
                         <div class="form-group"><label for="event-name">Nama Event</label><input id="event-name" class="form-control" type="text" required></div>
@@ -3370,7 +3299,7 @@
 
             <section class="dashboard-panel" id="securityTab" data-panel="security">
                 <h3 class="section-highlight"><i class="fa-solid fa-key"></i> Ganti Password Dashboard</h3>
-                <div class="dashboard-note">Password baru akan diproses dengan PBKDF2. Password asli tidak disimpan sebagai teks biasa.</div>
+                
                 <form id="passwordChangeForm" class="admin-form-grid">
                     <div class="form-group"><label for="current-password">Password Saat Ini</label><input id="current-password" class="form-control" type="password" autocomplete="current-password" required></div>
                     <div class="dashboard-grid-2">
@@ -3384,7 +3313,7 @@
 
             <section class="dashboard-panel" id="backupTab" data-panel="backup">
                 <h3 class="section-highlight"><i class="fa-solid fa-box-archive"></i> Backup & Restore</h3>
-                <div class="dashboard-note">Backup menyimpan aspirasi, status, pengumuman, event, dan tema. Data autentikasi/password sengaja tidak dimasukkan.</div>
+                
                 <div class="backup-actions">
                     <button type="button" class="secondary-action" onclick="downloadOsisBackup()"><i class="fa-solid fa-download"></i> Backup Semua Data</button>
                     <button type="button" class="secondary-action" onclick="document.getElementById('restoreBackupInput').click()"><i class="fa-solid fa-upload"></i> Restore Backup</button>
@@ -3395,8 +3324,8 @@
 
             <section class="dashboard-panel" id="qrTab" data-panel="qr">
                 <h3 class="section-highlight"><i class="fa-solid fa-qrcode"></i> QR Code Kotak Aspirasi</h3>
-                <p class="section-subtext">Masukkan alamat website yang sudah dipublish. QR akan langsung menuju bagian Kotak Aspirasi.</p>
-                <div class="form-group"><label for="qr-url">URL Website</label><input id="qr-url" class="form-control" type="url" placeholder="https://contoh.sch.id/osis/"></div>
+                <p class="section-subtext">QR Kotak Aspirasi.</p>
+                <div class="form-group"><label for="qr-url">URL Website</label><input id="qr-url" class="form-control" type="url" placeholder="URL website"></div>
                 <div class="qr-actions" style="margin-top:12px;"><button id="generateQrBtn" type="button" class="aspirasi-btn" style="width:auto;">Buat QR</button></div>
                 <div id="qrPreview" class="qr-preview"><span class="small-note">QR akan tampil di sini.</span></div>
                 <p id="qrMessage" class="inline-message" aria-live="polite"></p>
@@ -3406,7 +3335,6 @@
 
     </main>
 
-    <!-- POP-UP MODAL LOGIN OSIS -->
     <div class="modal-overlay" id="loginModal">
         <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
             <button class="close-btn" onclick="tutupModalLogin()" aria-label="Tutup jendela login">&times;</button>
@@ -3414,10 +3342,10 @@
                 <i class="fa-solid fa-user-shield" aria-hidden="true"></i>
             </div>
             <h3 id="loginModalTitle">Akses Khusus OSIS</h3>
-            <p class="modal-subtext">Masukkan password rahasia pengurus untuk masuk ke dashboard.</p>
+            <p class="modal-subtext">Area khusus pengurus OSIS.</p>
             
             <label for="passwordInput" class="sr-only">Password Area OSIS</label>
-            <input type="password" id="passwordInput" placeholder="Ketik Password..." autocomplete="current-password" onkeyup="checkEnter(event)">
+            <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password" onkeyup="checkEnter(event)">
             <p id="errorMsg" class="form-note" role="alert" aria-live="polite" style="display:none; color:#ef4444; margin-top:8px;">Password salah. Silakan coba lagi.</p>
             <div class="modal-actions">
                 <button class="btn-login-submit" id="loginSubmitBtn" onclick="verifikasiPassword()">Masuk Dashboard</button>
@@ -3425,7 +3353,6 @@
         </div>
     </div>
 
-    <!-- VIEWER FOTO GALERI -->
     <div class="modal-overlay gallery-viewer-overlay" id="lightboxModal">
         <div class="gallery-viewer" role="dialog" aria-modal="true" aria-labelledby="lightboxCaption">
             <div class="gallery-viewer-topbar">
@@ -3453,7 +3380,6 @@
         </div>
     </div>
 
-    <!-- MODAL ALBUM -->
     <div class="modal-overlay" id="albumModal">
         <div class="modal-box album-modal-box" role="dialog" aria-modal="true" aria-labelledby="albumTitle">
             <div class="album-modal-header">
@@ -3467,12 +3393,11 @@
                 <button class="album-close-btn" type="button" onclick="closeAlbum()" aria-label="Tutup album"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
             <div class="album-grid" id="albumDumpGrid">
-                <!-- Foto akan dimasukkan di sini lewat JS -->
+                
             </div>
         </div>
     </div>
 
-    <!-- DETAIL ASPIRASI INTERNAL -->
     <div class="modal-overlay" id="aspDetailModal">
         <div class="modal-box asp-detail-modal" role="dialog" aria-modal="true" aria-labelledby="aspDetailTitle">
             <button class="close-btn" id="closeAspDetailModal" aria-label="Tutup">&times;</button>
@@ -3484,27 +3409,24 @@
                 <div class="form-group"><label for="asp-detail-priority">Prioritas</label><select id="asp-detail-priority" class="form-control"><option value="high">Tinggi</option><option value="normal">Normal</option><option value="low">Rendah</option></select></div>
             </div>
             <div class="form-group"><label for="asp-detail-status">Status</label><select id="asp-detail-status" class="form-control"><option value="unread">Belum Dibaca</option><option value="processing">Sedang Dibahas</option><option value="done">Selesai</option></select></div>
-            <div class="form-group"><label for="asp-detail-note">Catatan Internal Pengurus</label><textarea id="asp-detail-note" class="form-control" rows="5" placeholder="Catatan ini hanya terlihat di dashboard OSIS."></textarea></div>
+            <div class="form-group"><label for="asp-detail-note">Catatan Internal Pengurus</label><textarea id="asp-detail-note" class="form-control" rows="5" placeholder="Catatan internal"></textarea></div>
             <p id="aspDetailMessage" class="inline-message" aria-live="polite"></p>
             <div class="modal-actions"><button id="saveAspDetailBtn" class="aspirasi-btn" type="button"><i class="fa-solid fa-floppy-disk"></i> Simpan</button></div>
         </div>
     </div>
 
-    <!-- TOMBOL-TOMBOL MELAYANG (FLOATING BUTTONS) -->
     <div class="float-container">
-        <!-- 1. Tombol Kembali ke Atas -->
+        
         <button id="scrollTopBtn" class="float-btn top-btn" onclick="window.scrollTo(0,0)" aria-label="Kembali ke atas halaman">
             <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
         </button>
 
-        <!-- 2. Tombol Dark Mode -->
         <button id="theme-toggle" class="float-btn theme-float-btn" aria-label="Ubah tema terang/gelap">
             <i class="fa-solid fa-moon" aria-hidden="true"></i>
         </button>
 
     </div>
 
-    <!-- MODAL SUKSES ASPIRASI -->
     <div class="modal-overlay" id="aspSuccessModal">
         <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="aspSuccessTitle">
             <button class="close-btn" onclick="closeAspSuccess()" aria-label="Tutup">&times;</button>
@@ -3515,14 +3437,13 @@
         </div>
     </div>
 
-    <!-- PWA INSTALL HELP -->
     <div class="modal-overlay" id="pwaInstallModal">
         <div class="modal-box pwa-install-modal" role="dialog" aria-modal="true" aria-labelledby="pwaInstallTitle">
-            <button class="close-btn" id="closePwaInstallModal" aria-label="Tutup panduan install">&times;</button>
+            <button class="close-btn" id="closePwaInstallModal" aria-label="Tutup">&times;</button>
             <div class="modal-icon-shell"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i></div>
             <h3 id="pwaInstallTitle">Install Aplikasi OSIS</h3>
             <p class="modal-subtext" id="pwaInstallText">Tambahkan website OSIS ke layar utama agar dapat dibuka seperti aplikasi.</p>
-            <div class="pwa-install-steps" id="pwaInstallSteps"></div>
+            
             <div class="modal-actions">
                 <button id="pwaNativeInstallBtn" class="aspirasi-btn" type="button">Install Sekarang</button>
             </div>
@@ -3557,12 +3478,11 @@
         </div>
     </footer>
 
-    <!-- SCRIPT (LOGIKA) -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="./gallery-config.js"></script>
     <script>
-        // 1. INISIALISASI ANIMASI SCROLL (AOS) + MODE RINGAN UNTUK HP
+        // Performance
         const lowEndDevice = Boolean(
             window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
             navigator.connection?.saveData ||
@@ -3580,7 +3500,7 @@
             });
         }
 
-        // 2. LOGIKA MENU HAMBURGER (UNTUK HP)
+        // Mobile navigation
         const hamburgerBtn = document.getElementById('hamburger-btn');
         const navLinks = document.getElementById('nav-links');
         const navOverlay = document.getElementById('nav-overlay');
@@ -3601,7 +3521,7 @@
             link.addEventListener('click', closeMobileNav);
         });
 
-        // 3. EFEK TYPING OTOMATIS DI HEADER
+        // Hero
         const words = ["Aspiratif • Inovatif • Kolaboratif • Islami", "Membangun Generasi Unggul & Berkarakter", "Bersama OSIS, Kita Wujudkan Perubahan Positif!"];
         let i = 0;
         let timer;
@@ -3643,7 +3563,7 @@
         }
         typingEffect();
 
-        // 4. LOGIKA DARK MODE MELAYANG & LOCALSTORAGE
+        // Theme
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
         const iconTheme = themeToggle.querySelector('i');
@@ -3667,7 +3587,7 @@
             }
         });
 
-        // 5. LOGIKA TOMBOL SCROLL TO TOP DENGAN ANIMASI
+        // Scroll actions
         const scrollTopBtn = document.getElementById('scrollTopBtn');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 300) {
@@ -3677,10 +3597,7 @@
             }
         });
 
-        // 6. LOGIKA AREA KHUSUS OSIS
-        // Password tidak disimpan sebagai plaintext. Yang disimpan hanya salt + verifier PBKDF2.
-        // Catatan: karena aplikasi sepenuhnya client-side, ini melindungi dari pembacaan kasual
-        // dan membuang password yang bisa didecode, tetapi tidak menggantikan autentikasi backend.
+        // Authentication
         const modal = document.getElementById('loginModal');
         const osisArea = document.getElementById('osis-area');
         const errorMsg = document.getElementById('errorMsg');
@@ -3693,13 +3610,11 @@
         const MAX_LOGIN_ATTEMPTS = 3;
         const LOCKOUT_DURATION_MS = 30 * 1000;
         let loginLockoutTimer = null;
-        // Preview memakai namespace sendiri. Jika ada auth versi utama, salin sekali tanpa mengubah versi utama.
         if (!localStorage.getItem(AUTH_STORAGE_KEY) && localStorage.getItem('osis_auth_v3')) {
             localStorage.setItem(AUTH_STORAGE_KEY, localStorage.getItem('osis_auth_v3'));
         }
         const PBKDF2_ITERATIONS = 210000;
 
-        // Default hanya berisi hasil PBKDF2, bukan password dan bukan secret yang bisa didecode.
         const DEFAULT_AUTH_RECORD = Object.freeze({
             version: 3,
             algorithm: 'PBKDF2-SHA-256',
@@ -3776,7 +3691,6 @@
                     return stored;
                 }
             } catch (e) {
-                // Abaikan record rusak, lalu pulihkan default verifier.
             }
 
             const fallback = { ...DEFAULT_AUTH_RECORD };
@@ -3835,7 +3749,6 @@
                     };
                 }
             } catch (e) {
-                // Record rusak dipulihkan ke kondisi normal.
             }
             return { failedAttempts: 0, lockedUntil: 0 };
         }
@@ -4015,12 +3928,10 @@
 
         modal.addEventListener('click', (e) => { if (e.target === modal) tutupModalLogin(); });
 
-        // Kunci penyimpanan data OSIS dideklarasikan lebih awal agar counter publik dapat membacanya saat halaman dimuat.
         const ASPIRASI_STORAGE_KEY = 'osis_aspirasi_preview_v2';
         const PUBLIC_CARD_STORAGE_KEY = 'osis_public_cards_preview_v2';
         const EVENT_STORAGE_KEY = 'osis_next_event_preview_v2';
 
-        // Salin data versi utama sekali saat preview pertama dibuka. Setelah itu semua perubahan hanya masuk namespace preview.
         [
             ['osis_aspirasi', ASPIRASI_STORAGE_KEY],
             ['osis_public_cards', PUBLIC_CARD_STORAGE_KEY],
@@ -4071,7 +3982,7 @@
             observer.observe(statSection);
         }
 
-        // 7. VIEWER FOTO GALERI
+        // Gallery viewer
         const lightboxModal = document.getElementById('lightboxModal');
         const lightboxImg = document.getElementById('lightboxImg');
         const lightboxCaption = document.getElementById('lightboxCaption');
@@ -4165,13 +4076,7 @@
             }
         });
 
-
-        // 8. GALERI GOOGLE DRIVE
-        const DEFAULT_GALLERY_ALBUMS = [
-            { id:'mos', title:'MOS', subtitle:'Kegiatan sekolah', fallbackCover:'images/galeri-1.jpg', fallbackPhotos:['images/galeri-1.jpg','images/galeri-1-2.jpg','images/galeri-1-3.jpg'], photos:[] },
-            { id:'kemerdekaan', title:'Kemerdekaan', subtitle:'Kegiatan 17 Agustus', fallbackCover:'images/galeri-2.jpg', fallbackPhotos:['images/galeri-2.jpg','images/galeri-2-2.jpg'], photos:[] },
-            { id:'pleno', title:'Pleno OSIS', subtitle:'Kegiatan organisasi', fallbackCover:'images/galeri-3.jpg', fallbackPhotos:['images/galeri-3.jpg','images/galeri-3-2.jpg'], photos:[] }
-        ];
+        // Google Drive gallery
         const DRIVE_UPLOAD_KEY_STORAGE = 'osis_drive_gallery_upload_key_v1';
         const DRIVE_CONFIG = window.OSIS_GALLERY_CONFIG || {};
         let driveGalleryData = {albums:[]};
@@ -4215,8 +4120,7 @@
         }
 
         function getVisibleGalleryAlbums() {
-            const remote = Array.isArray(driveGalleryData?.albums) ? driveGalleryData.albums : [];
-            return remote.length ? remote : DEFAULT_GALLERY_ALBUMS;
+            return Array.isArray(driveGalleryData?.albums) ? driveGalleryData.albums : [];
         }
 
         function loadDriveGalleryData(force=false) {
@@ -4335,9 +4239,7 @@
             grid.innerHTML = '';
             const albums = getVisibleGalleryAlbums();
             const totalPhotos = albums.reduce((sum, album) => {
-                const remoteCount = Array.isArray(album.photos) ? album.photos.length : 0;
-                const fallbackCount = Array.isArray(album.fallbackPhotos) ? album.fallbackPhotos.length : 0;
-                return sum + (remoteCount || fallbackCount);
+                return sum + (Array.isArray(album.photos) ? album.photos.length : 0);
             }, 0);
 
             if (summary) {
@@ -4345,15 +4247,15 @@
             }
 
             if (!albums.length) {
-                grid.innerHTML = '<div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-images"></i></span><strong>Belum ada album foto</strong><small>Dokumentasi kegiatan akan tampil di sini setelah album dipublikasikan.</small></div></div>';
+                grid.innerHTML = '<div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-images"></i></span><strong>Belum ada album foto</strong><small>Galeri masih kosong.</small></div></div>';
                 return;
             }
 
             albums.forEach((album, index) => {
                 const photos = Array.isArray(album.photos) ? album.photos : [];
                 const cover = photos.find(p => p.id === album.coverPhotoId) || photos[0];
-                const coverSrc = galleryPhotoUrl(cover) || album.fallbackCover || '';
-                const photoCount = photos.length || (album.fallbackPhotos?.length || 0);
+                const coverSrc = galleryPhotoUrl(cover);
+                const photoCount = photos.length;
 
                 const button = document.createElement('button');
                 button.type = 'button';
@@ -4414,16 +4316,11 @@
         }
 
         function getAlbumViewerPhotos(album) {
-            if (!album) return [];
-            return Array.isArray(album.photos) && album.photos.length
-                ? album.photos.map((p, i) => ({
-                    src: galleryPhotoUrl(p),
-                    name: p.name || `${album.title || 'Foto'} ${i + 1}`
-                })).filter(p => p.src)
-                : (album.fallbackPhotos || []).map((src, i) => ({
-                    src,
-                    name: `${album.title || 'Foto'} ${i + 1}`
-                }));
+            if (!album || !Array.isArray(album.photos)) return [];
+            return album.photos.map((p, i) => ({
+                src: galleryPhotoUrl(p),
+                name: p.name || `${album.title || 'Foto'} ${i + 1}`
+            })).filter(p => p.src);
         }
 
         function openAlbum(key) {
@@ -4846,10 +4743,10 @@
             if (!grid) return;
             grid.innerHTML = '';
             const album = driveGalleryData.albums?.find(a => a.id === selectedGalleryAlbumId);
-            if (!album) { grid.innerHTML = '<div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-folder-open"></i></span><strong>Pilih album terlebih dahulu</strong><small>Pilih album untuk melihat dan mengelola fotonya.</small></div></div>'; gallerySelectedPhotoIds.clear(); updateGalleryBulkButtons(); return; }
+            if (!album) { grid.innerHTML = '<div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-folder-open"></i></span><strong>Belum ada album dipilih</strong><small>Pilih album dari daftar.</small></div></div>'; gallerySelectedPhotoIds.clear(); updateGalleryBulkButtons(); return; }
             const photos = Array.isArray(album.photos) ? album.photos : [];
             [...gallerySelectedPhotoIds].forEach(id => { if (!photos.some(p => p.id === id)) gallerySelectedPhotoIds.delete(id); });
-            if (!photos.length) { grid.innerHTML = '<div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-image"></i></span><strong>Album masih kosong</strong><small>Pilih foto dari HP lalu upload ke Google Drive.</small></div></div>'; gallerySelectedPhotoIds.clear(); updateGalleryBulkButtons(); return; }
+            if (!photos.length) { grid.innerHTML = '<div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-image"></i></span><strong>Album masih kosong</strong><small>Belum ada foto.</small></div></div>'; gallerySelectedPhotoIds.clear(); updateGalleryBulkButtons(); return; }
 
             photos.forEach((photo, index) => {
                 const card = document.createElement('div');
@@ -4959,7 +4856,7 @@
             }
         }
 
-        // 8. COUNTDOWN AGENDA BERIKUTNYA - dapat diedit dari Dashboard
+        // Countdown
         function getEventConfig() {
             const fallback = { name: 'LOMBA KEMERDEKAAN (17AN) 2026', datetime: '2026-08-17T08:00' };
             try {
@@ -5022,7 +4919,7 @@
         document.addEventListener('visibilitychange', syncCountdownTimer);
         syncCountdownTimer();
 
-        // ASPIRASI FORM & DASHBOARD
+        // Aspirations
         const aspirasiForm = document.getElementById('aspirasiForm');
         const aspPesan = document.getElementById('asp-pesan');
         const aspError = document.getElementById('asp-error');
@@ -5133,7 +5030,7 @@
 
             tbody.innerHTML = '';
             if (!list.length) {
-                tbody.innerHTML = '<tr class="empty-row-v12"><td colspan="9"><div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-message"></i></span><strong>Tidak ada aspirasi yang cocok</strong><small>Coba ubah kata pencarian atau filter yang dipilih.</small></div></div></td></tr>';
+                tbody.innerHTML = '<tr class="empty-row-v12"><td colspan="9"><div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-message"></i></span><strong>Tidak ada aspirasi yang cocok</strong><small>Tidak ada hasil.</small></div></div></td></tr>';
                 updateAspirasiCounters();
                 return;
             }
@@ -5273,7 +5170,7 @@
             const cards = getVisibleAnnouncements();
             container.innerHTML = '';
             if (!cards.length) {
-                container.innerHTML = '<div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-calendar-check"></i></span><strong>Belum ada pengumuman aktif</strong><small>Informasi terbaru akan tampil di sini saat sudah dipublikasikan.</small></div></div>';
+                container.innerHTML = '<div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-calendar-check"></i></span><strong>Belum ada pengumuman aktif</strong><small>Belum ada informasi terbaru.</small></div></div>';
                 return;
             }
             cards.forEach((card, i) => {
@@ -5429,7 +5326,7 @@
             updateCommandCenterV12();
         }
 
-        // DASHBOARD TABS
+        // Dashboard tabs
         function switchOsisTab(tab) {
             document.querySelectorAll('.dashboard-tabs .tab-button').forEach(btn => {
                 const active = btn.dataset.tab === tab;
@@ -5467,7 +5364,7 @@
             showAppToast('Semua aspirasi berhasil dihapus.');
         }
 
-        // BACKUP / RESTORE - sengaja mengecualikan AUTH_STORAGE_KEY
+        // Backup and restore
         function downloadOsisBackup() {
             const payload = {
                 app: 'OSIS SMA Al-Kahfi', version: 3, exportedAt: new Date().toISOString(),
@@ -5516,7 +5413,7 @@
             el.textContent=text; el.className='inline-message' + (type ? ' '+type : '');
         }
 
-        // QR CODE
+        // QR
         function getDefaultQrUrl() {
             const base = location.href.split('#')[0];
             return base.startsWith('http') ? base + '#kritik-saran' : '';
@@ -5531,14 +5428,14 @@
             try { new URL(value); } catch (e) { return setInlineMessage('qrMessage','URL tidak valid. Gunakan alamat lengkap yang diawali https://','error'); }
             preview.innerHTML='';
             if (typeof QRCode !== 'function') {
-                preview.innerHTML='<span class="small-note">Library QR tidak termuat. Pastikan internet tersedia lalu refresh.</span>';
-                return setInlineMessage('qrMessage','QR belum dapat dibuat karena library eksternal tidak termuat.','error');
+                preview.innerHTML='<span class="small-note">QR tidak tersedia.</span>';
+                return setInlineMessage('qrMessage','QR tidak dapat dibuat.','error');
             }
             new QRCode(preview, { text:value, width:210, height:210, colorDark:'#0f172a', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.H });
-            setInlineMessage('qrMessage','QR siap. Arahkan kamera HP untuk menguji sebelum dicetak.','success');
+            setInlineMessage('qrMessage','QR berhasil dibuat.','success');
         }
 
-        // GANTI PASSWORD
+        // Password
         async function handlePasswordChange(e) {
             e.preventDefault();
             const current=document.getElementById('current-password').value;
@@ -5556,7 +5453,7 @@
                 showAppToast('Password berhasil diganti.');
             } catch (err) {
                 console.error(err);
-                setInlineMessage('passwordChangeMessage','Gagal mengganti password. Gunakan HTTPS atau localhost.','error');
+                setInlineMessage('passwordChangeMessage','Gagal mengganti password pada perangkat ini.','error');
             }
         }
 
@@ -5595,15 +5492,12 @@
             renderAspirasiList();
         }
 
-
-
-        // PWA INSTALL + SERVICE WORKER
+        // PWA
         let deferredPwaPrompt = null;
         const installPwaBtn = document.getElementById('installPwaBtn');
         const pwaInstallModal = document.getElementById('pwaInstallModal');
         const pwaNativeInstallBtn = document.getElementById('pwaNativeInstallBtn');
-        const pwaInstallSteps = document.getElementById('pwaInstallSteps');
-        const isIosDevice = /iphone|ipad|ipod/i.test(navigator.userAgent);
+                const isIosDevice = /iphone|ipad|ipod/i.test(navigator.userAgent);
         const isStandalonePwa = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
         function showPwaToast(message, type='info') {
@@ -5625,18 +5519,20 @@
 
         function openPwaInstallModal() {
             if (!pwaInstallModal) return;
-            pwaInstallSteps.innerHTML = '';
+            const installText = document.getElementById('pwaInstallText');
+
             if (deferredPwaPrompt) {
-                pwaInstallSteps.innerHTML = '<div class="pwa-install-step"><b>1</b><span>Tekan <strong>Install Sekarang</strong>.</span></div><div class="pwa-install-step"><b>2</b><span>Konfirmasi pada dialog browser.</span></div><div class="pwa-install-step"><b>3</b><span>Ikon OSIS akan muncul di layar utama.</span></div>';
+                installText.textContent = 'Aplikasi OSIS siap dipasang di perangkat ini.';
                 pwaNativeInstallBtn.hidden = false;
                 pwaNativeInstallBtn.textContent = 'Install Sekarang';
             } else if (isIosDevice) {
-                pwaInstallSteps.innerHTML = '<div class="pwa-install-step"><b>1</b><span>Buka website ini menggunakan <strong>Safari</strong>.</span></div><div class="pwa-install-step"><b>2</b><span>Tekan tombol <strong>Share</strong> di Safari.</span></div><div class="pwa-install-step"><b>3</b><span>Pilih <strong>Add to Home Screen / Tambahkan ke Layar Utama</strong>.</span></div>';
+                installText.textContent = 'Safari → Bagikan → Tambahkan ke Layar Utama.';
                 pwaNativeInstallBtn.hidden = true;
             } else {
-                pwaInstallSteps.innerHTML = '<div class="pwa-install-step"><b>1</b><span>Buka menu browser.</span></div><div class="pwa-install-step"><b>2</b><span>Pilih <strong>Install app</strong> atau <strong>Add to Home Screen</strong>.</span></div><div class="pwa-install-step"><b>3</b><span>Pastikan website sudah dipublish melalui HTTPS.</span></div>';
+                installText.textContent = 'Gunakan opsi Install aplikasi pada menu browser.';
                 pwaNativeInstallBtn.hidden = true;
             }
+
             pwaInstallModal.style.display = 'flex';
         }
 
@@ -5702,13 +5598,11 @@
         document.getElementById('pwaUpdateLaterBtn')?.addEventListener('click', () => { if (pwaUpdateBar) pwaUpdateBar.hidden = true; });
         window.addEventListener('load', registerPwaServiceWorker);
 
-
         const bootGallery = () => initializeGallerySystem();
         if ('requestIdleCallback' in window) requestIdleCallback(bootGallery, {timeout:1200});
         else setTimeout(bootGallery, 250);
 
-
-        // V11: announcement manager enhancements
+        // Announcement manager
         const ANNOUNCEMENT_CATEGORIES_V11 = ['Informasi','Kegiatan','Lomba','Rapat','Akademik','Prestasi','Pendaftaran','Penting'];
 
         function normalizeAnnouncement(item) {
@@ -5784,7 +5678,7 @@
             container.innerHTML = '';
 
             if (!list.length) {
-                container.innerHTML = '<div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-folder-open"></i></span><strong>Tidak ada pengumuman yang cocok</strong><small>Coba ubah kata pencarian atau filter.</small></div></div>';
+                container.innerHTML = '<div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-folder-open"></i></span><strong>Tidak ada pengumuman yang cocok</strong><small>Tidak ada hasil.</small></div></div>';
                 return;
             }
 
@@ -5889,9 +5783,7 @@
             renderAdminPublicCards();
         }
 
-
-
-        // V13+: smart quick actions, contact utilities, accessibility
+        // UI utilities
         function updateQuickActionsV13() {
             const aspirations = getAspirasiList();
             const unread = aspirations.filter(item => normalizeAspiration(item).status === 'unread').length;
@@ -5975,7 +5867,6 @@
             initializeAccessibilityV13();
             updateQuickActionsV13();
         }
-
 
         initializeOsisAdmin();
         initializeAnnouncementV11();
