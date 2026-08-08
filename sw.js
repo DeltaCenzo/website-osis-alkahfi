@@ -1,4 +1,4 @@
-const CACHE_NAME = 'osis-alkahfi-pwa-v14-contact-cleanup';
+const CACHE_NAME = 'osis-alkahfi-pwa-v15-no-bottom-nav';
 const CORE_ASSETS = [
   './', './index.html', './404.html', './manifest.webmanifest', './gallery-config.js',
   './icons/icon-192.png', './icons/icon-512.png'

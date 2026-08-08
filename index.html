@@ -2605,10 +2605,8 @@
 
 
 
-        /* V13: mobile navigation, smart actions, contact polish, micro-interactions, accessibility */
+        /* V13+: smart actions, contact polish, micro-interactions, accessibility */
         .section-kicker-v13 { display:block; margin-bottom:6px; color:var(--primary); font-size:.72rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
-
-        .mobile-bottom-nav-v13 { display:none; }
 
         .command-actions-v13 { grid-template-columns:repeat(2,minmax(0,1fr)); }
         .command-actions-v13 button { position:relative; padding-right:13px; }
@@ -2658,7 +2656,7 @@
         /* Accessibility improvements */
         button, [role="button"], .contact-action-v13, .social-channel-v13 { touch-action:manipulation; }
         .dashboard-tabs .tab-button { min-height:44px; }
-        .contact-action-v13, .mobile-bottom-nav-v13 a, .mobile-bottom-nav-v13 button { min-width:44px; }
+        .contact-action-v13 { min-width:44px; }
         [aria-disabled="true"] { pointer-events:none; }
 
         [data-theme="dark"] .contact-card-v13,
@@ -2673,25 +2671,9 @@
         }
 
         @media (max-width:768px) {
-            body { padding-bottom:calc(82px + env(safe-area-inset-bottom)); }
-            .mobile-bottom-nav-v13 {
-                position:fixed; left:max(10px,env(safe-area-inset-left)); right:max(10px,env(safe-area-inset-right)); bottom:max(8px,env(safe-area-inset-bottom)); z-index:1900;
-                display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); align-items:stretch; gap:2px;
-                padding:6px; border:1px solid var(--border-color); border-radius:20px;
-                background:color-mix(in srgb,var(--nav-bg) 94%,transparent); box-shadow:0 16px 44px rgba(15,23,42,.2);
-                backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
-            }
-            .mobile-bottom-nav-v13 a, .mobile-bottom-nav-v13 button {
-                min-height:56px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
-                padding:5px 3px; border:0; border-radius:14px; background:transparent; color:var(--text-muted); text-decoration:none; font:inherit; cursor:pointer;
-            }
-            .mobile-bottom-nav-v13 i { font-size:1rem; transition:transform .18s ease; }
-            .mobile-bottom-nav-v13 span { font-size:.62rem; line-height:1; font-weight:750; }
-            .mobile-bottom-nav-v13 a.active, .mobile-bottom-nav-v13 a[aria-current="page"], .mobile-bottom-nav-v13 button[aria-expanded="true"] { background:color-mix(in srgb,var(--primary) 11%,transparent); color:var(--primary); }
-            .mobile-bottom-nav-v13 a.active i, .mobile-bottom-nav-v13 a[aria-current="page"] i, .mobile-bottom-nav-v13 button[aria-expanded="true"] i { transform:translateY(-1px); }
-            .float-container { bottom:calc(86px + env(safe-area-inset-bottom))!important; }
-            .pwa-toast { bottom:calc(88px + env(safe-area-inset-bottom))!important; }
-            .pwa-update-bar { bottom:calc(86px + env(safe-area-inset-bottom))!important; }
+            .float-container { bottom:calc(16px + env(safe-area-inset-bottom))!important; }
+            .pwa-toast { bottom:calc(18px + env(safe-area-inset-bottom))!important; }
+            .pwa-update-bar { bottom:calc(16px + env(safe-area-inset-bottom))!important; }
             footer { margin-bottom:0; }
             .footer-inner-v13, .footer-bottom-v13 { align-items:flex-start; flex-direction:column; }
             .footer-links-v13 { gap:9px 16px; }
@@ -2702,19 +2684,15 @@
             .contact-card-v13 { padding:18px; border-radius:18px; }
             .command-actions-v13 { grid-template-columns:1fr; }
         }
-        @media (max-width:370px) {
-            .mobile-bottom-nav-v13 span { font-size:.56rem; }
-            .mobile-bottom-nav-v13 { left:6px; right:6px; }
-        }
         @media (prefers-reduced-motion:reduce) {
-            .mobile-bottom-nav-v13 i, .contact-card-v13, .leadership-card-v12, .division-card-v12, .command-stat-v12 { transition:none!important; }
+            .contact-card-v13, .leadership-card-v12, .division-card-v12, .command-stat-v12 { transition:none!important; }
             button:active, a.hero-btn:active, .contact-action-v13:active { transform:none!important; }
         }
-        html.perf-lite .mobile-bottom-nav-v13 { backdrop-filter:none!important; -webkit-backdrop-filter:none!important; }
 
     </style>
 </head>
 <body id="top">
+    <!-- V15: bottom navigation removed; hamburger navigation remains the mobile menu. -->
 
     <a href="#konten-utama" class="skip-link">Langsung ke konten utama</a>
 
@@ -2747,25 +2725,6 @@
         </div>
     </nav>
     <div class="nav-overlay" id="nav-overlay"></div>
-
-    <nav class="mobile-bottom-nav-v13" id="mobileBottomNavV13" aria-label="Navigasi cepat">
-        <a href="#top" data-mobile-section="home" aria-label="Beranda">
-            <i class="fa-solid fa-house" aria-hidden="true"></i><span>Beranda</span>
-        </a>
-        <a href="#pengumuman" data-mobile-section="pengumuman" aria-label="Agenda dan pengumuman">
-            <i class="fa-solid fa-calendar-days" aria-hidden="true"></i><span>Agenda</span>
-        </a>
-        <a href="#galeri" data-mobile-section="galeri" aria-label="Galeri kegiatan">
-            <i class="fa-solid fa-images" aria-hidden="true"></i><span>Galeri</span>
-        </a>
-        <a href="#kritik-saran" data-mobile-section="aspirasi" aria-label="Kotak aspirasi">
-            <i class="fa-solid fa-comments" aria-hidden="true"></i><span>Aspirasi</span>
-        </a>
-        <button type="button" id="mobileMenuButtonV13" aria-label="Buka menu lengkap" aria-controls="nav-links" aria-expanded="false">
-            <i class="fa-solid fa-bars" aria-hidden="true"></i><span>Menu</span>
-        </button>
-    </nav>
-
     <main id="konten-utama">
 
     <!-- SECTION 1: STRUKTUR OSIS -->
@@ -3630,7 +3589,6 @@
             navLinks.classList.remove('active');
             navOverlay.classList.remove('active');
             hamburgerBtn.setAttribute('aria-expanded', 'false');
-            document.getElementById('mobileMenuButtonV13')?.setAttribute('aria-expanded', 'false');
         }
 
         hamburgerBtn.addEventListener('click', () => {
@@ -5933,7 +5891,7 @@
 
 
 
-        // V13: mobile navigation, smart quick actions, contact utilities, accessibility
+        // V13+: smart quick actions, contact utilities, accessibility
         function updateQuickActionsV13() {
             const aspirations = getAspirasiList();
             const unread = aspirations.filter(item => normalizeAspiration(item).status === 'unread').length;
@@ -5958,58 +5916,6 @@
                 const d = new Date(event.datetime);
                 eventText.textContent = Number.isNaN(d.getTime()) ? 'Atur event berikutnya' : d.toLocaleDateString('id-ID', {day:'numeric', month:'short'});
             }
-        }
-
-        function setMobileBottomActiveV13(section) {
-            document.querySelectorAll('#mobileBottomNavV13 a[data-mobile-section]').forEach(link => {
-                const active = link.dataset.mobileSection === section;
-                link.classList.toggle('active', active);
-                if (active) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
-            });
-        }
-
-        function initializeMobileBottomNavV13() {
-            const bottomNav = document.getElementById('mobileBottomNavV13');
-            const menuBtn = document.getElementById('mobileMenuButtonV13');
-            if (!bottomNav) return;
-
-            menuBtn?.addEventListener('click', () => {
-                const willOpen = !navLinks.classList.contains('active');
-                if (willOpen) {
-                    navLinks.classList.add('active');
-                    navOverlay.classList.add('active');
-                    hamburgerBtn.setAttribute('aria-expanded','true');
-                    menuBtn.setAttribute('aria-expanded','true');
-                } else closeMobileNav();
-            });
-
-            bottomNav.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    closeMobileNav();
-                    const section = link.dataset.mobileSection || 'home';
-                    setMobileBottomActiveV13(section);
-                });
-            });
-
-            const tracked = [
-                ['pengumuman', document.getElementById('pengumuman')],
-                ['galeri', document.getElementById('galeri')],
-                ['aspirasi', document.getElementById('kritik-saran')]
-            ].filter(([,el]) => el);
-            if ('IntersectionObserver' in window) {
-                const observer = new IntersectionObserver(entries => {
-                    const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
-                    if (visible) {
-                        const found = tracked.find(([,el]) => el === visible.target);
-                        if (found) setMobileBottomActiveV13(found[0]);
-                    } else if (window.scrollY < Math.max(420, window.innerHeight * .55)) setMobileBottomActiveV13('home');
-                }, {rootMargin:'-25% 0px -58% 0px', threshold:[0,.05,.2]});
-                tracked.forEach(([,el]) => observer.observe(el));
-            }
-            window.addEventListener('scroll', () => {
-                if (window.scrollY < 300) setMobileBottomActiveV13('home');
-            }, {passive:true});
-            setMobileBottomActiveV13('home');
         }
 
         async function copyTextV13(text, label='Teks') {
@@ -6065,7 +5971,6 @@
         }
 
         function initializeV13Ux() {
-            initializeMobileBottomNavV13();
             initializeContactV13();
             initializeAccessibilityV13();
             updateQuickActionsV13();
