@@ -1,0 +1,38 @@
+/* =========================================================
+   PERFORMANCE GUARDS — V24
+   Keep first paint cheap while preserving the full UI.
+   ========================================================= */
+
+/* Defer rendering of far-below-the-fold public sections. The intrinsic
+   placeholder prevents large scroll jumps before they are rendered. */
+@supports (content-visibility: auto) {
+    #visi-misi,
+    #proker,
+    #pengumuman,
+    #galeri,
+    #kritik-saran,
+    #kontak {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 760px;
+    }
+}
+
+/* Save-data / lower-memory devices get the same information with less
+   GPU-heavy glass and decorative motion. */
+html.perf-lite .card-box,
+html.perf-lite .feature-card,
+html.perf-lite nav,
+html.perf-lite #osis-area .dashboard-nav-v14,
+html.perf-lite .modal-box {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+
+html.perf-lite header::after,
+html.perf-lite .logo-img {
+    animation: none !important;
+}
+
+html.perf-lite .motion-pending {
+    opacity: 1 !important;
+}
