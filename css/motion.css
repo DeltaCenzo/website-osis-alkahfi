@@ -1,0 +1,150 @@
+/* =========================================================
+   MOTION SYSTEM — V24
+   Native IntersectionObserver + Web Animations replacement
+   for the previous AOS dependency.
+   ========================================================= */
+
+:root {
+    --motion-duration: 520ms;
+    --motion-distance: 18px;
+    --motion-ease: cubic-bezier(.2,.72,.2,1);
+}
+
+/* Elements are only hidden after motion.js has bound them, so a JS
+   failure never leaves website content invisible. */
+.motion-pending {
+    opacity: 0 !important;
+}
+
+.motion-animating {
+    will-change: transform, opacity;
+}
+
+/* Keep hero copy geometrically stable while its phrase changes. */
+#typing-text {
+    width: min(760px, 100%);
+    height: 2.1em;
+    min-height: 2.1em;
+    margin-inline: auto;
+    display: grid;
+    place-items: start center;
+    align-content: start;
+    overflow: hidden;
+    text-align: center;
+    contain: layout;
+}
+
+/* Give translated cards a little breathing room so borders/shadows are
+   not cropped at grid edges during hover/reveal. */
+#osis-area .command-stats-v12,
+#osis-area .dashboard-summary,
+.leadership-grid-v12,
+.board-support-grid-v12,
+.division-grid-v12,
+.grid-layout,
+.contact-grid-v13 {
+    overflow: visible;
+}
+
+#osis-area .command-stats-v12,
+#osis-area .dashboard-summary {
+    padding: 6px 2px 10px;
+    margin: -6px -2px 6px;
+}
+
+#osis-area .dashboard-shell,
+#osis-area .dashboard-panel {
+    overflow: visible !important;
+}
+
+/* Refined micro-interactions: enough feedback without large jumps that
+   can look clipped or make the page feel unstable. */
+@media (hover: hover) and (pointer: fine) {
+    .card-box,
+    .feature-card,
+    .leadership-card-v12,
+    .division-card-v12,
+    .contact-card-v13,
+    #osis-area .command-stat-v12,
+    #osis-area .dashboard-stat,
+    .gallery-item {
+        transform-origin: center center;
+        transition-duration: 220ms !important;
+        transition-timing-function: var(--motion-ease) !important;
+    }
+
+    .card-box:hover,
+    .feature-card:hover,
+    .leadership-card-v12:hover,
+    .division-card-v12:hover,
+    .contact-card-v13:hover,
+    #osis-area .command-stat-v12:hover,
+    #osis-area .dashboard-stat:hover {
+        transform: translate3d(0,-4px,0) !important;
+    }
+
+    .gallery-item:hover {
+        transform: translate3d(0,-3px,0) !important;
+    }
+
+    .hero-btn:hover,
+    .contact-action-v13:hover,
+    .social-channel-v13:not(.is-disabled):hover {
+        transform: translate3d(0,-2px,0) !important;
+    }
+}
+
+button,
+a,
+summary,
+.gallery-item {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:active,
+.hero-btn:active,
+.secondary-action:active,
+.mini-btn:active {
+    transform: scale(.985);
+}
+
+/* Small entrance polish for dialogs without continuously animating them. */
+@keyframes modalPopV24 {
+    from { opacity: .35; transform: translate3d(0,8px,0) scale(.985); }
+    to { opacity: 1; transform: none; }
+}
+
+.modal[style*="display: flex"] .modal-box,
+.modal-overlay[style*="display: flex"] .modal-box {
+    animation: modalPopV24 220ms var(--motion-ease) both;
+}
+
+@media (max-width: 600px) {
+    #typing-text {
+        height: 3.35em;
+        min-height: 3.35em;
+        align-content: start;
+        line-height: 1.55;
+        padding-inline: 6px;
+    }
+
+    /* Mobile relies on tap feedback rather than hover translation. */
+    .card-box,
+    .feature-card,
+    .leadership-card-v12,
+    .division-card-v12,
+    .contact-card-v13,
+    #osis-area .command-stat-v12,
+    #osis-area .dashboard-stat,
+    .gallery-item {
+        transform: none !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .motion-pending { opacity: 1 !important; }
+    .modal[style*="display: flex"] .modal-box,
+    .modal-overlay[style*="display: flex"] .modal-box {
+        animation: none !important;
+    }
+}
