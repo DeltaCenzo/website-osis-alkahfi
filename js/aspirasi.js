@@ -23,6 +23,26 @@ let aspirasiRemoteCache = [];
 let aspirasiAdminToken = sessionStorage.getItem(ASPIRASI_SESSION_KEY) || '';
 let aspirasiRemoteLoading = false;
 
+// ID acak lokal untuk rate-limit dasar di backend. Ini bukan identitas siswa
+// dan tidak dikirim ke layanan selain backend OSIS.
+const OSIS_CLIENT_ID_KEY = 'osis_client_id_v1';
+
+function getOsisClientId() {
+    try {
+        let value = localStorage.getItem(OSIS_CLIENT_ID_KEY) || '';
+        if (!/^[A-Za-z0-9_-]{16,80}$/.test(value)) {
+            value = (globalThis.crypto?.randomUUID?.() ||
+                ('c_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2)))
+                .replace(/[^A-Za-z0-9_-]/g, '')
+                .slice(0, 80);
+            localStorage.setItem(OSIS_CLIENT_ID_KEY, value);
+        }
+        return value;
+    } catch (error) {
+        return '';
+    }
+}
+
 function getAspirasiApiUrl() {
     const url = String(ASPIRASI_API_URL || '').trim();
     if (!url || url.includes('GANTI_DENGAN_URL')) {
@@ -367,7 +387,7 @@ async function verifikasiPassword() {
 
     try {
         // Verifikasi password di backend, bukan localStorage browser.
-        const result = await aspirasiApi('login', { password: typed });
+        const result = await aspirasiApi('login', { password: typed, clientId: getOsisClientId() });
         setAspirasiAdminToken(result.token);
 
         resetLoginGuard();
@@ -414,6 +434,12 @@ async function verifikasiPassword() {
             } catch (eventError) {
                 console.error('[Event] Login berhasil tetapi event gagal dimuat:', eventError);
             }
+        }
+
+        if (typeof initializePushForAdmin === 'function') {
+            initializePushForAdmin({silent:true}).catch(pushError => {
+                console.warn('[Push] Login berhasil tetapi notifikasi belum siap:', pushError.message);
+            });
         }
     } catch (error) {
         console.error('[Aspirasi] Login gagal:', error);
@@ -524,7 +550,9 @@ async function saveAspirasi(item) {
         nama: item.name || 'Anonim',
         kelas: item.kelas || '-',
         kategori: item.category || 'Saran Umum',
-        aspirasi: item.message || ''
+        aspirasi: item.message || '',
+        clientId: getOsisClientId(),
+        website: item.website || ''
     });
     await refreshPublicAspirasiCount();
     if (aspirasiAdminToken && osisArea?.style.display === 'block') {
@@ -553,6 +581,13 @@ function updateAspirasiCounters() {
     Object.entries(ids).forEach(([id,key]) => { const el=document.getElementById(id); if(el) el.textContent=counts[key]; });
     const totalText = document.getElementById('dashTotalAspTextV12'); if (totalText) totalText.textContent = `${counts.total} total aspirasi`;
     const high = document.getElementById('dashHighPriorityAspV12'); if (high) high.textContent = list.filter(i => i.priority === 'high' && i.status !== 'done').length;
+    const quickCounts = {
+        aspQuickAllCountV14: counts.total,
+        aspQuickUnreadCountV14: counts.unread,
+        aspQuickProcessingCountV14: counts.processing,
+        aspQuickDoneCountV14: counts.done
+    };
+    Object.entries(quickCounts).forEach(([id, value]) => { const el = document.getElementById(id); if (el) el.textContent = value; });
     // Counter publik diambil dari endpoint count agar tetap benar sebelum admin login.
     if (aspirasiAdminToken) {
         const publicCounter = document.querySelector('#aspirasiCounter .stat-number');
@@ -568,22 +603,69 @@ function getPriorityMeta(priority) {
     })[priority] || {label:'Normal', cls:'priority-normal'};
 }
 
+function populateAspirationClassFilter(list) {
+    const select = document.getElementById('asp-class-filter');
+    if (!select) return;
+    const current = select.value || 'all';
+    const classes = [...new Set((list || []).map(item => String(item.kelas || '').trim()).filter(value => value && value !== '-'))]
+        .sort((a, b) => a.localeCompare(b, 'id', {numeric:true, sensitivity:'base'}));
+    select.innerHTML = '<option value="all">Semua kelas</option>' + classes.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join('');
+    select.value = classes.includes(current) ? current : 'all';
+}
+
+function syncAspirationQuickFilters() {
+    const status = document.getElementById('asp-status-filter')?.value || 'all';
+    const priority = document.getElementById('asp-priority-filter')?.value || 'all';
+    let mode = 'all';
+    if (priority === 'high' && status === 'all') mode = 'high';
+    else if (['unread','processing','done'].includes(status) && priority === 'all') mode = status;
+    document.querySelectorAll('[data-asp-quick]').forEach(button => {
+        button.classList.toggle('active', button.dataset.aspQuick === mode);
+    });
+}
+
+function updateAspirationFilterSummary(filteredCount, totalCount) {
+    const result = document.getElementById('aspFilterResultV14');
+    const query = (document.getElementById('asp-search')?.value || '').trim();
+    const filters = [
+        document.getElementById('asp-status-filter')?.value || 'all',
+        document.getElementById('asp-class-filter')?.value || 'all',
+        document.getElementById('asp-category-filter')?.value || 'all',
+        document.getElementById('asp-priority-filter')?.value || 'all'
+    ];
+    const activeCount = filters.filter(value => value !== 'all').length + (query ? 1 : 0);
+    if (result) result.textContent = activeCount
+        ? `Menampilkan ${filteredCount} dari ${totalCount} aspirasi`
+        : `Menampilkan ${totalCount} aspirasi`;
+    const badge = document.getElementById('aspActiveFilterCountV14');
+    if (badge) badge.textContent = activeCount ? `${activeCount} aktif` : '';
+    syncAspirationQuickFilters();
+}
+
 function renderAspirasiList() {
     const tbody = document.getElementById('osisTbody');
     if (!tbody) return;
+    const allItems = getAspirasiList();
+    populateAspirationClassFilter(allItems);
     const query = (document.getElementById('asp-search')?.value || '').trim().toLowerCase();
     const statusFilter = document.getElementById('asp-status-filter')?.value || 'all';
+    const classFilter = document.getElementById('asp-class-filter')?.value || 'all';
     const categoryFilter = document.getElementById('asp-category-filter')?.value || 'all';
     const priorityFilter = document.getElementById('asp-priority-filter')?.value || 'all';
-    let list = getAspirasiList();
+    let list = allItems.slice();
     if (query) list = list.filter(item => [item.name,item.kelas,item.category,item.message,item.internalNote].some(v => String(v || '').toLowerCase().includes(query)));
     if (statusFilter !== 'all') list = list.filter(item => item.status === statusFilter);
+    if (classFilter !== 'all') list = list.filter(item => String(item.kelas || '') === classFilter);
     if (categoryFilter !== 'all') list = list.filter(item => item.category === categoryFilter);
     if (priorityFilter !== 'all') list = list.filter(item => item.priority === priorityFilter);
 
+    updateAspirationFilterSummary(list.length, allItems.length);
     tbody.innerHTML = '';
     if (!list.length) {
-        tbody.innerHTML = '<tr class="empty-row-v12"><td colspan="9"><div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-message"></i></span><strong>Belum ada aspirasi</strong><small>Data dari Google Sheets akan muncul di sini.</small></div></div></td></tr>';
+        const hasFilters = Boolean(query || statusFilter !== 'all' || classFilter !== 'all' || categoryFilter !== 'all' || priorityFilter !== 'all');
+        tbody.innerHTML = hasFilters
+            ? '<tr class="empty-row-v12"><td colspan="9"><div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-solid fa-filter-circle-xmark"></i></span><strong>Tidak ada hasil yang cocok</strong><small>Coba ubah kata pencarian atau reset filter.</small></div></div></td></tr>'
+            : '<tr class="empty-row-v12"><td colspan="9"><div class="empty-state-v12"><div><span class="empty-icon-v12"><i class="fa-regular fa-message"></i></span><strong>Belum ada aspirasi</strong><small>Data dari Google Sheets akan muncul di sini.</small></div></div></td></tr>';
         updateAspirasiCounters();
         return;
     }
@@ -698,7 +780,7 @@ async function handlePasswordChange(e) {
     if (next.length < 12) return setInlineMessage('passwordChangeMessage', 'Password baru minimal 12 karakter.', 'error');
     if (next !== confirmNext) return setInlineMessage('passwordChangeMessage', 'Konfirmasi password baru tidak sama.', 'error');
     try {
-        const reauth = await aspirasiApi('login', { password: current });
+        const reauth = await aspirasiApi('login', { password: current, clientId: getOsisClientId() });
         setInlineMessage('passwordChangeMessage', 'Mengganti password backend...');
         await aspirasiApi('changePassword', { token: reauth.token, newPassword: next });
         setAspirasiAdminToken('');

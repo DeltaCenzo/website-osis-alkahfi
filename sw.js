@@ -1,5 +1,5 @@
 /* OSIS SMA Al-Kahfi - Service Worker */
-const VERSION = "v31"; // naikkan saat deploy perubahan
+const VERSION = "v36"; // naikkan saat deploy perubahan
 const STATIC_CACHE = `osis-alkahfi-pwa-static-${VERSION}`;
 const RUNTIME_CACHE = `osis-alkahfi-pwa-runtime-${VERSION}`;
 
@@ -17,6 +17,7 @@ const CORE_ASSETS = [
   "./css/polish.css",
   "./js/core.js",
   "./js/aspirasi.js",
+  "./js/push.js",
   "./js/gallery.js",
   "./js/countdown.js",
   "./js/announcements.js",
@@ -96,8 +97,10 @@ async function handleNavigation(request) {
     return response;
   } catch (err) {
     const cache = await caches.open(STATIC_CACHE);
+    const cachedHome = await cache.match("./index.html");
+    if (cachedHome) return cachedHome;
     const cached404 = await cache.match("./404.html");
-    return cached404 || new Response("404 - Offline", { status: 404 });
+    return cached404 || new Response("Offline", { status: 503 });
   }
 }
 

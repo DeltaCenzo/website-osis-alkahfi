@@ -77,7 +77,8 @@ if (aspirasiForm) {
             name: document.getElementById('asp-nama').value.trim() || 'Anonim',
             kelas: document.getElementById('asp-kelas').value.trim() || '-',
             category: document.getElementById('asp-category').value || 'Saran Umum',
-            message: aspPesan.value.trim()
+            message: aspPesan.value.trim(),
+            website: document.getElementById('asp-website')?.value || ''
         };
 
         try {

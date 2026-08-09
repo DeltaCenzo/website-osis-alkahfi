@@ -249,15 +249,18 @@ function resetAspirationFiltersV9() {
         document.getElementById(
             'asp-category-filter'
         );
-    const priority =
-        document.getElementById(
-            'asp-priority-filter'
-        );
+    const priority = document.getElementById('asp-priority-filter');
+    const classFilter = document.getElementById('asp-class-filter');
 
     if (search) search.value = '';
     if (status) status.value = 'all';
     if (category) category.value = 'all';
     if (priority) priority.value = 'all';
+    if (classFilter) classFilter.value = 'all';
+
+    document.querySelectorAll('[data-asp-quick]').forEach(button => {
+        button.classList.toggle('active', button.dataset.aspQuick === 'all');
+    });
 
     renderAspirasiList();
 
@@ -268,7 +271,7 @@ function initializeDashboardTabKeyboardV9() {
     const tabs =
         Array.from(
             document.querySelectorAll(
-                '.dashboard-tabs .tab-button'
+                '.dashboard-tabs-primary-v14 .tab-button'
             )
         );
 
@@ -340,7 +343,7 @@ function initializeCommandCenterV12() {
         button.addEventListener('click', () => {
             const tab = button.dataset.commandTab;
             switchOsisTab(tab);
-            document.querySelector('.dashboard-tabs')?.scrollIntoView({behavior:'smooth', block:'start'});
+            document.querySelector('.dashboard-nav-v14')?.scrollIntoView({behavior:'smooth', block:'start'});
             if (button.dataset.commandAction === 'new-announcement') {
                 setTimeout(() => document.getElementById('newAnnouncementBtn')?.click(), 300);
             }
@@ -351,28 +354,28 @@ function initializeCommandCenterV12() {
 
 // Dashboard tabs
 function switchOsisTab(tab) {
-    document.querySelectorAll('.dashboard-tabs .tab-button').forEach(btn => {
+    document.querySelectorAll('.dashboard-nav-v14 .tab-button').forEach(btn => {
         const active = btn.dataset.tab === tab;
         btn.classList.toggle('active', active);
         btn.setAttribute('aria-selected', String(active));
-        btn.tabIndex = active ? 0 : -1;
-        if (active && window.innerWidth <= 600) btn.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+        const isPrimary = Boolean(btn.closest('.dashboard-tabs-primary-v14'));
+        if (isPrimary) btn.tabIndex = active ? 0 : -1;
+        else btn.tabIndex = 0;
+        if (active && isPrimary && window.innerWidth <= 600) btn.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
     });
     document.querySelectorAll('.dashboard-panel').forEach(panel => {
-        const active =
-            panel.dataset.panel === tab;
-
-        panel.classList.toggle(
-            'active',
-            active
-        );
-
+        const active = panel.dataset.panel === tab;
+        panel.classList.toggle('active', active);
         panel.hidden = !active;
-        panel.setAttribute(
-            'aria-hidden',
-            String(!active)
-        );
+        panel.setAttribute('aria-hidden', String(!active));
     });
+
+    const tools = document.getElementById('dashboardToolsMenuV14');
+    const isToolTab = ['notifications', 'security', 'backup', 'qr'].includes(tab);
+    if (tools) {
+        tools.classList.toggle('has-active-tool', isToolTab);
+        if (isToolTab) tools.open = true;
+    }
 }
 
 function populateEventForm() {
@@ -497,7 +500,13 @@ function generateAspirationQr() {
 // Password
 
 function initializeOsisAdmin() {
-    document.querySelectorAll('.dashboard-tabs .tab-button').forEach(button => button.addEventListener('click', () => switchOsisTab(button.dataset.tab)));
+    document.querySelectorAll('.dashboard-nav-v14 .tab-button').forEach(button => button.addEventListener('click', () => {
+        switchOsisTab(button.dataset.tab);
+        if (button.closest('.dashboard-tools-popover-v14')) {
+            const menu = document.getElementById('dashboardToolsMenuV14');
+            if (menu && window.innerWidth <= 760) menu.open = false;
+        }
+    }));
 
     initializeDashboardTabKeyboardV9();
 
@@ -519,6 +528,29 @@ function initializeOsisAdmin() {
     document.getElementById('asp-status-filter')?.addEventListener('change', renderAspirasiList);
     document.getElementById('asp-category-filter')?.addEventListener('change', renderAspirasiList);
     document.getElementById('asp-priority-filter')?.addEventListener('change', renderAspirasiList);
+    document.getElementById('asp-class-filter')?.addEventListener('change', renderAspirasiList);
+
+    document.querySelectorAll('[data-asp-quick]').forEach(button => {
+        button.addEventListener('click', () => {
+            const mode = button.dataset.aspQuick || 'all';
+            const status = document.getElementById('asp-status-filter');
+            const priority = document.getElementById('asp-priority-filter');
+            if (status) status.value = ['unread','processing','done'].includes(mode) ? mode : 'all';
+            if (priority) priority.value = mode === 'high' ? 'high' : 'all';
+            document.querySelectorAll('[data-asp-quick]').forEach(item => item.classList.toggle('active', item === button));
+            renderAspirasiList();
+        });
+    });
+
+    document.addEventListener('keydown', event => {
+        if ((event.ctrlKey || event.metaKey) && String(event.key).toLowerCase() === 'k' && osisArea?.style.display === 'block') {
+            event.preventDefault();
+            switchOsisTab('aspirations');
+            const search = document.getElementById('asp-search');
+            search?.focus({preventScroll:false});
+            search?.select?.();
+        }
+    });
 
     const publicCardForm = document.getElementById('publicCardForm');
     publicCardForm?.addEventListener('submit', handleAnnouncementSubmit);

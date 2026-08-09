@@ -100,7 +100,7 @@
 
     <nav aria-label="Navigasi utama">
         <div class="brand-label"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Menu OSIS</div>
-        <button class="hamburger" id="hamburger-btn" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="nav-links"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+        <button type="button" class="hamburger" id="hamburger-btn" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="nav-links"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
         <div class="nav-links" id="nav-links">
             <a href="#struktur"><i class="fa-solid fa-sitemap" aria-hidden="true"></i> Pengurus</a>
             <a href="#visi-misi"><i class="fa-solid fa-bullseye" aria-hidden="true"></i> Visi & Misi</a>
@@ -109,7 +109,7 @@
             <a href="#galeri"><i class="fa-solid fa-images" aria-hidden="true"></i> Galeri</a>
             <a href="#kritik-saran"><i class="fa-solid fa-comments" aria-hidden="true"></i> Aspirasi</a>
             <a href="#kontak"><i class="fa-solid fa-address-book" aria-hidden="true"></i> Kontak</a>
-            <button onclick="bukaModalLogin()"><i class="fa-solid fa-lock" aria-hidden="true"></i> Area OSIS</button>
+            <button type="button" onclick="bukaModalLogin()"><i class="fa-solid fa-lock" aria-hidden="true"></i> Area OSIS</button>
             <button id="installPwaBtn" class="pwa-install-trigger nav-install-btn" type="button" aria-label="Install aplikasi OSIS"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i> Install Aplikasi OSIS</button>
         </div>
     </nav>
@@ -315,6 +315,10 @@
                     </div>
                 </div>
                 <form id="aspirasiForm" novalidate aria-describedby="asp-privacy">
+                    <div class="asp-honeypot" aria-hidden="true">
+                        <label for="asp-website">Website</label>
+                        <input id="asp-website" type="text" tabindex="-1" autocomplete="off" />
+                    </div>
                     <div class="form-group">
                         <label for="asp-nama" class="form-label">Nama <span class="optional-label">(opsional)</span></label>
                         <input id="asp-nama" class="form-control" type="text" placeholder="Kosongkan jika ingin anonim" maxlength="80" autocomplete="name" />
@@ -502,71 +506,84 @@
                         <button type="button" data-command-tab="event">
                             <i class="fa-solid fa-calendar-plus" aria-hidden="true"></i><span>Atur Event<small id="quickEventTextV13">Ubah countdown</small></span>
                         </button>
-                        <button type="button" data-command-tab="backup">
-                            <i class="fa-solid fa-box-archive" aria-hidden="true"></i><span>Backup Data<small>Simpan salinan data lokal</small></span>
-                        </button>
-                        <button type="button" data-command-tab="qr">
-                            <i class="fa-solid fa-qrcode" aria-hidden="true"></i><span>QR Aspirasi<small>Siapkan QR untuk siswa</small></span>
-                        </button>
                     </div>
                 </section>
             </div>
 
-            <div class="dashboard-tabs" role="tablist" aria-label="Menu dashboard OSIS">
-                <button class="tab-button active" id="dashboardTabAspirations" type="button" role="tab" aria-selected="true" aria-controls="aspirationsTab" data-tab="aspirations"><i class="fa-solid fa-inbox"></i> Aspirasi</button>
-                <button class="tab-button" id="dashboardTabAnnouncements" type="button" role="tab" aria-selected="false" aria-controls="announcementsTab" data-tab="announcements"><i class="fa-solid fa-bullhorn"></i> Pengumuman</button>
-                <button class="tab-button" id="dashboardTabGallery" type="button" role="tab" aria-selected="false" aria-controls="galleryTab" data-tab="gallery"><i class="fa-solid fa-images"></i> Galeri</button>
-                <button class="tab-button" id="dashboardTabEvent" type="button" role="tab" aria-selected="false" aria-controls="eventTab" data-tab="event"><i class="fa-solid fa-calendar-days"></i> Event</button>
-                <button class="tab-button" id="dashboardTabSecurity" type="button" role="tab" aria-selected="false" aria-controls="securityTab" data-tab="security"><i class="fa-solid fa-key"></i> Password</button>
-                <button class="tab-button" id="dashboardTabBackup" type="button" role="tab" aria-selected="false" aria-controls="backupTab" data-tab="backup"><i class="fa-solid fa-box-archive"></i> Backup</button>
-                <button class="tab-button" id="dashboardTabQr" type="button" role="tab" aria-selected="false" aria-controls="qrTab" data-tab="qr"><i class="fa-solid fa-qrcode"></i> QR Aspirasi</button>
+            <div class="dashboard-nav-v14" aria-label="Menu Dashboard OSIS">
+                <div class="dashboard-tabs dashboard-tabs-primary-v14" role="tablist" aria-label="Fitur utama dashboard">
+                    <button class="tab-button active" id="dashboardTabAspirations" type="button" role="tab" aria-selected="true" aria-controls="aspirationsTab" data-tab="aspirations"><i class="fa-solid fa-inbox"></i> Aspirasi</button>
+                    <button class="tab-button" id="dashboardTabAnnouncements" type="button" role="tab" aria-selected="false" aria-controls="announcementsTab" data-tab="announcements"><i class="fa-solid fa-bullhorn"></i> Pengumuman</button>
+                    <button class="tab-button" id="dashboardTabGallery" type="button" role="tab" aria-selected="false" aria-controls="galleryTab" data-tab="gallery"><i class="fa-solid fa-images"></i> Galeri</button>
+                    <button class="tab-button" id="dashboardTabEvent" type="button" role="tab" aria-selected="false" aria-controls="eventTab" data-tab="event"><i class="fa-solid fa-calendar-days"></i> Event</button>
+                </div>
+                <details class="dashboard-tools-v14" id="dashboardToolsMenuV14">
+                    <summary><i class="fa-solid fa-ellipsis" aria-hidden="true"></i><span>Lainnya</span></summary>
+                    <div class="dashboard-tools-popover-v14" role="group" aria-label="Pengaturan dan alat">
+                        <button class="tab-button" id="dashboardTabNotifications" type="button" role="tab" aria-selected="false" aria-controls="notificationsTab" data-tab="notifications"><i class="fa-solid fa-bell"></i><span>Notifikasi</span></button>
+                        <button class="tab-button" id="dashboardTabSecurity" type="button" role="tab" aria-selected="false" aria-controls="securityTab" data-tab="security"><i class="fa-solid fa-key"></i><span>Password</span></button>
+                        <button class="tab-button" id="dashboardTabBackup" type="button" role="tab" aria-selected="false" aria-controls="backupTab" data-tab="backup"><i class="fa-solid fa-box-archive"></i><span>Backup</span></button>
+                        <button class="tab-button" id="dashboardTabQr" type="button" role="tab" aria-selected="false" aria-controls="qrTab" data-tab="qr"><i class="fa-solid fa-qrcode"></i><span>QR Aspirasi</span></button>
+                    </div>
+                </details>
             </div>
-            <p class="dashboard-tabs-hint-v9" aria-hidden="true">
-                <i class="fa-solid fa-arrows-left-right"></i>
-                Geser menu untuk melihat semua fitur
-            </p>
 
             <section class="dashboard-panel active" id="aspirationsTab" role="tabpanel" aria-labelledby="dashboardTabAspirations" data-panel="aspirations">
                 <h3 class="section-highlight"><i class="fa-solid fa-table" aria-hidden="true"></i> Hasil Aspirasi & Kritik Siswa</h3>
                 <p class="section-subtext">Kelola aspirasi siswa.</p>
-                <div class="dashboard-filter-head-v9">
-                    <div>
-                        <strong><i class="fa-solid fa-filter" aria-hidden="true"></i> Filter Aspirasi</strong>
-                        <span>Gunakan pencarian atau filter untuk mempersempit data.</span>
+                <div class="asp-filter-v14">
+                    <div class="asp-search-row-v14">
+                        <label class="asp-search-box-v14" for="asp-search">
+                            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                            <input id="asp-search" type="search" placeholder="Cari nama, kelas, pesan, kategori, atau catatan..." aria-label="Cari aspirasi">
+                            <kbd>Ctrl K</kbd>
+                        </label>
+                        <button id="resetAspFiltersV9" type="button" class="dashboard-filter-reset-v9">
+                            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Reset
+                        </button>
                     </div>
-                    <button id="resetAspFiltersV9" type="button" class="dashboard-filter-reset-v9">
-                        <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
-                        Reset
-                    </button>
-                </div>
-                <div class="dashboard-toolbar v9-filter-grid">
-                    <input id="asp-search" class="form-control" type="search" placeholder="Cari nama, kelas, pesan, atau catatan..." aria-label="Cari aspirasi">
-                    <select id="asp-status-filter" class="form-control" aria-label="Filter status aspirasi">
-                        <option value="all">Semua status</option>
-                        <option value="unread">Belum Dibaca</option>
-                        <option value="processing">Sedang Dibahas</option>
-                        <option value="done">Selesai</option>
-                    </select>
-                    <select id="asp-category-filter" class="form-control" aria-label="Filter kategori aspirasi">
-                        <option value="all">Semua kategori</option>
-                        <option value="Fasilitas Sekolah">Fasilitas Sekolah</option>
-                        <option value="Kebersihan &amp; Lingkungan">Kebersihan &amp; Lingkungan</option>
-                        <option value="Kegiatan OSIS">Kegiatan OSIS</option>
-                        <option value="Akademik &amp; Pembelajaran">Akademik &amp; Pembelajaran</option>
-                        <option value="Keamanan &amp; Ketertiban">Keamanan &amp; Ketertiban</option>
-                        <option value="Kantin &amp; Konsumsi">Kantin &amp; Konsumsi</option>
-                        <option value="Teknologi &amp; Wi-Fi">Teknologi &amp; Wi-Fi</option>
-                        <option value="Kesehatan &amp; UKS">Kesehatan &amp; UKS</option>
-                        <option value="Sarana Ibadah">Sarana Ibadah</option>
-                        <option value="Saran Umum">Saran Umum</option>
-                        <option value="Lainnya">Lainnya</option>
-                    </select>
-                    <select id="asp-priority-filter" class="form-control" aria-label="Filter prioritas aspirasi">
-                        <option value="all">Semua prioritas</option>
-                        <option value="high">Tinggi</option>
-                        <option value="normal">Normal</option>
-                        <option value="low">Rendah</option>
-                    </select>
+                    <div class="asp-quick-filter-v14" role="group" aria-label="Filter cepat aspirasi">
+                        <button type="button" class="asp-filter-chip-v14 active" data-asp-quick="all">Semua <span id="aspQuickAllCountV14">0</span></button>
+                        <button type="button" class="asp-filter-chip-v14" data-asp-quick="unread">Baru <span id="aspQuickUnreadCountV14">0</span></button>
+                        <button type="button" class="asp-filter-chip-v14" data-asp-quick="processing">Dibahas <span id="aspQuickProcessingCountV14">0</span></button>
+                        <button type="button" class="asp-filter-chip-v14" data-asp-quick="done">Selesai <span id="aspQuickDoneCountV14">0</span></button>
+                        <button type="button" class="asp-filter-chip-v14" data-asp-quick="high"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Prioritas Tinggi</button>
+                    </div>
+                    <details class="asp-advanced-filter-v14">
+                        <summary><i class="fa-solid fa-sliders" aria-hidden="true"></i> Filter lanjutan <span id="aspActiveFilterCountV14"></span></summary>
+                        <div class="dashboard-toolbar v14-filter-grid">
+                            <select id="asp-status-filter" class="form-control" aria-label="Filter status aspirasi">
+                                <option value="all">Semua status</option>
+                                <option value="unread">Belum Dibaca</option>
+                                <option value="processing">Sedang Dibahas</option>
+                                <option value="done">Selesai</option>
+                            </select>
+                            <select id="asp-class-filter" class="form-control" aria-label="Filter kelas aspirasi">
+                                <option value="all">Semua kelas</option>
+                            </select>
+                            <select id="asp-category-filter" class="form-control" aria-label="Filter kategori aspirasi">
+                                <option value="all">Semua kategori</option>
+                                <option value="Fasilitas Sekolah">Fasilitas Sekolah</option>
+                                <option value="Kebersihan &amp; Lingkungan">Kebersihan &amp; Lingkungan</option>
+                                <option value="Kegiatan OSIS">Kegiatan OSIS</option>
+                                <option value="Akademik &amp; Pembelajaran">Akademik &amp; Pembelajaran</option>
+                                <option value="Keamanan &amp; Ketertiban">Keamanan &amp; Ketertiban</option>
+                                <option value="Kantin &amp; Konsumsi">Kantin &amp; Konsumsi</option>
+                                <option value="Teknologi &amp; Wi-Fi">Teknologi &amp; Wi-Fi</option>
+                                <option value="Kesehatan &amp; UKS">Kesehatan &amp; UKS</option>
+                                <option value="Sarana Ibadah">Sarana Ibadah</option>
+                                <option value="Saran Umum">Saran Umum</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                            <select id="asp-priority-filter" class="form-control" aria-label="Filter prioritas aspirasi">
+                                <option value="all">Semua prioritas</option>
+                                <option value="high">Tinggi</option>
+                                <option value="normal">Normal</option>
+                                <option value="low">Rendah</option>
+                            </select>
+                        </div>
+                    </details>
+                    <div class="asp-filter-result-v14" id="aspFilterResultV14" aria-live="polite">Menampilkan 0 aspirasi</div>
                 </div>
                 <div class="osis-table-wrapper">
                     <table id="osisTable" class="osis-table aspiration-v9-table">
@@ -575,8 +592,8 @@
                     </table>
                 </div>
                 <div class="table-button-row">
-                    <button onclick="exportAspirasiCSV()" class="secondary-action"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
-                    <button onclick="clearAspirasiStorage()" class="secondary-action" style="color:#dc2626;"><i class="fa-solid fa-trash"></i> Hapus Semua</button>
+                    <button type="button" onclick="exportAspirasiCSV()" class="secondary-action"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+                    <button type="button" onclick="clearAspirasiStorage()" class="secondary-action" style="color:#dc2626;"><i class="fa-solid fa-trash"></i> Hapus Semua</button>
                 </div>
             </section>
 
@@ -680,7 +697,7 @@
                         <div class="announcement-toolbar-v11">
                             <label class="announcement-search-v11">
                                 <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-                                <input id="announcementSearch" type="search" placeholder="Cari judul atau isi..." autocomplete="off">
+                                <input id="announcementSearch" type="search" placeholder="Cari judul atau isi..." autocomplete="off" aria-label="Cari pengumuman">
                             </label>
                             <select id="announcementStatusFilter" aria-label="Filter status pengumuman">
                                 <option value="all">Semua status</option>
@@ -708,78 +725,133 @@
             </section>
 
             <section class="dashboard-panel" id="galleryTab" role="tabpanel" aria-labelledby="dashboardTabGallery" data-panel="gallery">
-                <h3 class="section-highlight"><i class="fa-brands fa-google-drive" aria-hidden="true"></i> Kelola Galeri</h3>
-                <p class="section-subtext">Kelola album dan dokumentasi kegiatan.</p>
-
-                <div class="gallery-admin-card gallery-admin-stack" style="margin-bottom:20px;">
-                    <h4>Google Drive</h4>
-                    <div id="driveGalleryStatus" class="dashboard-note">Memeriksa koneksi galeri...</div>
-                    <div class="dashboard-note" id="driveGallerySecurityStatus">
-                        <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
-                        Upload dan pengelolaan galeri menggunakan sesi admin. Kunci upload tidak disimpan di browser.
+                <div class="gallery-admin-heading">
+                    <div>
+                        <h3 class="section-highlight"><i class="fa-brands fa-google-drive" aria-hidden="true"></i> Kelola Galeri</h3>
+                        <p class="section-subtext">Ikuti 3 langkah sederhana: pilih album, pilih foto, lalu rapikan hasilnya.</p>
                     </div>
-                    <div class="gallery-admin-actions">
-                        <button id="testDriveGalleryBtn" type="button" class="secondary-action"><i class="fa-solid fa-rotate"></i> Periksa Koneksi</button>
-                        <a id="openDriveGalleryBtn" class="secondary-action" href="#" target="_blank" rel="noopener noreferrer" style="display:none;text-decoration:none;"><i class="fa-brands fa-google-drive"></i> Buka Folder Drive</a>
-                    </div>
-                    <p id="driveGalleryMessage" class="inline-message" aria-live="polite"></p>
                 </div>
 
-                <div class="gallery-admin-layout">
-                    <div class="gallery-admin-card gallery-admin-stack">
-                        <h4>Album</h4>
-                        <div class="form-group">
-                            <label for="galleryAlbumSelect">Pilih Album</label>
+                <div class="gallery-status-bar" aria-live="polite">
+                    <div class="gallery-status-copy">
+                        <span class="gallery-status-icon"><i class="fa-brands fa-google-drive" aria-hidden="true"></i></span>
+                        <div>
+                            <strong>Google Drive</strong>
+                            <div id="driveGalleryStatus" class="gallery-status-text">Memeriksa koneksi galeri...</div>
+                            <div class="gallery-security-note" id="driveGallerySecurityStatus"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Akses upload dilindungi sesi admin.</div>
+                        </div>
+                    </div>
+                    <div class="gallery-status-actions">
+                        <button id="testDriveGalleryBtn" type="button" class="gallery-icon-action" title="Periksa koneksi" aria-label="Periksa koneksi Google Drive"><i class="fa-solid fa-rotate"></i></button>
+                        <a id="openDriveGalleryBtn" class="gallery-icon-action" href="#" target="_blank" rel="noopener noreferrer" style="display:none;" title="Buka folder Drive" aria-label="Buka folder Google Drive"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                    <p id="driveGalleryMessage" class="inline-message gallery-status-message" aria-live="polite"></p>
+                </div>
+
+                <div class="gallery-workflow" aria-label="Langkah mengelola galeri">
+                    <div class="gallery-workflow-step is-active" id="galleryWorkflowStep1"><span>1</span><div><strong>Pilih album</strong><small>Tentukan tempat foto</small></div></div>
+                    <div class="gallery-workflow-line" aria-hidden="true"></div>
+                    <div class="gallery-workflow-step" id="galleryWorkflowStep2"><span>2</span><div><strong>Tambah foto</strong><small>Pilih lalu upload</small></div></div>
+                    <div class="gallery-workflow-line" aria-hidden="true"></div>
+                    <div class="gallery-workflow-step" id="galleryWorkflowStep3"><span>3</span><div><strong>Rapikan</strong><small>Cover & urutan</small></div></div>
+                </div>
+
+                <div id="galleryUndoBar" class="gallery-undo-bar" hidden aria-live="polite">
+                    <div><i class="fa-solid fa-trash-arrow-up" aria-hidden="true"></i><span id="galleryUndoText">Item akan dihapus.</span><small id="galleryUndoCountdown"></small></div>
+                    <button id="galleryUndoBtn" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Batalkan</button>
+                </div>
+
+                <div class="gallery-admin-layout gallery-simple-layout">
+                    <div class="gallery-admin-card gallery-admin-stack gallery-step-card">
+                        <div class="gallery-step-head">
+                            <span class="gallery-step-number">1</span>
+                            <div><h4>Pilih Album</h4><p>Foto baru akan dimasukkan ke album yang dipilih.</p></div>
+                        </div>
+
+                        <div class="form-group gallery-album-picker">
+                            <label for="galleryAlbumSelect">Album yang sedang dikelola</label>
                             <select id="galleryAlbumSelect" class="form-control"></select>
                         </div>
-                        <div class="form-group">
-                            <label for="galleryAlbumTitle">Judul Album</label>
-                            <input id="galleryAlbumTitle" class="form-control" type="text" placeholder="Nama album">
-                        </div>
-                        <div class="form-group">
-                            <label for="galleryAlbumSubtitle">Keterangan</label>
-                            <input id="galleryAlbumSubtitle" class="form-control" type="text" placeholder="Keterangan album">
-                        </div>
-                        <div class="gallery-admin-actions">
-                            <button id="saveGalleryAlbumBtn" type="button" class="aspirasi-btn"><i class="fa-solid fa-floppy-disk"></i> Simpan Album</button>
-                            <button id="newGalleryAlbumBtn" type="button" class="secondary-action"><i class="fa-solid fa-plus"></i> Album Baru</button>
-                            <button id="moveGalleryAlbumUpBtn" type="button" class="secondary-action"><i class="fa-solid fa-arrow-up"></i> Naik</button>
-                            <button id="moveGalleryAlbumDownBtn" type="button" class="secondary-action"><i class="fa-solid fa-arrow-down"></i> Turun</button>
-                            <button id="deleteGalleryAlbumBtn" type="button" class="secondary-action" style="color:#dc2626;"><i class="fa-solid fa-trash"></i> Hapus Album</button>
-                        </div>
+
+                        <button id="newGalleryAlbumBtn" type="button" class="secondary-action gallery-create-album-btn"><i class="fa-solid fa-plus"></i> Buat Album Baru</button>
+
+                        <details class="gallery-settings-details" id="galleryAlbumSettings">
+                            <summary><span><i class="fa-solid fa-pen" aria-hidden="true"></i> Edit nama & pengaturan album</span><i class="fa-solid fa-chevron-down gallery-details-chevron" aria-hidden="true"></i></summary>
+                            <div class="gallery-settings-body">
+                                <div class="form-group">
+                                    <label for="galleryAlbumTitle">Judul Album</label>
+                                    <input id="galleryAlbumTitle" class="form-control" type="text" placeholder="Contoh: Lomba 17 Agustus">
+                                </div>
+                                <div class="form-group">
+                                    <label for="galleryAlbumSubtitle">Keterangan <span class="gallery-optional-label">opsional</span></label>
+                                    <input id="galleryAlbumSubtitle" class="form-control" type="text" placeholder="Contoh: Dokumentasi kegiatan sekolah">
+                                </div>
+                                <button id="saveGalleryAlbumBtn" type="button" class="aspirasi-btn"><i class="fa-solid fa-check"></i> Simpan Album</button>
+
+                                <div class="gallery-advanced-divider"><span>Urutan &amp; pengaturan</span></div>
+                                <p class="gallery-settings-help"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i> Geser album untuk mengubah urutan. Di HP, gunakan panah.</p>
+                                <div id="galleryAlbumOrderList" class="gallery-album-order-list" aria-label="Urutan album"></div>
+                                <div class="gallery-advanced-actions gallery-album-fallback-actions">
+                                    <button id="moveGalleryAlbumUpBtn" type="button" class="gallery-mini-btn"><i class="fa-solid fa-arrow-up"></i> Naik</button>
+                                    <button id="moveGalleryAlbumDownBtn" type="button" class="gallery-mini-btn"><i class="fa-solid fa-arrow-down"></i> Turun</button>
+                                    <button id="deleteGalleryAlbumBtn" type="button" class="gallery-mini-btn danger"><i class="fa-solid fa-trash"></i> Hapus Album</button>
+                                </div>
+                            </div>
+                        </details>
                         <p id="galleryAlbumMessage" class="inline-message" aria-live="polite"></p>
                     </div>
 
-                    <div class="gallery-admin-card gallery-admin-stack">
-                        <h4>Tambah Foto</h4>
-                        <label class="gallery-upload-zone" for="galleryPhotoInput">
-                            <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
-                            <span><strong>Pilih Foto</strong><span>Galeri kegiatan</span></span>
+                    <div class="gallery-admin-card gallery-admin-stack gallery-step-card">
+                        <div class="gallery-step-head">
+                            <span class="gallery-step-number">2</span>
+                            <div><h4>Tambah Foto</h4><p id="galleryUploadTarget">Pilih album terlebih dahulu.</p></div>
+                        </div>
+
+                        <label class="gallery-upload-zone gallery-upload-zone-simple" for="galleryPhotoInput">
+                            <span class="gallery-upload-icon"><i class="fa-solid fa-images" aria-hidden="true"></i></span>
+                            <span><strong>Pilih foto dari perangkat</strong><span>Bisa pilih beberapa foto sekaligus.</span></span>
+                            <span class="gallery-upload-cta">Pilih Foto</span>
                         </label>
                         <input id="galleryPhotoInput" type="file" accept="image/*" multiple hidden>
+                        <div class="gallery-selection-summary" id="gallerySelectionSummary"><i class="fa-regular fa-image" aria-hidden="true"></i> Belum ada foto dipilih</div>
                         <div id="galleryPendingPreview" class="gallery-file-preview"></div>
-                        <div class="gallery-admin-actions">
-                            <button id="uploadGalleryPhotosBtn" type="button" class="aspirasi-btn" disabled><i class="fa-brands fa-google-drive"></i> Upload ke Drive</button>
-                            <button id="retryGalleryUploadsBtn" type="button" class="secondary-action" hidden><i class="fa-solid fa-rotate-right"></i> Coba Lagi yang Gagal</button>
-                            <button id="clearGallerySelectionBtn" type="button" class="secondary-action" disabled>Batal</button>
+
+                        <button id="uploadGalleryPhotosBtn" type="button" class="aspirasi-btn gallery-upload-primary" disabled><i class="fa-solid fa-cloud-arrow-up"></i> Upload Foto</button>
+                        <div class="gallery-upload-secondary-actions">
+                            <button id="retryGalleryUploadsBtn" type="button" class="gallery-text-action" hidden><i class="fa-solid fa-rotate-right"></i> Coba lagi yang gagal</button>
+                            <button id="clearGallerySelectionBtn" type="button" class="gallery-text-action danger" disabled><i class="fa-solid fa-xmark"></i> Batalkan pilihan</button>
                         </div>
-                        <div id="galleryUploadProgress" class="gallery-progress" aria-hidden="true"><span></span></div>
+                        <div class="gallery-upload-progress-wrap" id="galleryUploadProgressWrap" hidden>
+                            <div class="gallery-upload-progress-meta"><strong id="galleryUploadProgressText">Menyiapkan upload...</strong><span id="galleryUploadProgressPercent">0%</span></div>
+                            <div id="galleryUploadProgress" class="gallery-progress" role="progressbar" aria-label="Progress upload foto" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+                            <div class="gallery-upload-stats" id="galleryUploadStats">Kompresi otomatis aktif.</div>
+                        </div>
                         <p id="galleryUploadMessage" class="inline-message" aria-live="polite"></p>
                     </div>
                 </div>
 
-                <div class="gallery-admin-card" style="margin-top:20px;">
-                    <div class="gallery-manager-head">
-                        <div>
-                            <h4 style="margin:0;">Foto dalam Album</h4>
-                            <small class="gallery-manager-hint">Desktop: drag untuk mengurutkan. HP: gunakan tombol panah.</small>
+                <div class="gallery-admin-card gallery-manager-card">
+                    <div class="gallery-manager-head gallery-manager-head-simple">
+                        <div class="gallery-step-head gallery-step-head-inline">
+                            <span class="gallery-step-number">3</span>
+                            <div>
+                                <h4>Rapikan Foto</h4>
+                                <p id="galleryManagerAlbumName">Pilih album untuk melihat fotonya.</p>
+                            </div>
                         </div>
-                        <div class="gallery-admin-actions compact">
+                        <button id="refreshDriveGalleryBtn" type="button" class="gallery-icon-action" title="Muat ulang galeri" aria-label="Muat ulang galeri"><i class="fa-solid fa-rotate"></i></button>
+                    </div>
+
+                    <div class="gallery-manager-tip"><i class="fa-regular fa-lightbulb" aria-hidden="true"></i><span><strong>Tips:</strong> tekan <b>Cover</b> pada foto utama. Geser foto di desktop atau gunakan panah di HP untuk mengubah urutan.</span></div>
+
+                    <details class="gallery-bulk-details">
+                        <summary><span><i class="fa-solid fa-list-check" aria-hidden="true"></i> Pilih atau hapus beberapa foto</span><i class="fa-solid fa-chevron-down gallery-details-chevron" aria-hidden="true"></i></summary>
+                        <div class="gallery-admin-actions compact gallery-bulk-actions">
                             <button id="selectAllGalleryPhotosBtn" type="button" class="gallery-mini-btn"><i class="fa-regular fa-square-check"></i> Pilih Semua</button>
                             <button id="deleteSelectedGalleryPhotosBtn" type="button" class="gallery-mini-btn danger" disabled><i class="fa-solid fa-trash"></i> Hapus Terpilih</button>
-                            <button id="refreshDriveGalleryBtn" type="button" class="gallery-mini-btn"><i class="fa-solid fa-rotate"></i> Refresh</button>
                         </div>
-                    </div>
+                    </details>
+
                     <div id="galleryAdminPhotos" class="gallery-admin-photo-grid"></div>
                 </div>
             </section>
@@ -795,6 +867,66 @@
                     <button class="aspirasi-btn" type="submit">Simpan Countdown</button>
                     <p id="eventMessage" class="inline-message" aria-live="polite"></p>
                 </form>
+            </section>
+
+
+            <section class="dashboard-panel push-admin-panel-v15" id="notificationsTab" role="tabpanel" aria-labelledby="dashboardTabNotifications" data-panel="notifications">
+                <div class="push-admin-head-v15">
+                    <div>
+                        <h3 class="section-highlight"><i class="fa-solid fa-bell" aria-hidden="true"></i> Notifikasi Pengurus OSIS</h3>
+                        <p class="section-subtext">Aktifkan pada HP atau laptop pengurus yang perlu menerima aspirasi dan perubahan penting tanpa harus membuka dashboard terus-menerus.</p>
+                    </div>
+                    <span class="push-status-badge-v15" id="pushStatusBadgeV15" data-state="idle"><i class="fa-regular fa-bell" aria-hidden="true"></i> Belum aktif</span>
+                </div>
+
+                <div class="push-status-card-v15">
+                    <span class="push-status-icon-v15"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i></span>
+                    <div>
+                        <strong id="pushStatusTitleV15">Notifikasi belum aktif</strong>
+                        <span id="pushStatusDetailV15">Aktifkan sekali pada perangkat pengurus yang ingin menerima pemberitahuan.</span>
+                    </div>
+                </div>
+
+                <div class="push-admin-grid-v15">
+                    <div class="push-settings-card-v15">
+                        <label class="form-group" for="pushDeviceNameV15">
+                            <span>Nama perangkat</span>
+                            <input id="pushDeviceNameV15" class="form-control" type="text" maxlength="100" placeholder="Contoh: HP Ketua OSIS">
+                            <small class="form-note">Bebas diganti agar perangkat mudah dikenali jika nanti aksesnya perlu dicabut.</small>
+                        </label>
+
+                        <div class="push-pref-head-v15">
+                            <strong>Jenis notifikasi</strong>
+                            <span>Pilih informasi yang ingin masuk ke perangkat ini.</span>
+                        </div>
+                        <div class="push-pref-grid-v15">
+                            <label><input id="pushPrefAspirasi" type="checkbox" checked><span><i class="fa-solid fa-inbox"></i><b>Aspirasi baru</b><small>Saat siswa mengirim aspirasi.</small></span></label>
+                            <label><input id="pushPrefPengumuman" type="checkbox" checked><span><i class="fa-solid fa-bullhorn"></i><b>Pengumuman</b><small>Saat pengumuman dibuat, diubah, atau dihapus.</small></span></label>
+                            <label><input id="pushPrefEvent" type="checkbox" checked><span><i class="fa-solid fa-calendar-days"></i><b>Event</b><small>Saat event/countdown diperbarui.</small></span></label>
+                            <label><input id="pushPrefGaleri" type="checkbox" checked><span><i class="fa-solid fa-images"></i><b>Galeri</b><small>Album atau foto penting berubah.</small></span></label>
+                            <label><input id="pushPrefKeamanan" type="checkbox" checked><span><i class="fa-solid fa-shield-halved"></i><b>Keamanan</b><small>Perubahan penting seperti password dashboard.</small></span></label>
+                        </div>
+
+                        <div class="push-action-row-v15">
+                            <button id="activatePushBtnV15" type="button" class="aspirasi-btn"><i class="fa-solid fa-bell"></i> Aktifkan di Perangkat Ini</button>
+                            <button id="savePushPrefsBtnV15" type="button" class="secondary-action" disabled><i class="fa-solid fa-floppy-disk"></i> Simpan Preferensi</button>
+                            <button id="testPushBtnV15" type="button" class="secondary-action" disabled><i class="fa-solid fa-paper-plane"></i> Kirim Tes</button>
+                            <button id="disablePushBtnV15" type="button" class="secondary-action danger-action-v15" hidden><i class="fa-solid fa-bell-slash"></i> Nonaktifkan</button>
+                        </div>
+                        <p id="pushAdminMessage" class="form-message push-admin-message-v15" aria-live="polite"></p>
+                    </div>
+
+                    <div class="push-devices-card-v15">
+                        <div class="push-devices-head-v15">
+                            <div><span>Perangkat terdaftar</span><strong><b id="pushDeviceCountV15">0</b> perangkat OSIS</strong></div>
+                            <button id="refreshPushDevicesBtnV15" type="button" class="gallery-mini-btn"><i class="fa-solid fa-rotate"></i> Refresh</button>
+                        </div>
+                        <div id="pushDeviceListV15" class="push-device-list-v15">
+                            <div class="push-device-empty-v15"><i class="fa-regular fa-bell-slash"></i><span>Belum ada perangkat OSIS terdaftar.</span></div>
+                        </div>
+                        <p class="form-note push-ios-note-v15"><i class="fa-brands fa-apple" aria-hidden="true"></i> iPhone/iPad: tambahkan website ke Home Screen terlebih dahulu, lalu buka dari ikon tersebut untuk mengaktifkan Web Push.</p>
+                    </div>
+                </div>
             </section>
 
             <section class="dashboard-panel" id="securityTab" role="tabpanel" aria-labelledby="dashboardTabSecurity" data-panel="security">
@@ -817,7 +949,7 @@
                 <div class="backup-actions">
                     <button type="button" class="secondary-action" onclick="downloadOsisBackup()"><i class="fa-solid fa-download"></i> Backup Semua Data</button>
                     <button type="button" class="secondary-action" onclick="document.getElementById('restoreBackupInput').click()"><i class="fa-solid fa-upload"></i> Restore Backup</button>
-                    <input id="restoreBackupInput" type="file" accept="application/json,.json" hidden>
+                    <input id="restoreBackupInput" type="file" accept="application/json,.json" aria-label="Pilih file backup JSON" hidden>
                 </div>
                 <p id="backupMessage" class="inline-message" aria-live="polite"></p>
             </section>
@@ -837,7 +969,7 @@
 
     <div class="modal-overlay" id="loginModal">
         <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
-            <button class="close-btn" onclick="tutupModalLogin()" aria-label="Tutup jendela login">&times;</button>
+            <button type="button" class="close-btn" onclick="tutupModalLogin()" aria-label="Tutup jendela login">&times;</button>
             <div class="modal-icon-shell">
                 <i class="fa-solid fa-user-shield" aria-hidden="true"></i>
             </div>
@@ -866,7 +998,7 @@
             </div>
             <p id="errorMsg" class="form-note" role="alert" aria-live="polite" style="display:none; color:#ef4444; margin-top:8px;">Password salah. Silakan coba lagi.</p>
             <div class="modal-actions">
-                <button class="btn-login-submit" id="loginSubmitBtn" onclick="verifikasiPassword()">Masuk Dashboard</button>
+                <button type="button" class="btn-login-submit" id="loginSubmitBtn" onclick="verifikasiPassword()">Masuk Dashboard</button>
             </div>
         </div>
     </div>
@@ -918,7 +1050,7 @@
 
     <div class="modal-overlay" id="aspDetailModal">
         <div class="modal-box asp-detail-modal" role="dialog" aria-modal="true" aria-labelledby="aspDetailTitle">
-            <button class="close-btn" id="closeAspDetailModal" aria-label="Tutup">&times;</button>
+            <button type="button" class="close-btn" id="closeAspDetailModal" aria-label="Tutup">&times;</button>
             <h3 id="aspDetailTitle">Detail Aspirasi</h3>
             <p id="aspDetailIdentity" class="modal-subtext"></p>
             <input id="asp-detail-id" type="hidden">
@@ -935,11 +1067,11 @@
 
     <div class="float-container">
         
-        <button id="scrollTopBtn" class="float-btn top-btn" onclick="window.scrollTo(0,0)" aria-label="Kembali ke atas halaman">
+        <button type="button" id="scrollTopBtn" class="float-btn top-btn" onclick="window.scrollTo(0,0)" aria-label="Kembali ke atas halaman">
             <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
         </button>
 
-        <button id="theme-toggle" class="float-btn theme-float-btn" aria-label="Ubah tema terang/gelap">
+        <button type="button" id="theme-toggle" class="float-btn theme-float-btn" aria-label="Ubah tema terang/gelap">
             <i class="fa-solid fa-moon" aria-hidden="true"></i>
         </button>
 
@@ -947,17 +1079,17 @@
 
     <div class="modal-overlay" id="aspSuccessModal">
         <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="aspSuccessTitle">
-            <button class="close-btn" onclick="closeAspSuccess()" aria-label="Tutup">&times;</button>
+            <button type="button" class="close-btn" onclick="closeAspSuccess()" aria-label="Tutup">&times;</button>
             <div class="modal-icon-shell success-shell"><i class="fa-solid fa-check"></i></div>
             <h3 id="aspSuccessTitle">Terima Kasih!</h3>
             <p class="modal-subtext">Aspirasi Anda sudah terkirim dan akan segera kami tampung. Terima kasih atas partisipasinya.</p>
-            <div class="modal-actions"><button class="aspirasi-btn" onclick="closeAspSuccess()">Tutup</button></div>
+            <div class="modal-actions"><button type="button" class="aspirasi-btn" onclick="closeAspSuccess()">Tutup</button></div>
         </div>
     </div>
 
     <div class="modal-overlay" id="pwaInstallModal">
         <div class="modal-box pwa-install-modal" role="dialog" aria-modal="true" aria-labelledby="pwaInstallTitle">
-            <button class="close-btn" id="closePwaInstallModal" aria-label="Tutup panduan install">&times;</button>
+            <button type="button" class="close-btn" id="closePwaInstallModal" aria-label="Tutup panduan install">&times;</button>
             <div class="modal-icon-shell"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i></div>
             <h3 id="pwaInstallTitle">Install Aplikasi OSIS</h3>
             <p class="modal-subtext" id="pwaInstallText">Tambahkan website OSIS ke layar utama agar dapat dibuka seperti aplikasi.</p>
@@ -995,6 +1127,7 @@
     <script src="./aspirasi-config.js" defer></script>
     <script src="./js/core.js" defer></script>
     <script src="./js/aspirasi.js" defer></script>
+    <script src="./js/push.js" defer></script>
     <script src="./js/gallery.js" defer></script>
     <script src="./js/countdown.js" defer></script>
     <script src="./js/announcements.js" defer></script>

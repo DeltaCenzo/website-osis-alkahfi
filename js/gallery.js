@@ -106,7 +106,11 @@ let galleryPendingObjectUrls = [];
 let galleryFailedFiles = [];
 const gallerySelectedPhotoIds = new Set();
 let draggedGalleryPhotoId = null;
+let draggedGalleryAlbumId = null;
 let driveGalleryLoadingPromise = null;
+let galleryPendingDeleteJob = null;
+const galleryPendingDeletePhotoIds = new Set();
+let galleryPendingDeleteAlbumId = null;
 
 const albumModal = document.getElementById('albumModal');
 const albumTitle = document.getElementById('albumTitle');
@@ -123,21 +127,85 @@ function getDriveGalleryUrl() {
     return isDriveGalleryConfigured() ? String(DRIVE_CONFIG.appsScriptUrl).trim() : '';
 }
 
-// Kredensial admin galeri hanya hidup di memory tab ini.
-// Tidak pernah disimpan ke localStorage/sessionStorage.
-let driveAdminKey = '';
-let driveAdminKeyPromise = null;
+function getSelectedGalleryAlbum() {
+    return (driveGalleryData.albums || []).find(album => album.id === selectedGalleryAlbumId) || null;
+}
+
+function updateGalleryAdminGuidance() {
+    const album = getSelectedGalleryAlbum();
+    const titleInput = document.getElementById('galleryAlbumTitle');
+    const draftTitle = titleInput?.value.trim() || '';
+    const pendingCount = galleryPendingFiles.length;
+    const photoCount = Array.isArray(album?.photos) ? album.photos.length : 0;
+
+    const target = document.getElementById('galleryUploadTarget');
+    if (target) {
+        if (album) target.textContent = `Foto akan masuk ke “${album.title || 'Album'}”.`;
+        else if (draftTitle) target.textContent = `Album baru “${draftTitle}” akan dibuat saat upload.`;
+        else target.textContent = 'Pilih album atau buat album baru terlebih dahulu.';
+    }
+
+    const selection = document.getElementById('gallerySelectionSummary');
+    if (selection) {
+        selection.classList.toggle('has-files', pendingCount > 0);
+        selection.innerHTML = pendingCount
+            ? `<i class="fa-solid fa-images" aria-hidden="true"></i> ${pendingCount} foto siap diupload`
+            : '<i class="fa-regular fa-image" aria-hidden="true"></i> Belum ada foto dipilih';
+    }
+
+    const upload = document.getElementById('uploadGalleryPhotosBtn');
+    if (upload) {
+        upload.innerHTML = pendingCount
+            ? `<i class="fa-solid fa-cloud-arrow-up"></i> Upload ${pendingCount} Foto`
+            : '<i class="fa-solid fa-cloud-arrow-up"></i> Upload Foto';
+    }
+
+    const manager = document.getElementById('galleryManagerAlbumName');
+    if (manager) {
+        manager.textContent = album
+            ? `${album.title || 'Album'} • ${photoCount} foto`
+            : 'Pilih album untuk melihat fotonya.';
+    }
+
+    const step1 = document.getElementById('galleryWorkflowStep1');
+    const step2 = document.getElementById('galleryWorkflowStep2');
+    const step3 = document.getElementById('galleryWorkflowStep3');
+    [step1, step2, step3].forEach(step => step?.classList.remove('is-active', 'is-ready'));
+
+    const albumReady = Boolean(album || draftTitle);
+    if (!albumReady) {
+        step1?.classList.add('is-active');
+    } else {
+        step1?.classList.add('is-ready');
+        if (pendingCount > 0) {
+            step2?.classList.add('is-active');
+        } else if (album && photoCount > 0) {
+            step2?.classList.add('is-ready');
+            step3?.classList.add('is-active');
+        } else {
+            step2?.classList.add('is-active');
+        }
+    }
+}
+
+// Token admin galeri hanya hidup di memory tab ini dan memiliki masa berlaku singkat.
+// Secret permanen tidak pernah dikirim ke browser.
+let driveAdminToken = '';
+let driveAdminTokenExpiresAt = 0;
+let driveAdminTokenPromise = null;
 
 function clearDriveAdminCredential() {
-    driveAdminKey = '';
-    driveAdminKeyPromise = null;
+    driveAdminToken = '';
+    driveAdminTokenExpiresAt = 0;
+    driveAdminTokenPromise = null;
 }
 
 window.clearDriveAdminCredential = clearDriveAdminCredential;
 
-async function getDriveAdminKey() {
-    if (driveAdminKey) {
-        return driveAdminKey;
+async function getDriveAdminToken() {
+    const now = Date.now();
+    if (driveAdminToken && driveAdminTokenExpiresAt > now + 30000) {
+        return driveAdminToken;
     }
 
     if (!aspirasiAdminToken) {
@@ -146,33 +214,33 @@ async function getDriveAdminKey() {
         );
     }
 
-    if (driveAdminKeyPromise) {
-        return driveAdminKeyPromise;
+    if (driveAdminTokenPromise) {
+        return driveAdminTokenPromise;
     }
 
-    driveAdminKeyPromise = aspirasiApi(
+    driveAdminTokenPromise = aspirasiApi(
         'galleryCredential',
-        {
-            token: aspirasiAdminToken
-        }
+        { token: aspirasiAdminToken }
     )
         .then(result => {
-            const key = String(result?.key || '').trim();
+            const token = String(result?.token || '').trim();
+            const expiresInSeconds = Math.max(60, Number(result?.expiresInSeconds) || 600);
 
-            if (!key) {
+            if (!token) {
                 throw new Error(
-                    'Backend tidak memberikan kredensial galeri.'
+                    'Backend tidak memberikan token galeri.'
                 );
             }
 
-            driveAdminKey = key;
-            return driveAdminKey;
+            driveAdminToken = token;
+            driveAdminTokenExpiresAt = Date.now() + expiresInSeconds * 1000;
+            return driveAdminToken;
         })
         .finally(() => {
-            driveAdminKeyPromise = null;
+            driveAdminTokenPromise = null;
         });
 
-    return driveAdminKeyPromise;
+    return driveAdminTokenPromise;
 }
 
 function revokeUrls(urls) {
@@ -235,80 +303,63 @@ async function drivePost(payload, timeoutMs=60000) {
     const url = getDriveGalleryUrl();
 
     if (!url) {
-        throw new Error(
-            'Google Drive belum dihubungkan.'
-        );
+        throw new Error('Google Drive belum dihubungkan.');
     }
 
-    // Minta key sementara hanya setelah sesi admin tervalidasi.
-    const key = await getDriveAdminKey();
+    // Token galeri tetap sementara; secret permanen tidak pernah dikirim ke browser.
+    const authToken = await getDriveAdminToken();
+    const requestId = 'req_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    const body = new URLSearchParams();
+    body.set('requestId', requestId);
+    body.set('responseMode', 'json');
+    body.set('payload', JSON.stringify({...payload, authToken}));
 
-    return new Promise((resolve, reject) => {
-        const requestId = 'req_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-        const frameName = 'osisDriveFrame_' + requestId;
-        const iframe = document.createElement('iframe');
-        iframe.name = frameName;
-        iframe.style.display = 'none';
-        iframe.setAttribute('aria-hidden', 'true');
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            body,
+            signal: controller.signal,
+            redirect: 'follow',
+            credentials: 'omit'
+        });
 
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = url;
-        form.target = frameName;
-        form.style.display = 'none';
+        if (!response.ok) {
+            throw new Error(`Backend galeri merespons HTTP ${response.status}.`);
+        }
 
-        const addField = (name, value) => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = name;
-            input.value = value;
-            form.appendChild(input);
-        };
-        addField('requestId', requestId);
-        addField('payload', JSON.stringify({...payload, key}));
-
-        let finished = false;
-        let timer;
-        const cleanup = () => {
-            if (finished) return;
-            finished = true;
-            clearTimeout(timer);
-            window.removeEventListener('message', onMessage);
-            setTimeout(() => { iframe.remove(); form.remove(); }, 0);
-        };
-
-        const onMessage = event => {
-            const data = event.data;
-            if (!data || data.source !== 'osis-drive-gallery' || data.requestId !== requestId) return;
-            cleanup();
-            if (data.ok) {
-                resolve(data);
-            } else {
-                const message =
-                    data.error ||
-                    'Operasi Google Drive gagal.';
-
-                if (/key|kunci|auth|unauthor|forbidden/i.test(message)) {
-                    clearDriveAdminCredential();
-                }
-
-                reject(
-                    new Error(message)
-                );
+        const text = await response.text();
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (parseError) {
+            // Backend galeri versi lama mengembalikan HTML postMessage.
+            // Pesan ini membuat masalah deployment langsung terbaca, bukan timeout 60 detik.
+            if (/postMessage|<!doctype|<script/i.test(text)) {
+                throw new Error('Backend galeri masih memakai versi lama. Deploy BACKEND-GALERI-Code.gs terbaru terlebih dahulu.');
             }
-        };
+            throw new Error('Respons backend galeri tidak valid. Deploy ulang Web App galeri.');
+        }
 
-        timer = setTimeout(() => {
-            cleanup();
-            reject(new Error('Permintaan terlalu lama. Periksa deployment Apps Script.'));
-        }, timeoutMs);
+        if (!data || data.ok !== true) {
+            const message = data?.error || 'Operasi Google Drive gagal.';
+            if (/token|key|kunci|auth|unauthor|forbidden|kedaluwarsa/i.test(message)) {
+                clearDriveAdminCredential();
+            }
+            throw new Error(message);
+        }
 
-        window.addEventListener('message', onMessage);
-        document.body.append(iframe, form);
-        form.submit();
-    });
+        return data;
+    } catch (error) {
+        if (error?.name === 'AbortError') {
+            throw new Error('Backend galeri terlalu lama merespons. Periksa deployment Apps Script galeri.');
+        }
+        throw error;
+    } finally {
+        clearTimeout(timer);
+    }
 }
-
 function galleryPhotoUrl(photo) {
     return String(photo?.url || '');
 }
@@ -463,9 +514,43 @@ function canvasToBlob(canvas, quality) {
     return new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', quality));
 }
 
+function formatGalleryBytes(bytes) {
+    const value = Math.max(0, Number(bytes) || 0);
+    if (value < 1024) return `${value} B`;
+    if (value < 1024 * 1024) return `${Math.round(value / 1024)} KB`;
+    return `${(value / (1024 * 1024)).toFixed(value >= 10 * 1024 * 1024 ? 0 : 1)} MB`;
+}
+
+function setGalleryUploadProgress({percent=0, text='', stats=''}={}) {
+    const wrap = document.getElementById('galleryUploadProgressWrap');
+    const progress = document.getElementById('galleryUploadProgress');
+    const bar = progress?.querySelector('span');
+    const textEl = document.getElementById('galleryUploadProgressText');
+    const percentEl = document.getElementById('galleryUploadProgressPercent');
+    const statsEl = document.getElementById('galleryUploadStats');
+    const safePercent = Math.max(0, Math.min(100, Math.round(percent)));
+    if (wrap) wrap.hidden = false;
+    if (bar) bar.style.width = `${safePercent}%`;
+    if (progress) progress.setAttribute('aria-valuenow', String(safePercent));
+    if (textEl && text) textEl.textContent = text;
+    if (percentEl) percentEl.textContent = `${safePercent}%`;
+    if (statsEl && stats) statsEl.textContent = stats;
+}
+
+function hideGalleryUploadProgress(delay=900) {
+    const wrap = document.getElementById('galleryUploadProgressWrap');
+    setTimeout(() => {
+        if (wrap) wrap.hidden = true;
+        const progress = document.getElementById('galleryUploadProgress');
+        const bar = progress?.querySelector('span');
+        if (bar) bar.style.width = '0%';
+        progress?.setAttribute('aria-valuenow', '0');
+    }, delay);
+}
+
 async function compressGalleryImage(file) {
     let image;
-    const bitmap = await createImageBitmap(file).catch(() => null);
+    const bitmap = typeof createImageBitmap === 'function' ? await createImageBitmap(file).catch(() => null) : null;
     if (bitmap) {
         image = bitmap;
     } else {
@@ -499,7 +584,12 @@ async function compressGalleryImage(file) {
     if (bitmap?.close) bitmap.close();
     if (!blob) throw new Error('Foto gagal dikompres.');
     if (blob.size > 1200 * 1024) throw new Error('Foto masih terlalu besar setelah dikompres.');
-    return blob;
+    return {
+        blob,
+        originalBytes: file.size,
+        outputBytes: blob.size,
+        savedBytes: Math.max(0, file.size - blob.size)
+    };
 }
 
 function clearPendingGallerySelection() {
@@ -514,6 +604,7 @@ function clearPendingGallerySelection() {
     if (upload) upload.disabled = true;
     const clear = document.getElementById('clearGallerySelectionBtn');
     if (clear) clear.disabled = true;
+    updateGalleryAdminGuidance();
 }
 
 function previewPendingGalleryFiles(files) {
@@ -533,6 +624,7 @@ function previewPendingGalleryFiles(files) {
     if (galleryPendingFiles.length) {
         setInlineMessage('galleryUploadMessage', `${galleryPendingFiles.length} foto dipilih${duplicates ? ` • ${duplicates} duplikat pilihan dilewati` : ''}.`);
     }
+    updateGalleryAdminGuidance();
 }
 
 function renderPendingGalleryPreview() {
@@ -547,7 +639,10 @@ function renderPendingGalleryPreview() {
         div.className = 'gallery-file-preview-item';
         const img = document.createElement('img');
         img.src = url; img.alt = file.name; img.loading = 'lazy';
-        div.appendChild(img); preview?.appendChild(div);
+        const meta = document.createElement('div');
+        meta.className = 'gallery-file-preview-meta';
+        meta.innerHTML = `<strong>${escapeHtml(file.name)}</strong><span>${formatGalleryBytes(file.size)} • kompres otomatis</span>`;
+        div.append(img, meta); preview?.appendChild(div);
     });
     const upload = document.getElementById('uploadGalleryPhotosBtn');
     if (upload) upload.disabled = !galleryPendingFiles.length;
@@ -555,6 +650,7 @@ function renderPendingGalleryPreview() {
     if (clear) clear.disabled = !galleryPendingFiles.length;
     const retry = document.getElementById('retryGalleryUploadsBtn');
     if (retry) retry.hidden = !galleryFailedFiles.length;
+    updateGalleryAdminGuidance();
 }
 
 async function sha256Blob(blob) {
@@ -615,9 +711,11 @@ function populateGalleryAlbumSelect(preferredId=null) {
     if (!albums.length) {
         const option = document.createElement('option');
         option.value = '';
-        option.textContent = 'Belum ada album';
+        option.textContent = 'Belum ada album — buat album baru';
         select.appendChild(option);
         selectedGalleryAlbumId = null;
+        const settings = document.getElementById('galleryAlbumSettings');
+        if (settings) settings.open = true;
     } else {
         albums.forEach(album => {
             const option = document.createElement('option');
@@ -648,7 +746,70 @@ function loadGalleryAlbumForm() {
     const down = document.getElementById('moveGalleryAlbumDownBtn');
     if (up) up.disabled = albumIndex <= 0;
     if (down) down.disabled = albumIndex < 0 || albumIndex >= albums.length - 1;
+    renderGalleryAlbumOrderList();
     renderGalleryAdminPhotos();
+    updateGalleryAdminGuidance();
+}
+
+function renderGalleryAlbumOrderList() {
+    const list = document.getElementById('galleryAlbumOrderList');
+    if (!list) return;
+    const albums = Array.isArray(driveGalleryData.albums) ? driveGalleryData.albums : [];
+    list.innerHTML = '';
+    if (albums.length <= 1) {
+        list.innerHTML = `<div class="gallery-album-order-empty">${albums.length ? 'Hanya ada satu album.' : 'Belum ada album.'}</div>`;
+        return;
+    }
+    albums.forEach((album, index) => {
+        const item = document.createElement('div');
+        item.className = 'gallery-album-order-item' + (album.id === selectedGalleryAlbumId ? ' is-current' : '') + (album.id === galleryPendingDeleteAlbumId ? ' is-pending-delete' : '');
+        item.draggable = true;
+        item.dataset.albumId = album.id;
+        item.innerHTML = `<span class="gallery-album-drag-handle" title="Geser album"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></span><span class="gallery-album-order-index">${index + 1}</span><strong>${escapeHtml(album.title || 'Album')}</strong><span class="gallery-album-photo-count">${Array.isArray(album.photos) ? album.photos.length : 0} foto</span>`;
+        item.addEventListener('click', event => {
+            if (event.target.closest('.gallery-album-drag-handle')) return;
+            selectedGalleryAlbumId = album.id;
+            const select = document.getElementById('galleryAlbumSelect');
+            if (select) select.value = album.id;
+            loadGalleryAlbumForm();
+        });
+        item.addEventListener('dragstart', event => {
+            draggedGalleryAlbumId = album.id;
+            item.classList.add('dragging');
+            event.dataTransfer?.setData('text/plain', album.id);
+            if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move';
+        });
+        item.addEventListener('dragend', () => {
+            draggedGalleryAlbumId = null;
+            item.classList.remove('dragging');
+            list.querySelectorAll('.drag-target').forEach(el => el.classList.remove('drag-target'));
+        });
+        item.addEventListener('dragover', event => {
+            if (!draggedGalleryAlbumId || draggedGalleryAlbumId === album.id) return;
+            event.preventDefault();
+            item.classList.add('drag-target');
+        });
+        item.addEventListener('dragleave', () => item.classList.remove('drag-target'));
+        item.addEventListener('drop', async event => {
+            event.preventDefault();
+            item.classList.remove('drag-target');
+            if (!draggedGalleryAlbumId || draggedGalleryAlbumId === album.id) return;
+            const ids = albums.map(entry => entry.id);
+            const from = ids.indexOf(draggedGalleryAlbumId);
+            const to = ids.indexOf(album.id);
+            if (from < 0 || to < 0) return;
+            const [moved] = ids.splice(from, 1);
+            ids.splice(to, 0, moved);
+            try {
+                await drivePost({action:'reorderAlbums', albumIds:ids});
+                await refreshDriveGallery({preserveAlbum:true});
+                showAppToast('Urutan album diperbarui.');
+            } catch (error) {
+                setInlineMessage('galleryAlbumMessage', error.message, 'error');
+            }
+        });
+        list.appendChild(item);
+    });
 }
 
 function startNewGalleryAlbum() {
@@ -659,14 +820,19 @@ function startNewGalleryAlbum() {
     if (title) title.value = '';
     const subtitle = document.getElementById('galleryAlbumSubtitle');
     if (subtitle) subtitle.value = '';
+    const settings = document.getElementById('galleryAlbumSettings');
+    if (settings) settings.open = true;
     const grid = document.getElementById('galleryAdminPhotos');
-    if (grid) grid.innerHTML = '<div class="gallery-empty">Simpan album baru, lalu upload foto.</div>';
-    setInlineMessage('galleryAlbumMessage', '');
+    if (grid) grid.innerHTML = '<div class="gallery-empty">Buat album, lalu pilih foto untuk diupload.</div>';
+    setInlineMessage('galleryAlbumMessage', 'Isi judul album baru, lalu klik Simpan Album.');
+    updateGalleryAdminGuidance();
+    setTimeout(() => title?.focus({preventScroll:true}), 0);
 }
 
 async function saveGalleryAlbum() {
     const title = document.getElementById('galleryAlbumTitle')?.value.trim();
     const subtitle = document.getElementById('galleryAlbumSubtitle')?.value.trim() || '';
+    const wasNewAlbum = !selectedGalleryAlbumId;
     if (!title) {
         setInlineMessage('galleryAlbumMessage', 'Isi judul album terlebih dahulu.', 'error');
         return;
@@ -682,28 +848,118 @@ async function saveGalleryAlbum() {
         });
         selectedGalleryAlbumId = result.albumId || selectedGalleryAlbumId;
         await refreshDriveGallery({preserveAlbum:true});
+        const settings = document.getElementById('galleryAlbumSettings');
+        if (settings) settings.open = false;
         setInlineMessage('galleryAlbumMessage', 'Album berhasil disimpan.', 'success');
+        updateGalleryAdminGuidance();
         showAppToast('Album berhasil disimpan.');
+        if (typeof notifyGalleryAdminChange === 'function') {
+            notifyGalleryAdminChange({
+                kind: wasNewAlbum ? 'album-created' : 'album-updated',
+                albumTitle: title
+            });
+        }
     } catch (e) {
         setInlineMessage('galleryAlbumMessage', e.message, 'error');
     }
 }
 
+function clearGalleryDeleteVisualState() {
+    galleryPendingDeletePhotoIds.clear();
+    galleryPendingDeleteAlbumId = null;
+    renderGalleryAlbumOrderList();
+    renderGalleryAdminPhotos();
+}
+
+function hideGalleryUndoBar() {
+    const bar = document.getElementById('galleryUndoBar');
+    if (bar) bar.hidden = true;
+}
+
+function updateGalleryUndoCountdown() {
+    if (!galleryPendingDeleteJob) return;
+    const remaining = Math.max(0, galleryPendingDeleteJob.expiresAt - Date.now());
+    const countdown = document.getElementById('galleryUndoCountdown');
+    if (countdown) countdown.textContent = `${Math.ceil(remaining / 1000)} dtk`;
+}
+
+function undoGalleryDeletion() {
+    const job = galleryPendingDeleteJob;
+    if (!job) return;
+    clearTimeout(job.timer);
+    clearInterval(job.interval);
+    galleryPendingDeleteJob = null;
+    hideGalleryUndoBar();
+    clearGalleryDeleteVisualState();
+    setInlineMessage('galleryAlbumMessage', 'Penghapusan dibatalkan.', 'success');
+    showAppToast('Penghapusan dibatalkan.');
+}
+
+async function commitGalleryDeletion(job) {
+    if (!job || galleryPendingDeleteJob !== job) return;
+    clearInterval(job.interval);
+    galleryPendingDeleteJob = null;
+    hideGalleryUndoBar();
+    try {
+        if (job.kind === 'album') {
+            await drivePost({action:'deleteAlbum', albumId:job.albumId});
+            selectedGalleryAlbumId = null;
+            await refreshDriveGallery({preserveAlbum:false});
+        } else {
+            await drivePost({action:'deletePhotos', albumId:job.albumId, photoIds:job.photoIds}, 90000);
+            job.photoIds.forEach(id => gallerySelectedPhotoIds.delete(id));
+            await refreshDriveGallery({preserveAlbum:true});
+        }
+        clearGalleryDeleteVisualState();
+        setInlineMessage('galleryAlbumMessage', job.successMessage, 'success');
+        showAppToast(job.successMessage);
+        if (typeof notifyGalleryAdminChange === 'function') {
+            notifyGalleryAdminChange({
+                kind: job.kind === 'album' ? 'album-deleted' : 'photos-deleted',
+                albumTitle: job.albumTitle || 'Galeri OSIS',
+                count: job.kind === 'album' ? 0 : (job.photoIds?.length || 0)
+            });
+        }
+    } catch (error) {
+        clearGalleryDeleteVisualState();
+        setInlineMessage('galleryAlbumMessage', `Gagal menghapus: ${error.message}`, 'error');
+        showAppToast(`Gagal menghapus: ${error.message}`, 'error');
+    }
+}
+
+function scheduleGalleryDeletion(job) {
+    if (galleryPendingDeleteJob) {
+        showAppToast('Batalkan atau tunggu penghapusan sebelumnya selesai.', 'warning');
+        return false;
+    }
+    const bar = document.getElementById('galleryUndoBar');
+    const text = document.getElementById('galleryUndoText');
+    const expiresAt = Date.now() + 8000;
+    const pending = {...job, expiresAt};
+    pending.timer = setTimeout(() => commitGalleryDeletion(pending), 8000);
+    pending.interval = setInterval(updateGalleryUndoCountdown, 250);
+    galleryPendingDeleteJob = pending;
+    if (job.kind === 'album') galleryPendingDeleteAlbumId = job.albumId;
+    else job.photoIds.forEach(id => galleryPendingDeletePhotoIds.add(id));
+    if (text) text.textContent = job.undoMessage;
+    if (bar) bar.hidden = false;
+    updateGalleryUndoCountdown();
+    renderGalleryAlbumOrderList();
+    renderGalleryAdminPhotos();
+    return true;
+}
+
 async function deleteSelectedGalleryAlbum() {
     const album = driveGalleryData.albums?.find(a => a.id === selectedGalleryAlbumId);
     if (!album) return;
-    if (!confirm(`Hapus album “${album.title}” beserta semua fotonya dari Google Drive?`)) return;
-
-    try {
-        setInlineMessage('galleryAlbumMessage', 'Menghapus album...');
-        await drivePost({action:'deleteAlbum', albumId:album.id});
-        selectedGalleryAlbumId = null;
-        await refreshDriveGallery({preserveAlbum:false});
-        setInlineMessage('galleryAlbumMessage', 'Album dihapus.', 'success');
-        showAppToast('Album berhasil dihapus.');
-    } catch (e) {
-        setInlineMessage('galleryAlbumMessage', e.message, 'error');
-    }
+    if (!confirm(`Hapus album “${album.title}” beserta semua fotonya? Kamu masih punya 8 detik untuk membatalkan.`)) return;
+    scheduleGalleryDeletion({
+        kind:'album',
+        albumId:album.id,
+        albumTitle:album.title,
+        undoMessage:`Album “${album.title}” akan dihapus.`,
+        successMessage:'Album berhasil dihapus.'
+    });
 }
 
 async function uploadPendingGalleryPhotos() {
@@ -711,24 +967,41 @@ async function uploadPendingGalleryPhotos() {
     let albumId = selectedGalleryAlbumId;
     const title = document.getElementById('galleryAlbumTitle')?.value.trim();
     const subtitle = document.getElementById('galleryAlbumSubtitle')?.value.trim() || '';
+    let uploadAlbumTitle = driveGalleryData.albums?.find(a => a.id === albumId)?.title || title || 'Galeri OSIS';
     if (!albumId && !title) return setInlineMessage('galleryUploadMessage','Pilih album atau buat album baru terlebih dahulu.','error');
 
     const btn = document.getElementById('uploadGalleryPhotosBtn');
-    const progress = document.getElementById('galleryUploadProgress');
-    const bar = progress?.querySelector('span');
-    btn.disabled = true; if (progress) progress.style.display = 'block'; if (bar) bar.style.width = '0%';
+    btn.disabled = true;
     const queue = galleryPendingFiles.slice();
     galleryFailedFiles = [];
     let uploaded = 0, duplicates = 0, processed = 0;
+    let originalBytes = 0, compressedBytes = 0;
     try {
+        setGalleryUploadProgress({percent:1, text:`Menyiapkan ${queue.length} foto...`, stats:'Kompresi otomatis aktif untuk mempercepat upload.'});
         if (!albumId) {
             const created = await drivePost({action:'upsertAlbum', albumId:'', title, subtitle});
             albumId = created.albumId; selectedGalleryAlbumId = albumId;
+            uploadAlbumTitle = created.title || title || uploadAlbumTitle;
         }
         for (const file of queue) {
-            setInlineMessage('galleryUploadMessage', `Memproses ${processed + 1} dari ${queue.length} foto...`);
+            const number = processed + 1;
+            const startPercent = processed / queue.length * 100;
+            setGalleryUploadProgress({
+                percent:startPercent,
+                text:`Foto ${number} dari ${queue.length} • Mengompres ${file.name}`,
+                stats:`Ukuran awal ${formatGalleryBytes(file.size)}`
+            });
             try {
-                const blob = await compressGalleryImage(file);
+                const compressed = await compressGalleryImage(file);
+                const blob = compressed.blob;
+                originalBytes += compressed.originalBytes;
+                compressedBytes += compressed.outputBytes;
+                const midPercent = ((processed + 0.45) / queue.length) * 100;
+                setGalleryUploadProgress({
+                    percent:midPercent,
+                    text:`Foto ${number} dari ${queue.length} • Mengupload...`,
+                    stats:`${formatGalleryBytes(compressed.originalBytes)} → ${formatGalleryBytes(compressed.outputBytes)}${compressed.savedBytes > 0 ? ` • hemat ${Math.round(compressed.savedBytes / compressed.originalBytes * 100)}%` : ''}`
+                });
                 const hash = await sha256Blob(blob);
                 const dataUrl = await blobToDataUrl(blob);
                 const result = await drivePost({action:'uploadPhoto', albumId, name:file.name, sha256:hash, dataUrl}, 90000);
@@ -738,20 +1011,35 @@ async function uploadPendingGalleryPhotos() {
                 galleryFailedFiles.push(file);
             }
             processed++;
-            if (bar) bar.style.width = `${Math.round(processed / queue.length * 100)}%`;
+            const donePercent = processed / queue.length * 100;
+            setGalleryUploadProgress({
+                percent:donePercent,
+                text:`Selesai ${processed} dari ${queue.length} foto`,
+                stats: originalBytes ? `Total ${formatGalleryBytes(originalBytes)} → ${formatGalleryBytes(compressedBytes)}` : 'Memproses foto berikutnya...'
+            });
         }
         galleryPendingFiles = galleryFailedFiles.slice();
         renderPendingGalleryPreview();
         await refreshDriveGallery({preserveAlbum:true});
+        updateGalleryAdminGuidance();
         const parts = [];
         if (uploaded) parts.push(`${uploaded} berhasil`);
         if (duplicates) parts.push(`${duplicates} duplikat dilewati`);
         if (galleryFailedFiles.length) parts.push(`${galleryFailedFiles.length} gagal`);
+        if (originalBytes > compressedBytes && compressedBytes > 0) parts.push(`hemat ${Math.round((originalBytes-compressedBytes)/originalBytes*100)}% ukuran`);
         const uploadSummary = parts.join(' • ') || 'Tidak ada foto yang diupload.';
+        setGalleryUploadProgress({percent:100, text:'Upload selesai', stats:uploadSummary});
         setInlineMessage('galleryUploadMessage', uploadSummary, galleryFailedFiles.length ? 'error' : 'success');
         showAppToast(uploadSummary, galleryFailedFiles.length ? 'warning' : 'success');
+        if (uploaded > 0 && typeof notifyGalleryAdminChange === 'function') {
+            notifyGalleryAdminChange({
+                kind:'photos-uploaded',
+                albumTitle:uploadAlbumTitle,
+                count:uploaded
+            });
+        }
     } finally {
-        if (progress) setTimeout(() => { progress.style.display='none'; if(bar) bar.style.width='0%'; }, 700);
+        hideGalleryUploadProgress(galleryFailedFiles.length ? 1800 : 1100);
         btn.disabled = !galleryPendingFiles.length;
         const retry = document.getElementById('retryGalleryUploadsBtn'); if (retry) retry.hidden = !galleryFailedFiles.length;
     }
@@ -811,14 +1099,16 @@ function toggleSelectAllGalleryPhotos() {
 async function deleteSelectedGalleryPhotos() {
     const album = driveGalleryData.albums?.find(a => a.id === selectedGalleryAlbumId);
     if (!album || !gallerySelectedPhotoIds.size) return;
-    const count = gallerySelectedPhotoIds.size;
-    if (!confirm(`Hapus ${count} foto terpilih dari Google Drive?`)) return;
-    try {
-        await drivePost({action:'deletePhotos', albumId:album.id, photoIds:Array.from(gallerySelectedPhotoIds)}, 90000);
-        gallerySelectedPhotoIds.clear();
-        await refreshDriveGallery({preserveAlbum:true});
-        setInlineMessage('galleryAlbumMessage', `${count} foto dihapus.`, 'success');
-    } catch(e) { setInlineMessage('galleryAlbumMessage',e.message,'error'); }
+    const ids = Array.from(gallerySelectedPhotoIds);
+    const count = ids.length;
+    scheduleGalleryDeletion({
+        kind:'photos',
+        albumId:album.id,
+        albumTitle:album.title,
+        photoIds:ids,
+        undoMessage:`${count} foto akan dihapus.`,
+        successMessage:`${count} foto berhasil dihapus.`
+    });
 }
 
 function renderGalleryAdminPhotos() {
@@ -833,8 +1123,8 @@ function renderGalleryAdminPhotos() {
 
     photos.forEach((photo, index) => {
         const card = document.createElement('div');
-        card.className = 'gallery-admin-photo' + (gallerySelectedPhotoIds.has(photo.id) ? ' is-selected' : '');
-        card.draggable = true; card.dataset.photoId = photo.id;
+        card.className = 'gallery-admin-photo' + (gallerySelectedPhotoIds.has(photo.id) ? ' is-selected' : '') + (galleryPendingDeletePhotoIds.has(photo.id) ? ' is-pending-delete' : '');
+        card.draggable = !galleryPendingDeletePhotoIds.has(photo.id); card.dataset.photoId = photo.id;
         const select = document.createElement('input');
         select.type='checkbox'; select.className='gallery-photo-select'; select.checked=gallerySelectedPhotoIds.has(photo.id); select.setAttribute('aria-label',`Pilih ${photo.name || 'foto'}`);
         select.addEventListener('change', () => { select.checked ? gallerySelectedPhotoIds.add(photo.id) : gallerySelectedPhotoIds.delete(photo.id); card.classList.toggle('is-selected',select.checked); updateGalleryBulkButtons(); });
@@ -842,12 +1132,15 @@ function renderGalleryAdminPhotos() {
         img.src=galleryPhotoUrl(photo); img.alt=photo.name || 'Foto'; img.loading='lazy'; img.decoding='async';
         const body=document.createElement('div'); body.className='gallery-admin-photo-body';
         const name=document.createElement('small'); name.textContent=photo.name || 'Foto';
-        const dragHint=document.createElement('span'); dragHint.className='gallery-photo-drag-hint'; dragHint.innerHTML=`<i class="fa-solid fa-grip"></i> Posisi ${index+1}`;
+        const dragHint=document.createElement('span'); dragHint.className='gallery-photo-drag-hint'; dragHint.innerHTML=`<i class="fa-solid fa-grip-vertical"></i> Geser • Posisi ${index+1}`;
         const actions=document.createElement('div'); actions.className='gallery-admin-photo-actions';
         const cover=document.createElement('button'); cover.type='button'; cover.className='gallery-mini-btn'+(album.coverPhotoId===photo.id?' primary':''); cover.innerHTML=album.coverPhotoId===photo.id?'<i class="fa-solid fa-star"></i> Cover':'<i class="fa-regular fa-star"></i> Cover';
         cover.addEventListener('click', async () => { try { await drivePost({action:'setCover',albumId:album.id,photoId:photo.id}); await refreshDriveGallery({preserveAlbum:true}); showAppToast('Cover album diperbarui.'); } catch(e){ setInlineMessage('galleryAlbumMessage',e.message,'error'); showAppToast(e.message,'error'); } });
         const del=document.createElement('button'); del.type='button'; del.className='gallery-mini-btn danger'; del.innerHTML='<i class="fa-solid fa-trash"></i>'; del.setAttribute('aria-label','Hapus foto');
-        del.addEventListener('click', async () => { if(!confirm('Hapus foto ini dari Google Drive?')) return; try{ await drivePost({action:'deletePhoto',albumId:album.id,photoId:photo.id}); gallerySelectedPhotoIds.delete(photo.id); await refreshDriveGallery({preserveAlbum:true}); showAppToast('Foto berhasil dihapus.'); }catch(e){setInlineMessage('galleryAlbumMessage',e.message,'error'); showAppToast(e.message,'error');} });
+        del.disabled = galleryPendingDeletePhotoIds.has(photo.id);
+        del.addEventListener('click', () => {
+            scheduleGalleryDeletion({kind:'photos', albumId:album.id, albumTitle:album.title, photoIds:[photo.id], undoMessage:`Foto “${photo.name || 'Foto'}” akan dihapus.`, successMessage:'Foto berhasil dihapus.'});
+        });
         const order=document.createElement('div'); order.className='gallery-photo-order';
         const left=document.createElement('button'); left.type='button'; left.className='gallery-mini-btn'; left.innerHTML='<i class="fa-solid fa-arrow-left"></i>'; left.disabled=index===0; left.setAttribute('aria-label','Geser foto ke kiri'); left.addEventListener('click',()=>moveGalleryPhoto(photo.id,-1));
         const right=document.createElement('button'); right.type='button'; right.className='gallery-mini-btn'; right.innerHTML='<i class="fa-solid fa-arrow-right"></i>'; right.disabled=index===photos.length-1; right.setAttribute('aria-label','Geser foto ke kanan'); right.addEventListener('click',()=>moveGalleryPhoto(photo.id,1));
@@ -866,6 +1159,7 @@ function renderGalleryAdminPhotos() {
         });
     });
     updateGalleryBulkButtons();
+    updateGalleryAdminGuidance();
 }
 
 async function initializeGallerySystem() {
@@ -876,7 +1170,25 @@ async function initializeGallerySystem() {
 
     if (securityStatus) {
         securityStatus.title =
-            'Kredensial upload diambil sementara dari backend setelah login admin.';
+            'Token upload sementara diterbitkan backend setelah login admin.';
+    }
+
+    document.getElementById('galleryUndoBtn')?.addEventListener('click', undoGalleryDeletion);
+
+    const uploadZone = document.querySelector('.gallery-upload-zone-simple');
+    if (uploadZone) {
+        ['dragenter','dragover'].forEach(type => uploadZone.addEventListener(type, event => {
+            event.preventDefault();
+            uploadZone.classList.add('is-dragover');
+        }));
+        ['dragleave','drop'].forEach(type => uploadZone.addEventListener(type, event => {
+            event.preventDefault();
+            uploadZone.classList.remove('is-dragover');
+        }));
+        uploadZone.addEventListener('drop', event => {
+            const files = event.dataTransfer?.files;
+            if (files?.length) previewPendingGalleryFiles(files);
+        });
     }
 
     document.getElementById('testDriveGalleryBtn')?.addEventListener('click', () => {
@@ -889,12 +1201,15 @@ async function initializeGallerySystem() {
         selectedGalleryAlbumId = e.target.value || null;
         gallerySelectedPhotoIds.clear();
         clearPendingGallerySelection();
+        const settings = document.getElementById('galleryAlbumSettings');
+        if (settings) settings.open = false;
         loadGalleryAlbumForm();
     });
     document.getElementById('saveGalleryAlbumBtn')?.addEventListener('click', () => {
         saveGalleryAlbum();
     });
     document.getElementById('newGalleryAlbumBtn')?.addEventListener('click', startNewGalleryAlbum);
+    document.getElementById('galleryAlbumTitle')?.addEventListener('input', updateGalleryAdminGuidance);
     document.getElementById('deleteGalleryAlbumBtn')?.addEventListener('click', () => {
         deleteSelectedGalleryAlbum();
     });
@@ -915,6 +1230,7 @@ async function initializeGallerySystem() {
     document.getElementById('moveGalleryAlbumDownBtn')?.addEventListener('click', () => moveSelectedGalleryAlbum(1));
 
     updateDriveGalleryStatus();
+    updateGalleryAdminGuidance();
 
     if (isDriveGalleryConfigured()) {
         await refreshDriveGallery({preserveAlbum:false});
