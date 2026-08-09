@@ -1,0 +1,518 @@
+/* =========================================================
+   PERFORMANCE GUARDS — V24
+   Keep first paint cheap while preserving the full UI.
+   ========================================================= */
+
+/* Defer rendering of far-below-the-fold public sections. The intrinsic
+   placeholder prevents large scroll jumps before they are rendered. */
+@supports (content-visibility: auto) {
+    #visi-misi,
+    #proker,
+    #pengumuman,
+    #galeri,
+    #kritik-saran,
+    #kontak {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 760px;
+    }
+}
+
+/* Save-data / lower-memory devices get the same information with less
+   GPU-heavy glass and decorative motion. */
+html.perf-lite .card-box,
+html.perf-lite .feature-card,
+html.perf-lite nav,
+html.perf-lite #osis-area .dashboard-nav-v14,
+html.perf-lite .modal-box {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+
+html.perf-lite header::after,
+html.perf-lite .logo-img {
+    animation: none !important;
+}
+
+html.perf-lite .motion-pending {
+    opacity: 1 !important;
+}
+
+/* =========================================================
+   V27 — SOFT NAVY DARK MODE
+   Mengikuti warna navy pada bar "Versi baru tersedia"
+   agar dark mode terasa lebih lembut, bukan hitam pekat.
+   ========================================================= */
+[data-theme="dark"] {
+    --bg-light: #0f172a;
+    --text-dark: #f8fafc;
+    --text-muted: #cbd5e1;
+    --card-bg: rgba(23, 31, 50, 0.92);
+    --border-color: rgba(71, 85, 105, 0.62);
+    --nav-bg: rgba(15, 23, 42, 0.88);
+    --bg-soft: #162033;
+    --shadow: 0 10px 30px -5px rgba(2, 6, 23, 0.42);
+}
+
+/* Latar global dan section dibuat bernuansa navy seperti contoh */
+[data-theme="dark"] body,
+[data-theme="dark"] main,
+[data-theme="dark"] section,
+[data-theme="dark"] #osis-area {
+    background-color: var(--bg-light);
+}
+
+/* Panel utama */
+[data-theme="dark"] #announcementsTab .announcement-panel-v11,
+[data-theme="dark"] #announcementsTab .announcement-stat-v11,
+[data-theme="dark"] .dashboard-shell,
+[data-theme="dark"] .leadership-card-v12,
+[data-theme="dark"] .division-card-v12,
+[data-theme="dark"] .command-stat-v12,
+[data-theme="dark"] .contact-card-v13,
+[data-theme="dark"] .social-channel-v13,
+[data-theme="dark"] .interactive-box,
+[data-theme="dark"] .card-box,
+[data-theme="dark"] .feature-card,
+[data-theme="dark"] .dashboard-stat,
+[data-theme="dark"] .sekbid-card {
+    background: rgba(23, 31, 50, 0.92);
+    border-color: rgba(71, 85, 105, 0.62);
+}
+
+/* Panel sekunder */
+[data-theme="dark"] #announcementsTab .form-group,
+[data-theme="dark"] #announcementsTab .announcement-toggle-v11,
+[data-theme="dark"] #announcementsTab .announcement-search-v11,
+[data-theme="dark"] #announcementsTab .announcement-toolbar-v11 select,
+[data-theme="dark"] #announcementsTab .announcement-admin-card-v11,
+[data-theme="dark"] .board-support-card-v12,
+[data-theme="dark"] .command-focus-v12,
+[data-theme="dark"] .command-quick-v12,
+[data-theme="dark"] .command-actions-v12 button,
+[data-theme="dark"] .command-event-meta-v12 span,
+[data-theme="dark"] .member-list-v12 span,
+[data-theme="dark"] .empty-state-v12,
+[data-theme="dark"] .admin-item,
+[data-theme="dark"] .media-panel,
+[data-theme="dark"] .upload-panel,
+[data-theme="dark"] .form-container,
+[data-theme="dark"] .close-btn,
+[data-theme="dark"] .announcement-empty-v9,
+[data-theme="dark"] .announcement-empty-admin-v11,
+[data-theme="dark"] .social-hub-v13,
+[data-theme="dark"] .contact-action-v13:not(.primary) {
+    background: #162033;
+    border-color: rgba(71, 85, 105, 0.62);
+}
+
+/* Input, modal, dashboard utilitas */
+[data-theme="dark"] .upload-field input,
+[data-theme="dark"] .upload-field textarea,
+[data-theme="dark"] .upload-field select,
+[data-theme="dark"] .dashboard-panel input.form-control,
+[data-theme="dark"] .dashboard-panel select.form-control,
+[data-theme="dark"] .dashboard-panel textarea.form-control,
+[data-theme="dark"] .aspirasi-card .form-control,
+[data-theme="dark"] .aspirasi-card select.form-control option,
+[data-theme="dark"] .modal-box,
+[data-theme="dark"] .dashboard-utility-btn-v9,
+[data-theme="dark"] .dashboard-filter-reset-v9,
+[data-theme="dark"] #osis-area .dashboard-nav-v14,
+[data-theme="dark"] #osis-area .dashboard-tools-popover-v14,
+[data-theme="dark"] #osis-area .dashboard-panel,
+[data-theme="dark"] .gallery-workspace-panel,
+[data-theme="dark"] .gallery-admin-card {
+    background: #1b2640;
+    border-color: rgba(71, 85, 105, 0.66);
+}
+
+[data-theme="dark"] .aspirasi-card {
+    background: linear-gradient(180deg, #172033, #111a2d);
+    border-color: rgba(71, 85, 105, 0.68);
+    box-shadow: 0 20px 55px rgba(2, 6, 23, 0.30);
+}
+
+[data-theme="dark"] .aspirasi-card .form-group {
+    background: rgba(27, 38, 64, 0.88);
+    border-color: rgba(71, 85, 105, 0.64);
+}
+
+/* Navbar / footer dan area pendukung */
+[data-theme="dark"] nav,
+[data-theme="dark"] .mobile-menu,
+[data-theme="dark"] .mobile-menu-overlay {
+    background: rgba(15, 23, 42, 0.9);
+    border-color: rgba(71, 85, 105, 0.54);
+}
+
+[data-theme="dark"] footer {
+    background: #0c1425;
+    border-top-color: rgba(148, 163, 184, 0.16);
+}
+
+
+/* =========================================================
+   V28 — NAVY GRADIENT DARK MODE
+   Versi ini dibuat lebih dekat dengan contoh user:
+   navy gelap lembut dengan sentuhan gradasi biru.
+   ========================================================= */
+[data-theme="dark"] {
+    --bg-light: #091426;
+    --text-dark: #f8fbff;
+    --text-muted: #c5d0e0;
+    --card-bg: rgba(16, 26, 46, 0.88);
+    --border-color: rgba(82, 101, 133, 0.58);
+    --nav-bg: rgba(9, 20, 38, 0.84);
+    --bg-soft: #10203a;
+    --shadow: 0 14px 38px -10px rgba(2, 6, 23, 0.48);
+}
+
+[data-theme="dark"] body {
+    background-color: #091426 !important;
+    background-image:
+        linear-gradient(180deg, #08111f 0%, #0c1830 42%, #11264a 100%),
+        radial-gradient(circle at 18% 12%, rgba(59,130,246,0.20), transparent 24%),
+        radial-gradient(circle at 82% 10%, rgba(37,99,235,0.14), transparent 26%),
+        radial-gradient(circle at 50% 100%, rgba(29,78,216,0.10), transparent 35%) !important;
+}
+
+/* Biarkan gradasi body tetap terasa di dark mode */
+[data-theme="dark"] main,
+[data-theme="dark"] section,
+[data-theme="dark"] #osis-area {
+    background: transparent;
+}
+
+/* Panel utama memakai navy glass yang lebih lembut */
+[data-theme="dark"] #announcementsTab .announcement-panel-v11,
+[data-theme="dark"] #announcementsTab .announcement-stat-v11,
+[data-theme="dark"] .dashboard-shell,
+[data-theme="dark"] .leadership-card-v12,
+[data-theme="dark"] .division-card-v12,
+[data-theme="dark"] .command-stat-v12,
+[data-theme="dark"] .contact-card-v13,
+[data-theme="dark"] .social-channel-v13,
+[data-theme="dark"] .interactive-box,
+[data-theme="dark"] .card-box,
+[data-theme="dark"] .feature-card,
+[data-theme="dark"] .dashboard-stat,
+[data-theme="dark"] .sekbid-card {
+    background: linear-gradient(180deg, rgba(15, 25, 44, 0.92), rgba(20, 34, 60, 0.92));
+    border-color: rgba(82, 101, 133, 0.54);
+    box-shadow: 0 18px 42px rgba(2, 6, 23, 0.22);
+}
+
+/* Panel sekunder */
+[data-theme="dark"] #announcementsTab .form-group,
+[data-theme="dark"] #announcementsTab .announcement-toggle-v11,
+[data-theme="dark"] #announcementsTab .announcement-search-v11,
+[data-theme="dark"] #announcementsTab .announcement-toolbar-v11 select,
+[data-theme="dark"] #announcementsTab .announcement-admin-card-v11,
+[data-theme="dark"] .board-support-card-v12,
+[data-theme="dark"] .command-focus-v12,
+[data-theme="dark"] .command-quick-v12,
+[data-theme="dark"] .command-actions-v12 button,
+[data-theme="dark"] .command-event-meta-v12 span,
+[data-theme="dark"] .member-list-v12 span,
+[data-theme="dark"] .empty-state-v12,
+[data-theme="dark"] .admin-item,
+[data-theme="dark"] .media-panel,
+[data-theme="dark"] .upload-panel,
+[data-theme="dark"] .form-container,
+[data-theme="dark"] .close-btn,
+[data-theme="dark"] .announcement-empty-v9,
+[data-theme="dark"] .announcement-empty-admin-v11,
+[data-theme="dark"] .social-hub-v13,
+[data-theme="dark"] .contact-action-v13:not(.primary) {
+    background: linear-gradient(180deg, rgba(16, 32, 58, 0.96), rgba(13, 26, 48, 0.96));
+    border-color: rgba(82, 101, 133, 0.58);
+}
+
+/* Input dan modal */
+[data-theme="dark"] .upload-field input,
+[data-theme="dark"] .upload-field textarea,
+[data-theme="dark"] .upload-field select,
+[data-theme="dark"] .dashboard-panel input.form-control,
+[data-theme="dark"] .dashboard-panel select.form-control,
+[data-theme="dark"] .dashboard-panel textarea.form-control,
+[data-theme="dark"] .aspirasi-card .form-control,
+[data-theme="dark"] .aspirasi-card select.form-control option,
+[data-theme="dark"] .modal-box,
+[data-theme="dark"] .dashboard-utility-btn-v9,
+[data-theme="dark"] .dashboard-filter-reset-v9,
+[data-theme="dark"] #osis-area .dashboard-nav-v14,
+[data-theme="dark"] #osis-area .dashboard-tools-popover-v14,
+[data-theme="dark"] #osis-area .dashboard-panel,
+[data-theme="dark"] .gallery-workspace-panel,
+[data-theme="dark"] .gallery-admin-card {
+    background: linear-gradient(180deg, #122341, #0f1d36);
+    border-color: rgba(82, 101, 133, 0.62);
+}
+
+[data-theme="dark"] .aspirasi-card {
+    background: linear-gradient(180deg, #13233f, #0d1930);
+    border-color: rgba(82, 101, 133, 0.64);
+    box-shadow: 0 22px 54px rgba(2, 6, 23, 0.30);
+}
+
+[data-theme="dark"] .aspirasi-card .form-group {
+    background: linear-gradient(180deg, rgba(19, 35, 63, 0.94), rgba(15, 29, 54, 0.94));
+    border-color: rgba(82, 101, 133, 0.58);
+}
+
+/* Navbar dan popup utilitas ikut bernuansa navy */
+[data-theme="dark"] nav,
+[data-theme="dark"] .mobile-menu,
+[data-theme="dark"] .mobile-menu-overlay {
+    background: linear-gradient(90deg, rgba(8, 17, 31, 0.96), rgba(10, 20, 38, 0.94), rgba(15, 35, 70, 0.96));
+    border-color: rgba(82, 101, 133, 0.48);
+}
+
+/* Bar update dan toast dibuat mirip contoh screenshot */
+[data-theme="dark"] .pwa-update-bar,
+[data-theme="dark"] .pwa-toast,
+[data-theme="dark"] .gallery-undo-bar {
+    background: linear-gradient(90deg, #08101f 0%, #0d1830 52%, #15305d 100%) !important;
+    border-color: rgba(148, 163, 184, 0.18) !important;
+    box-shadow: 0 18px 50px rgba(2, 6, 23, 0.34) !important;
+}
+
+[data-theme="dark"] .pwa-update-bar span,
+[data-theme="dark"] .gallery-undo-bar {
+    color: rgba(255,255,255,0.76);
+}
+
+[data-theme="dark"] .gallery-undo-bar button {
+    color: #0b1730;
+}
+
+/* Footer */
+[data-theme="dark"] footer {
+    background: linear-gradient(90deg, #08101f 0%, #0d1830 58%, #13294d 100%);
+    border-top-color: rgba(148, 163, 184, 0.14);
+}
+
+/* =========================================================
+   V29 — ELEGANT MOTION POLISH
+   Animasi ringan untuk dark navy agar terasa premium.
+   ========================================================= */
+[data-theme="dark"] body {
+    animation: navyBreath 14s ease-in-out infinite alternate;
+}
+
+@keyframes navyBreath {
+    from { background-position: 0% 0%, 0% 0%, 100% 0%, 50% 100%; }
+    to { background-position: 0% 18%, 12% 8%, 88% 12%, 50% 90%; }
+}
+
+[data-theme="dark"] .card-box,
+[data-theme="dark"] .feature-card,
+[data-theme="dark"] .dashboard-shell,
+[data-theme="dark"] .dashboard-stat,
+[data-theme="dark"] .interactive-box,
+[data-theme="dark"] .leadership-card-v12,
+[data-theme="dark"] .division-card-v12 {
+    animation: softFloat 7s ease-in-out infinite;
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+}
+
+[data-theme="dark"] .card-box:hover,
+[data-theme="dark"] .feature-card:hover,
+[data-theme="dark"] .dashboard-shell:hover,
+[data-theme="dark"] .interactive-box:hover {
+    transform: translateY(-4px);
+    border-color: rgba(96,165,250,.55);
+    box-shadow: 0 24px 55px rgba(2,6,23,.35);
+}
+
+@keyframes softFloat {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+[data-theme="dark"] .pwa-update-bar,
+[data-theme="dark"] .pwa-toast {
+    animation: updateGlow 5s ease-in-out infinite;
+}
+
+@keyframes updateGlow {
+    0%,100% { box-shadow:0 18px 50px rgba(2,6,23,.34); }
+    50% { box-shadow:0 18px 60px rgba(37,99,235,.22); }
+}
+
+[data-theme="dark"] .theme-float-btn {
+    animation: buttonPulse 4s ease-in-out infinite;
+}
+
+@keyframes buttonPulse {
+    0%,100% { transform:scale(1); }
+    50% { transform:scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-theme="dark"] body,
+    [data-theme="dark"] .card-box,
+    [data-theme="dark"] .feature-card,
+    [data-theme="dark"] .dashboard-shell,
+    [data-theme="dark"] .dashboard-stat,
+    [data-theme="dark"] .pwa-update-bar,
+    [data-theme="dark"] .theme-float-btn {
+        animation:none!important;
+    }
+}
+
+/* =========================================================
+   V30 — ELEGANT NAVY GLASS
+   Polesan visual: glass yang halus, navy lebih berlapis,
+   dan kontras tetap nyaman untuk layar HP.
+   ========================================================= */
+[data-theme="dark"] {
+    --bg-light: #081426;
+    --card-bg: rgba(14, 26, 47, 0.88);
+    --bg-soft: #10213d;
+    --nav-bg: rgba(8, 19, 36, 0.88);
+    --border-color: rgba(101, 124, 158, 0.46);
+    --text-muted: #c2cede;
+    --shadow: 0 18px 44px -14px rgba(2, 6, 23, 0.58);
+}
+
+[data-theme="dark"] body {
+    position: relative;
+    isolation: isolate;
+    background-color: #081426 !important;
+    background-image:
+        linear-gradient(180deg, #07101f 0%, #0a1730 44%, #10264a 100%),
+        radial-gradient(circle at 18% 8%, rgba(59,130,246,.14), transparent 24%),
+        radial-gradient(circle at 82% 12%, rgba(37,99,235,.10), transparent 28%) !important;
+}
+
+[data-theme="dark"] #announcementsTab .announcement-panel-v11,
+[data-theme="dark"] #announcementsTab .announcement-stat-v11,
+[data-theme="dark"] .dashboard-shell,
+[data-theme="dark"] .leadership-card-v12,
+[data-theme="dark"] .division-card-v12,
+[data-theme="dark"] .command-stat-v12,
+[data-theme="dark"] .contact-card-v13,
+[data-theme="dark"] .social-channel-v13,
+[data-theme="dark"] .interactive-box,
+[data-theme="dark"] .card-box,
+[data-theme="dark"] .feature-card,
+[data-theme="dark"] .dashboard-stat,
+[data-theme="dark"] .sekbid-card {
+    background: linear-gradient(145deg, rgba(15, 28, 50, .91), rgba(17, 35, 64, .88));
+    border-color: rgba(101, 124, 158, .44);
+    box-shadow: 0 18px 48px rgba(2, 6, 23, .20), inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+[data-theme="dark"] #announcementsTab .form-group,
+[data-theme="dark"] #announcementsTab .announcement-toggle-v11,
+[data-theme="dark"] #announcementsTab .announcement-search-v11,
+[data-theme="dark"] #announcementsTab .announcement-toolbar-v11 select,
+[data-theme="dark"] #announcementsTab .announcement-admin-card-v11,
+[data-theme="dark"] .board-support-card-v12,
+[data-theme="dark"] .command-focus-v12,
+[data-theme="dark"] .command-quick-v12,
+[data-theme="dark"] .command-actions-v12 button,
+[data-theme="dark"] .command-event-meta-v12 span,
+[data-theme="dark"] .member-list-v12 span,
+[data-theme="dark"] .empty-state-v12,
+[data-theme="dark"] .admin-item,
+[data-theme="dark"] .media-panel,
+[data-theme="dark"] .upload-panel,
+[data-theme="dark"] .form-container,
+[data-theme="dark"] .close-btn,
+[data-theme="dark"] .announcement-empty-v9,
+[data-theme="dark"] .announcement-empty-admin-v11,
+[data-theme="dark"] .social-hub-v13,
+[data-theme="dark"] .contact-action-v13:not(.primary) {
+    background: linear-gradient(145deg, rgba(14, 30, 55, .95), rgba(13, 25, 47, .95));
+    border-color: rgba(101, 124, 158, .46);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+[data-theme="dark"] .upload-field input,
+[data-theme="dark"] .upload-field textarea,
+[data-theme="dark"] .upload-field select,
+[data-theme="dark"] .dashboard-panel input.form-control,
+[data-theme="dark"] .dashboard-panel select.form-control,
+[data-theme="dark"] .dashboard-panel textarea.form-control,
+[data-theme="dark"] .aspirasi-card .form-control,
+[data-theme="dark"] .aspirasi-card select.form-control option,
+[data-theme="dark"] .modal-box,
+[data-theme="dark"] .dashboard-utility-btn-v9,
+[data-theme="dark"] .dashboard-filter-reset-v9,
+[data-theme="dark"] #osis-area .dashboard-nav-v14,
+[data-theme="dark"] #osis-area .dashboard-tools-popover-v14,
+[data-theme="dark"] #osis-area .dashboard-panel,
+[data-theme="dark"] .gallery-workspace-panel,
+[data-theme="dark"] .gallery-admin-card {
+    background: linear-gradient(180deg, rgba(18, 36, 66, .97), rgba(13, 27, 51, .97));
+    border-color: rgba(101, 124, 158, .50);
+}
+
+[data-theme="dark"] .aspirasi-card {
+    background: linear-gradient(145deg, rgba(18, 36, 65, .96), rgba(10, 24, 47, .97));
+    border-color: rgba(101, 124, 158, .50);
+    box-shadow: 0 24px 64px rgba(2,6,23,.28), inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+[data-theme="dark"] nav {
+    background: linear-gradient(90deg, rgba(7, 16, 31, .90), rgba(10, 23, 44, .88), rgba(13, 33, 66, .90));
+    border-color: rgba(101, 124, 158, .34);
+    box-shadow: 0 12px 36px rgba(2,6,23,.18), inset 0 -1px 0 rgba(255,255,255,.025);
+}
+
+[data-theme="dark"] .mobile-menu,
+[data-theme="dark"] .mobile-menu-overlay {
+    background: rgba(8, 19, 36, .96);
+    border-color: rgba(101, 124, 158, .38);
+}
+
+[data-theme="dark"] .pwa-update-bar,
+[data-theme="dark"] .pwa-toast,
+[data-theme="dark"] .gallery-undo-bar {
+    background: linear-gradient(100deg, #07101f 0%, #0d1a33 54%, #153463 100%) !important;
+    border-color: rgba(148, 163, 184, .18) !important;
+}
+
+[data-theme="dark"] footer {
+    background: linear-gradient(100deg, #07101f 0%, #0d1a33 60%, #122b52 100%);
+    border-top-color: rgba(148, 163, 184, .12);
+}
+
+/* Blur hanya diberikan pada perangkat yang relatif mampu. */
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    @media (min-width: 768px) {
+        html:not(.perf-lite) [data-theme="dark"] nav {
+            -webkit-backdrop-filter: blur(18px) saturate(125%);
+            backdrop-filter: blur(18px) saturate(125%);
+        }
+
+        html:not(.perf-lite) [data-theme="dark"] .card-box,
+        html:not(.perf-lite) [data-theme="dark"] .feature-card,
+        html:not(.perf-lite) [data-theme="dark"] .leadership-card-v12,
+        html:not(.perf-lite) [data-theme="dark"] .division-card-v12,
+        html:not(.perf-lite) [data-theme="dark"] .contact-card-v13,
+        html:not(.perf-lite) [data-theme="dark"] .dashboard-shell,
+        html:not(.perf-lite) [data-theme="dark"] .interactive-box,
+        html:not(.perf-lite) [data-theme="dark"] .aspirasi-card {
+            -webkit-backdrop-filter: blur(10px) saturate(112%);
+            backdrop-filter: blur(10px) saturate(112%);
+        }
+    }
+}
+
+/* Pada HP, glass dibuat lebih ringan agar scrolling tetap lancar. */
+@media (max-width: 767px) {
+    [data-theme="dark"] .card-box,
+    [data-theme="dark"] .feature-card,
+    [data-theme="dark"] .leadership-card-v12,
+    [data-theme="dark"] .division-card-v12,
+    [data-theme="dark"] .contact-card-v13,
+    [data-theme="dark"] .dashboard-shell,
+    [data-theme="dark"] .interactive-box,
+    [data-theme="dark"] .aspirasi-card {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+    }
+}
