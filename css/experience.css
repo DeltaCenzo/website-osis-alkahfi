@@ -1,0 +1,415 @@
+/* =========================================================
+   V31 — OSIS CINEMATIC EXPERIENCE
+   Intentional motion, restrained depth, and interaction polish.
+   Designed to complement the existing interface without turning
+   every surface into a continuously moving decoration.
+   ========================================================= */
+
+:root {
+    --experience-ease: cubic-bezier(.2,.8,.2,1);
+    --experience-spring: cubic-bezier(.16,1,.3,1);
+    --spot-x: 50%;
+    --spot-y: 50%;
+}
+
+html {
+    scrollbar-gutter: stable;
+}
+
+body {
+    isolation: isolate;
+}
+
+/* ---------- Hero: editorial, institutional, alive ---------- */
+header {
+    min-height: min(760px, 88svh);
+    display: grid;
+    align-content: center;
+    perspective: 1100px;
+    --hero-x: 0px;
+    --hero-y: 0px;
+    --hero-rx: 0deg;
+    --hero-ry: 0deg;
+}
+
+header::before {
+    background:
+        linear-gradient(180deg, rgba(2,6,23,.10), rgba(2,6,23,.38)),
+        radial-gradient(circle at 50% 35%, transparent 0 18%, rgba(2,6,23,.20) 58%, rgba(2,6,23,.58) 100%);
+}
+
+header::after {
+    inset: -24%;
+    width: 148%;
+    height: 148%;
+    background:
+        radial-gradient(circle at calc(30% + var(--hero-x)) calc(28% + var(--hero-y)), rgba(96,165,250,.22), transparent 23%),
+        radial-gradient(circle at calc(72% - var(--hero-x)) calc(20% - var(--hero-y)), rgba(245,158,11,.13), transparent 18%);
+    animation: none;
+    transition: background-position 120ms linear;
+}
+
+.hero-grid-v31,
+.hero-sheen-v31 {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.hero-grid-v31 {
+    opacity: .19;
+    background-image:
+        linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,.72), transparent 86%);
+    transform: translate3d(calc(var(--hero-x) * -.12), calc(var(--hero-y) * -.12), 0) scale(1.04);
+}
+
+.hero-sheen-v31 {
+    inset: -30% -18%;
+    background: linear-gradient(112deg, transparent 38%, rgba(255,255,255,.075) 47%, transparent 56%);
+    transform: translate3d(-30%,0,0);
+    animation: heroSheenV31 11s ease-in-out infinite;
+    opacity: .75;
+}
+
+@keyframes heroSheenV31 {
+    0%, 54% { transform: translate3d(-34%,0,0); opacity: 0; }
+    62% { opacity: .72; }
+    82%, 100% { transform: translate3d(34%,0,0); opacity: 0; }
+}
+
+header > .logo-container,
+header > h1,
+header > #typing-text,
+header > .hero-actions,
+header > .hero-badge {
+    transform-style: preserve-3d;
+}
+
+.logo-container {
+    transform: translate3d(calc(var(--hero-x) * .22), calc(var(--hero-y) * .22), 34px)
+               rotateX(var(--hero-rx)) rotateY(var(--hero-ry));
+    transition: transform 180ms ease-out;
+}
+
+.logo-img {
+    animation: logoBreatheV31 5.8s ease-in-out infinite;
+    transition: filter 280ms ease, transform 280ms var(--experience-spring);
+}
+
+.logo-img:nth-child(2) { animation-delay: -2.9s; }
+
+@keyframes logoBreatheV31 {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-7px) rotate(.6deg); }
+}
+
+.hero-badge {
+    margin-inline: auto;
+    width: max-content;
+    max-width: 100%;
+    border-color: rgba(255,255,255,.28);
+    background: rgba(6,18,43,.36);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.09), 0 16px 40px rgba(2,6,23,.12);
+}
+
+.hero-badge-dot-v31 {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #93c5fd;
+    box-shadow: 0 0 0 5px rgba(147,197,253,.12), 0 0 18px rgba(147,197,253,.7);
+    animation: badgePulseV31 2.6s ease-in-out infinite;
+}
+
+@keyframes badgePulseV31 {
+    0%, 100% { transform: scale(.9); opacity: .72; }
+    50% { transform: scale(1.12); opacity: 1; }
+}
+
+header h1 {
+    text-wrap: balance;
+    text-shadow: 0 12px 48px rgba(2,6,23,.20);
+    transform: translate3d(calc(var(--hero-x) * .06), calc(var(--hero-y) * .06), 16px);
+    transition: transform 180ms ease-out;
+}
+
+#typing-text {
+    transform: translate3d(calc(var(--hero-x) * .035), calc(var(--hero-y) * .035), 8px);
+    transition: transform 180ms ease-out;
+}
+
+.hero-actions {
+    transform: translate3d(calc(var(--hero-x) * .025), calc(var(--hero-y) * .025), 5px);
+    transition: transform 180ms ease-out;
+}
+
+/* ---------- Navigation ---------- */
+nav {
+    border-bottom: 1px solid color-mix(in srgb, var(--border-color) 76%, transparent);
+}
+
+nav .nav-links a {
+    transition: color 220ms ease, background-color 220ms ease, transform 220ms var(--experience-ease);
+}
+
+nav .nav-links a.is-active-v31 {
+    color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 9%, transparent);
+}
+
+nav .nav-links a.is-active-v31::after {
+    transform: scaleX(1) !important;
+    opacity: .86 !important;
+}
+
+/* ---------- Section rhythm ---------- */
+main > .container,
+main > section.container {
+    position: relative;
+}
+
+.section-title {
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 54px;
+    height: 3px;
+    margin: 17px auto 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    transform: scaleX(.16);
+    opacity: .25;
+    transition: transform 760ms var(--experience-spring), opacity 560ms ease, width 760ms var(--experience-spring);
+}
+
+.section-title.is-seen-v31::after {
+    width: 112px;
+    transform: scaleX(1);
+    opacity: .8;
+}
+
+.section-title h2 {
+    text-wrap: balance;
+}
+
+/* ---------- Pointer spotlight + 3D depth ---------- */
+.experience-card-v31 {
+    --tilt-x: 0deg;
+    --tilt-y: 0deg;
+    --lift-y: 0px;
+    --spot-opacity: 0;
+    position: relative;
+    isolation: isolate;
+    transition:
+        transform 340ms var(--experience-spring),
+        box-shadow 340ms ease,
+        border-color 280ms ease !important;
+}
+
+
+.experience-card-v31:not(.motion-animating) {
+    transform: perspective(920px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translate3d(0,var(--lift-y),0) !important;
+}
+
+.experience-card-v31::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+    opacity: var(--spot-opacity);
+    background: radial-gradient(360px circle at var(--spot-x) var(--spot-y), rgba(96,165,250,.16), transparent 64%);
+    transition: opacity 260ms ease;
+}
+
+
+@media (hover:hover) and (pointer:fine) {
+    .experience-card-v31:hover {
+        --lift-y: -5px;
+        --spot-opacity: 1;
+    }
+
+    [data-theme="dark"] .experience-card-v31::before {
+        background: radial-gradient(390px circle at var(--spot-x) var(--spot-y), rgba(96,165,250,.20), transparent 65%);
+    }
+}
+
+/* Program icons get an intentional response instead of generic card float. */
+#proker .card-box .icon-big,
+.leadership-icon-v12,
+.board-support-icon-v12,
+.division-icon-v12,
+.contact-icon-v13 {
+    transition: transform 420ms var(--experience-spring), filter 320ms ease;
+}
+
+@media (hover:hover) and (pointer:fine) {
+    #proker .card-box:hover .icon-big,
+    .leadership-card-v12:hover .leadership-icon-v12,
+    .board-support-card-v12:hover .board-support-icon-v12,
+    .division-card-v12:hover .division-icon-v12,
+    .contact-card-v13:hover .contact-icon-v13 {
+        transform: translateY(-2px) rotate(-4deg) scale(1.06);
+        filter: drop-shadow(0 10px 14px rgba(37,99,235,.12));
+    }
+}
+
+/* ---------- Buttons: magnetic response + tactile sheen ---------- */
+.experience-magnetic-v31 {
+    --mag-x: 0px;
+    --mag-y: 0px;
+    transform: translate3d(var(--mag-x),var(--mag-y),0);
+    transition: transform 240ms var(--experience-spring), box-shadow 260ms ease, border-color 240ms ease !important;
+}
+
+.experience-magnetic-v31:active {
+    transform: translate3d(calc(var(--mag-x) * .35),calc(var(--mag-y) * .35),0) scale(.975) !important;
+}
+
+/* ---------- Countdown: living data, not decorative wobble ---------- */
+.countdown-grid > div {
+    position: relative;
+    overflow: hidden;
+}
+
+.countdown-grid > div::after {
+    content: '';
+    position: absolute;
+    inset: auto 18% 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--primary) 60%, transparent), transparent);
+}
+
+.countdown-grid span {
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+}
+
+.countdown-grid span.tick-v31 {
+    animation: countTickV31 260ms var(--experience-spring);
+}
+
+@keyframes countTickV31 {
+    0% { opacity: .35; transform: translateY(5px) scale(.96); filter: blur(1px); }
+    100% { opacity: 1; transform: none; filter: none; }
+}
+
+/* ---------- Gallery: cinematic crop ---------- */
+.gallery-item img,
+.gallery-card img,
+.album-grid img {
+    transition: transform 700ms var(--experience-spring), filter 500ms ease !important;
+}
+
+@media (hover:hover) and (pointer:fine) {
+    .gallery-item:hover img,
+    .gallery-card:hover img,
+    .album-grid button:hover img {
+        transform: scale(1.045);
+        filter: saturate(1.04) contrast(1.02);
+    }
+}
+
+/* ---------- Modal polish ---------- */
+.modal[style*="display: flex"] .modal-box,
+.modal-overlay[style*="display: flex"] .modal-box,
+.modal-overlay[style*="display: flex"] .gallery-viewer {
+    animation: modalSpringV31 420ms var(--experience-spring) both !important;
+}
+
+@keyframes modalSpringV31 {
+    from { opacity: 0; transform: translate3d(0,18px,0) scale(.965); filter: blur(4px); }
+    to { opacity: 1; transform: none; filter: none; }
+}
+
+/* ---------- Page entry: only first paint ---------- */
+.experience-boot-v31 header .hero-badge,
+.experience-boot-v31 header .logo-container,
+.experience-boot-v31 header h1,
+.experience-boot-v31 header #typing-text,
+.experience-boot-v31 header .hero-actions {
+    animation: heroEnterV31 820ms var(--experience-spring) both;
+}
+
+.experience-boot-v31 header .hero-badge { animation-delay: 40ms; }
+.experience-boot-v31 header .logo-container { animation-delay: 110ms; }
+.experience-boot-v31 header h1 { animation-delay: 190ms; }
+.experience-boot-v31 header #typing-text { animation-delay: 270ms; }
+.experience-boot-v31 header .hero-actions { animation-delay: 350ms; }
+
+@keyframes heroEnterV31 {
+    from { opacity: 0; filter: blur(7px); transform: translate3d(0,18px,0) scale(.985); }
+    to { opacity: 1; filter: blur(0); }
+}
+
+/* Keep boot animation one-shot. */
+.experience-ready-v31 header .hero-badge,
+.experience-ready-v31 header .logo-container,
+.experience-ready-v31 header h1,
+.experience-ready-v31 header #typing-text,
+.experience-ready-v31 header .hero-actions {
+    animation-fill-mode: both;
+}
+
+/* ---------- Mobile / constrained devices ---------- */
+@media (max-width: 760px) {
+    header {
+        min-height: min(710px, 88svh);
+        padding-top: 5.8rem;
+    }
+
+    .hero-grid-v31 {
+        background-size: 48px 48px;
+        opacity: .12;
+    }
+
+    .hero-sheen-v31 { opacity: .42; }
+
+    .experience-card-v31 {
+        --tilt-x: 0deg !important;
+        --tilt-y: 0deg !important;
+        transform: translate3d(0,var(--lift-y),0) !important;
+    }
+}
+
+.perf-lite .hero-grid-v31,
+.perf-lite .hero-sheen-v31 {
+    display: none;
+}
+
+.perf-lite .experience-card-v31,
+.perf-lite .experience-magnetic-v31 {
+    transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-grid-v31,
+    .hero-sheen-v31 { display: none !important; }
+
+    .logo-img,
+    .hero-badge-dot-v31,
+    .experience-boot-v31 header .hero-badge,
+    .experience-boot-v31 header .logo-container,
+    .experience-boot-v31 header h1,
+    .experience-boot-v31 header #typing-text,
+    .experience-boot-v31 header .hero-actions {
+        animation: none !important;
+    }
+
+    .experience-card-v31,
+    .experience-magnetic-v31,
+    .logo-container,
+    header h1,
+    #typing-text,
+    .hero-actions {
+        transform: none !important;
+    }
+}

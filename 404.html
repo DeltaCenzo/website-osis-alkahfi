@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,follow" />
+  <title>404 - Halaman Tidak Ditemukan | OSIS SMA Al-Kahfi</title>
+  <meta name="theme-color" content="#2563eb">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f172a;
+      color: white;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated background orbs */
+    body::before, body::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::before {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(59,130,246,0.2), transparent);
+      top: -15%; left: -10%;
+      animation: orbA 20s ease-in-out infinite;
+    }
+    body::after {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(139,92,246,0.15), transparent);
+      bottom: -10%; right: -8%;
+      animation: orbB 25s ease-in-out infinite;
+    }
+
+    @keyframes orbA {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(40px, -30px) scale(1.05); }
+      66% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+    @keyframes orbB {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(-30px, 40px) scale(1.05); }
+      66% { transform: translate(20px, -20px) scale(0.95); }
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 40px 24px;
+      max-width: 520px;
+      width: 100%;
+    }
+
+    .error-code {
+      font-size: clamp(7rem, 20vw, 12rem);
+      font-weight: 900;
+      font-family: 'Poppins', sans-serif;
+      line-height: 1;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: textPulse 3s ease-in-out infinite;
+      letter-spacing: -8px;
+      margin-bottom: 8px;
+    }
+
+    @keyframes textPulse {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.15); }
+    }
+
+    .glitch-line {
+      display: block;
+      width: 80px; height: 4px;
+      margin: 0 auto 24px;
+      background: linear-gradient(90deg, transparent, #60a5fa, #a78bfa, transparent);
+      border-radius: 4px;
+      animation: lineGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes lineGlow {
+      0%, 100% { transform: scaleX(0.8); opacity: 0.6; }
+      50% { transform: scaleX(1.2); opacity: 1; }
+    }
+
+    h1 {
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #f1f5f9;
+    }
+
+    p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 6px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 36px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      min-height: 50px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white;
+      box-shadow: 0 18px 35px rgba(37, 99, 235, 0.24);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 22px 45px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: #e2e8f0;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,0.12);
+    }
+
+    /* Floating particles */
+    .particle {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float linear infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0) scale(1);
+        opacity: 0;
+      }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% {
+        transform: translateY(-10vh) translateX(40px) scale(0);
+        opacity: 0;
+      }
+    }
+
+    .logo-404 {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 24px;
+      animation: logoFloat 3s ease-in-out infinite;
+    }
+
+    .logo-404 img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 20px rgba(59,130,246,0.3));
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @media (max-width: 600px) {
+      .error-code { font-size: clamp(5rem, 25vw, 7rem); letter-spacing: -4px; }
+      .actions { flex-direction: column; }
+      .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-404">
+    <img src="./images/logo-osis.png" alt="" onerror="this.style.display='none'">
+  </div>
+  <main>
+    <div class="error-code" aria-hidden="true">404</div>
+    <span class="glitch-line" aria-hidden="true"></span>
+    <h1>Halaman Tidak Ditemukan</h1>
+    <p>Sepertinya kamu tersesat di labirin digital.</p>
+    <p>Halaman yang kamu cari tidak tersedia atau telah dipindahkan.</p>
+
+    <div class="actions">
+      <a href="./index.html" class="btn btn-primary"><i class="fa-solid fa-house"></i> Kembali ke Beranda</a>
+      <a href="./index.html#kritik-saran" class="btn btn-secondary"><i class="fa-solid fa-comments"></i> Buka Aspirasi</a>
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      var count = window.innerWidth < 768 ? 15 : 30;
+      for (var i = 0; i < count; i++) {
+        var p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.width = (2 + Math.random() * 5) + 'px';
+        p.style.height = p.style.width;
+        p.style.animationDuration = (10 + Math.random() * 15) + 's';
+        p.style.animationDelay = (Math.random() * 10) + 's';
+        p.style.opacity = 0.2 + Math.random() * 0.4;
+        document.body.appendChild(p);
+      }
+    })();
+  </script>
+</body>
+</html>

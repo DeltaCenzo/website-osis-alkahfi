@@ -1,0 +1,768 @@
+/* =========================================================
+   OSIS MOTION SYSTEM — V32
+   Full-motion editorial experience without animation clutter.
+   Native CSS + WAAPI + Canvas progressive enhancement.
+   ========================================================= */
+
+@property --v32-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+:root {
+    --v32-ease: cubic-bezier(.2,.78,.2,1);
+    --v32-spring: cubic-bezier(.16,1,.3,1);
+    --v32-blue: #60a5fa;
+    --v32-gold: #fbbf24;
+    --v32-ink: #07101f;
+}
+
+html {
+    scroll-timeline-name: --page-scroll-v32;
+    scroll-timeline-axis: block;
+}
+
+body {
+    position: relative;
+    min-height: 100%;
+}
+
+/* V29 used generic perpetual card floating. V32 replaces it with interaction
+   and scroll-driven motion, which feels more intentional and less template-like. */
+[data-theme="dark"] .card-box,
+[data-theme="dark"] .feature-card,
+[data-theme="dark"] .dashboard-shell,
+[data-theme="dark"] .dashboard-stat,
+[data-theme="dark"] .interactive-box,
+[data-theme="dark"] .leadership-card-v12,
+[data-theme="dark"] .board-support-card-v12,
+[data-theme="dark"] .division-card-v12,
+[data-theme="dark"] .contact-card-v13,
+[data-theme="dark"] .social-hub-v13 {
+    animation: none !important;
+}
+
+/* ---------- Global constellation / background ---------- */
+.motion-canvas-v32 {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: .48;
+    filter: saturate(.94);
+}
+
+[data-theme="dark"] .motion-canvas-v32 { opacity: .72; }
+
+body > header,
+body > main,
+body > footer {
+    position: relative;
+    z-index: 2;
+}
+
+.pointer-aura-v32 {
+    position: fixed;
+    width: 360px;
+    height: 360px;
+    left: -180px;
+    top: -180px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    background: radial-gradient(circle, rgba(96,165,250,.10), rgba(96,165,250,.045) 34%, transparent 68%);
+    transform: translate3d(var(--pointer-x, -500px), var(--pointer-y, -500px), 0);
+    transition: opacity 350ms ease;
+    will-change: transform;
+}
+
+[data-theme="dark"] .pointer-aura-v32 {
+    background: radial-gradient(circle, rgba(96,165,250,.13), rgba(59,130,246,.055) 34%, transparent 68%);
+}
+
+.pointer-aura-v32.is-active { opacity: 1; }
+
+/* ---------- Branded opening shutter ---------- */
+.motion-intro-v32 {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+}
+
+.motion-intro-v32::before,
+.motion-intro-v32::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    width: 51%;
+    background:
+        radial-gradient(circle at 50% 38%, rgba(59,130,246,.20), transparent 26%),
+        linear-gradient(135deg, #07101f, #0d2144 62%, #0a1730);
+    animation: introPanelV32 980ms var(--v32-spring) 260ms both;
+}
+
+.motion-intro-v32::before { left: 0; transform-origin: left center; }
+.motion-intro-v32::after { right: 0; transform-origin: right center; }
+
+.motion-intro-label-v32 {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: 5px;
+    text-align: center;
+    color: white;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    animation: introLabelV32 650ms var(--v32-ease) both;
+}
+
+.motion-intro-label-v32 strong {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(1.05rem, 3vw, 1.55rem);
+    font-weight: 800;
+}
+
+.motion-intro-label-v32 span {
+    color: #93c5fd;
+    font-size: .72rem;
+    font-weight: 700;
+}
+
+@keyframes introPanelV32 {
+    0% { transform: scaleX(1); }
+    100% { transform: scaleX(0); }
+}
+
+@keyframes introLabelV32 {
+    0% { opacity: 0; transform: translateY(10px); filter: blur(6px); }
+    35%, 70% { opacity: 1; transform: none; filter: none; }
+    100% { opacity: 0; transform: translateY(-8px); filter: blur(5px); }
+}
+
+/* ---------- Hero camera + geometric identity ---------- */
+header {
+    min-height: min(820px, 92svh) !important;
+    /* Keep the original image as a no-JS fallback; the animated layer is additive. */
+    background-color: #081426 !important;
+    isolation: isolate;
+}
+
+.hero-bg-v32 {
+    position: absolute;
+    inset: -5%;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        linear-gradient(135deg, rgba(8,17,31,.73), rgba(23,55,120,.68)),
+        image-set(url('../images/bg-sekolah.webp') type('image/webp'), url('../images/bg-sekolah.jpg') type('image/jpeg')) center/cover no-repeat;
+    transform: scale(1.06);
+    animation: heroCameraV32 20s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+@keyframes heroCameraV32 {
+    0% { transform: scale(1.06) translate3d(-.6%, -.4%, 0); }
+    45% { transform: scale(1.105) translate3d(.7%, .15%, 0); }
+    100% { transform: scale(1.075) translate3d(-.15%, .65%, 0); }
+}
+
+.hero-orbits-v32 {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.hero-orbit-v32 {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    width: min(76vw, 740px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgba(147,197,253,.12);
+    transform: translate(-50%, -50%);
+    animation: orbitSpinV32 28s linear infinite;
+}
+
+.hero-orbit-v32::before,
+.hero-orbit-v32::after {
+    content: '';
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #93c5fd;
+    box-shadow: 0 0 18px rgba(147,197,253,.8), 0 0 0 5px rgba(147,197,253,.08);
+}
+
+.hero-orbit-v32::before { left: 13%; top: 16%; }
+.hero-orbit-v32::after { right: 7%; bottom: 25%; width: 5px; height: 5px; background: #fbbf24; box-shadow: 0 0 18px rgba(251,191,36,.65); }
+
+.hero-orbit-v32:nth-child(2) {
+    width: min(54vw, 520px);
+    border-style: dashed;
+    border-color: rgba(255,255,255,.085);
+    animation-duration: 21s;
+    animation-direction: reverse;
+}
+
+.hero-orbit-v32:nth-child(3) {
+    width: min(96vw, 940px);
+    opacity: .52;
+    animation-duration: 38s;
+}
+
+@keyframes orbitSpinV32 {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.hero-scan-v32 {
+    position: absolute;
+    inset-inline: 8%;
+    top: 0;
+    height: 1px;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(147,197,253,.65), transparent);
+    opacity: 0;
+    animation: heroScanV32 8s ease-in-out 2s infinite;
+}
+
+@keyframes heroScanV32 {
+    0%, 10% { top: 11%; opacity: 0; }
+    18% { opacity: .42; }
+    55% { top: 82%; opacity: .18; }
+    62%, 100% { top: 82%; opacity: 0; }
+}
+
+header h1 {
+    max-width: 1040px;
+    margin-inline: auto;
+    font-size: clamp(2.15rem, 6.1vw, 4.6rem) !important;
+    line-height: 1.04;
+    letter-spacing: -.035em;
+    text-wrap: balance;
+    animation: none !important;
+}
+
+.hero-word-v32 {
+    display: inline-block;
+    margin-inline: .055em;
+    opacity: 0;
+    transform: translate3d(0, 34px, 0) rotateX(-18deg);
+    filter: blur(7px);
+    animation: heroWordInV32 900ms var(--v32-spring) forwards;
+    animation-delay: calc(120ms + var(--word-index) * 72ms);
+    transform-origin: 50% 100%;
+}
+
+@keyframes heroWordInV32 {
+    to { opacity: 1; transform: none; filter: blur(0); }
+}
+
+.hero-actions .hero-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-actions .hero-btn::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.30) 49%, transparent 68%);
+    transform: translateX(-125%);
+    transition: transform 650ms var(--v32-ease);
+    pointer-events: none;
+}
+
+.hero-actions .hero-btn:hover::after { transform: translateX(125%); }
+
+.hero-scroll-cue-v32 {
+    position: absolute;
+    left: 50%;
+    bottom: 22px;
+    z-index: 3;
+    transform: translateX(-50%);
+    display: grid;
+    justify-items: center;
+    gap: 7px;
+    color: rgba(255,255,255,.66);
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+
+.hero-scroll-line-v32 {
+    width: 1px;
+    height: 34px;
+    overflow: hidden;
+    background: rgba(255,255,255,.16);
+}
+
+.hero-scroll-line-v32::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 45%;
+    background: linear-gradient(to bottom, transparent, #93c5fd);
+    animation: scrollCueV32 1.8s var(--v32-ease) infinite;
+}
+
+@keyframes scrollCueV32 {
+    from { transform: translateY(-115%); }
+    to { transform: translateY(240%); }
+}
+
+/* ---------- Navigation becomes a compact instrument while scrolling ---------- */
+nav {
+    transition: padding 280ms var(--v32-ease), box-shadow 280ms ease, background-color 280ms ease, backdrop-filter 280ms ease;
+}
+
+nav.is-scrolled-v32 {
+    box-shadow: 0 14px 42px rgba(15,23,42,.12), inset 0 -1px rgba(148,163,184,.08);
+}
+
+[data-theme="dark"] nav.is-scrolled-v32 {
+    box-shadow: 0 16px 48px rgba(2,6,23,.30), inset 0 -1px rgba(148,163,184,.08);
+}
+
+.nav-links a,
+.nav-links button {
+    position: relative;
+}
+
+.nav-links a.is-active-v31 i {
+    animation: navIconPopV32 430ms var(--v32-spring);
+}
+
+@keyframes navIconPopV32 {
+    0% { transform: scale(.72) rotate(-8deg); }
+    65% { transform: scale(1.16) rotate(3deg); }
+    100% { transform: none; }
+}
+
+/* ---------- Right-side chapter rail ---------- */
+.motion-rail-v32 {
+    position: fixed;
+    right: 19px;
+    top: 50%;
+    z-index: 60;
+    transform: translateY(-50%);
+    display: grid;
+    gap: 11px;
+    padding: 12px 9px;
+    border: 1px solid color-mix(in srgb, var(--border-color) 72%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--card-bg) 82%, transparent);
+    box-shadow: 0 12px 34px rgba(15,23,42,.08);
+    backdrop-filter: blur(12px);
+}
+
+.motion-rail-dot-v32 {
+    appearance: none;
+    border: 0;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    padding: 0;
+    cursor: pointer;
+    background: color-mix(in srgb, var(--text-muted) 48%, transparent);
+    transition: transform 280ms var(--v32-spring), background-color 280ms ease, box-shadow 280ms ease;
+}
+
+.motion-rail-dot-v32:hover { transform: scale(1.65); }
+.motion-rail-dot-v32.is-active {
+    transform: scale(1.55);
+    background: var(--primary);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 14%, transparent), 0 0 14px color-mix(in srgb, var(--primary) 35%, transparent);
+}
+
+/* ---------- Sections behave like chapters ---------- */
+main > .container,
+main > section.container {
+    --scene-shift-v32: 0px;
+    isolation: isolate;
+}
+
+.scene-orb-v32 {
+    position: absolute;
+    z-index: -1;
+    width: clamp(220px, 32vw, 460px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    top: 14%;
+    right: -18%;
+    pointer-events: none;
+    opacity: .45;
+    background: radial-gradient(circle, color-mix(in srgb, var(--primary) 10%, transparent), transparent 66%);
+    transform: translate3d(0, var(--scene-shift-v32), 0);
+    transition: opacity 500ms ease;
+}
+
+main > .container:nth-of-type(even) .scene-orb-v32,
+main > section.container:nth-of-type(even) .scene-orb-v32 {
+    right: auto;
+    left: -18%;
+    background: radial-gradient(circle, rgba(245,158,11,.065), transparent 66%);
+}
+
+.scene-kicker-v32 {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 9px;
+    color: var(--primary);
+    font-size: .67rem;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    opacity: .72;
+}
+
+.scene-kicker-v32::before {
+    content: '';
+    width: 22px;
+    height: 1px;
+    background: currentColor;
+    transform-origin: left center;
+    transform: scaleX(.28);
+    transition: transform 700ms var(--v32-spring);
+}
+
+.motion-scene-v32.scene-active-v32 .scene-kicker-v32::before { transform: scaleX(1); }
+
+.motion-scene-v32 .section-title h2 {
+    transition: letter-spacing 700ms var(--v32-spring), transform 700ms var(--v32-spring);
+}
+
+.motion-scene-v32.scene-active-v32 .section-title h2 {
+    letter-spacing: -.02em;
+}
+
+.motion-scene-v32 .section-title {
+    transition: transform 700ms var(--v32-spring), opacity 620ms ease;
+}
+
+.motion-scene-v32:not(.scene-active-v32) .section-title {
+    transform: translateY(14px);
+    opacity: .78;
+}
+
+/* Animate an understated light sweep once a card is first seen. */
+.card-arrived-v32 {
+    position: relative;
+}
+
+.card-arrived-v32 > .card-arrival-sheen-v32 {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    border-radius: inherit;
+    overflow: hidden;
+}
+
+.card-arrived-v32 > .card-arrival-sheen-v32::after {
+    content: '';
+    position: absolute;
+    inset: -25%;
+    background: linear-gradient(110deg, transparent 40%, rgba(255,255,255,.12) 49%, transparent 58%);
+    transform: translateX(-80%);
+    animation: cardArrivalV32 1050ms var(--v32-ease) 120ms both;
+}
+
+@keyframes cardArrivalV32 {
+    to { transform: translateX(80%); }
+}
+
+/* ---------- More tactile cards ---------- */
+.experience-card-v31 {
+    transform-origin: center center;
+}
+
+/* Beat legacy dark-mode hover rules so V31 tilt + V32 lift remain authoritative. */
+[data-theme="dark"] .experience-card-v31:not(.motion-animating) {
+    transform: perspective(920px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translate3d(0,var(--lift-y),0) !important;
+}
+
+@media (hover:hover) and (pointer:fine) {
+    .experience-card-v31:hover {
+        --lift-y: -7px;
+        box-shadow: 0 26px 66px -24px rgba(37,99,235,.28) !important;
+    }
+
+    .experience-card-v31:hover h3,
+    .experience-card-v31:hover h4 {
+        transform: translateX(2px);
+    }
+}
+
+/* ---------- Inputs / controls respond to focus ---------- */
+.form-control,
+.dashboard-panel input,
+.dashboard-panel select,
+.dashboard-panel textarea {
+    transition: border-color 220ms ease, box-shadow 280ms ease, transform 280ms var(--v32-spring), background-color 220ms ease !important;
+}
+
+.form-control:focus,
+.dashboard-panel input:focus,
+.dashboard-panel select:focus,
+.dashboard-panel textarea:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 12%, transparent), 0 10px 30px rgba(37,99,235,.08) !important;
+}
+
+/* ---------- Click ripple ---------- */
+.motion-ripple-host-v32 { position: relative !important; overflow: hidden !important; }
+.motion-ripple-v32 {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: rgba(255,255,255,.36);
+    transform: translate(-50%, -50%) scale(0);
+    animation: rippleV32 620ms ease-out forwards;
+}
+
+@keyframes rippleV32 {
+    to { opacity: 0; transform: translate(-50%, -50%) scale(18); }
+}
+
+/* ---------- Countdown has a soft live pulse ---------- */
+.countdown-card {
+    overflow: hidden;
+}
+
+.countdown-card::after {
+    content: '';
+    position: absolute;
+    inset: -60% -20%;
+    pointer-events: none;
+    background: conic-gradient(from var(--v32-angle), transparent 0 38%, color-mix(in srgb, var(--primary) 8%, transparent) 47%, transparent 57% 100%);
+    animation: countdownOrbitV32 11s linear infinite;
+}
+
+@keyframes countdownOrbitV32 { to { --v32-angle: 360deg; } }
+
+.countdown-card > * { position: relative; z-index: 1; }
+
+/* ---------- Footer closes the story with a moving trace ---------- */
+.footer-v13 {
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-v13::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -35%;
+    width: 35%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(147,197,253,.85), transparent);
+    animation: footerTraceV32 7s ease-in-out infinite;
+}
+
+@keyframes footerTraceV32 {
+    0%, 14% { left: -35%; opacity: 0; }
+    26% { opacity: .8; }
+    62% { left: 100%; opacity: .28; }
+    70%, 100% { left: 100%; opacity: 0; }
+}
+
+/* ---------- Performance & reduced motion ---------- */
+html.perf-lite .motion-canvas-v32,
+html.perf-lite .pointer-aura-v32,
+html.perf-lite .hero-orbits-v32,
+html.perf-lite .hero-scan-v32,
+html.perf-lite .motion-rail-v32 {
+    display: none !important;
+}
+
+html.perf-lite .hero-bg-v32,
+html.perf-lite .countdown-card::after,
+html.perf-lite .footer-v13::before {
+    animation: none !important;
+}
+
+@media (max-width: 1180px) {
+    .motion-rail-v32 { display: none; }
+}
+
+@media (max-width: 767px) {
+    header { min-height: 86svh !important; }
+    header h1 { font-size: clamp(2rem, 10vw, 3.2rem) !important; }
+    .hero-orbit-v32 { width: 118vw; opacity: .58; }
+    .hero-orbit-v32:nth-child(2) { width: 78vw; }
+    .hero-orbit-v32:nth-child(3) { display: none; }
+    .hero-scroll-cue-v32 { bottom: 14px; }
+    .pointer-aura-v32 { display: none; }
+    .motion-canvas-v32 { opacity: .28; }
+    [data-theme="dark"] .motion-canvas-v32 { opacity: .42; }
+    .scene-orb-v32 { opacity: .28; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .motion-intro-v32,
+    .motion-canvas-v32,
+    .pointer-aura-v32,
+    .hero-orbits-v32,
+    .hero-scan-v32,
+    .hero-scroll-cue-v32,
+    .motion-rail-v32,
+    .scene-orb-v32,
+    .card-arrival-sheen-v32 {
+        display: none !important;
+    }
+
+    .hero-bg-v32,
+    .hero-word-v32,
+    .countdown-card::after,
+    .footer-v13::before {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+    }
+}
+
+
+/* =========================================================
+   V33 TEXT-SAFE PATCH
+   Motion belongs to scenery and containers. Visible copy is never split,
+   squeezed, letter-animated, or translated independently.
+   ========================================================= */
+
+/* Hero copy: keep native line wrapping and animate the heading as one block. */
+header h1.hero-title-safe-v33 {
+    width: min(1040px, 92vw);
+    max-width: 1040px;
+    margin-inline: auto;
+    font-size: clamp(2.05rem, 5.2vw, 4rem) !important;
+    line-height: 1.1 !important;
+    letter-spacing: .005em !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+    text-wrap: balance;
+    transform: none !important;
+    transition: none !important;
+    animation: heroTitleSafeInV33 900ms var(--v32-spring) 120ms both !important;
+}
+
+@keyframes heroTitleSafeInV33 {
+    from { opacity: 0; transform: translate3d(0, 18px, 0); filter: blur(4px); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); filter: blur(0); }
+}
+
+/* Legacy per-word animation is deliberately neutralized in case stale DOM/cache survives. */
+.hero-word-v32 {
+    display: inline !important;
+    margin: 0 !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+}
+
+/* Paragraph/tagline remains completely stable while the scenery moves around it. */
+header #typing-text {
+    transform: none !important;
+    transition: none !important;
+    max-width: min(760px, 88vw);
+    line-height: 1.65;
+}
+
+/* Section headings never change geometry during intersection/scroll state. */
+.motion-scene-v32 .section-title,
+.motion-scene-v32:not(.scene-active-v32) .section-title,
+.motion-scene-v32.scene-active-v32 .section-title {
+    transform: none !important;
+    opacity: 1 !important;
+}
+
+.motion-scene-v32 .section-title h2,
+.motion-scene-v32.scene-active-v32 .section-title h2 {
+    letter-spacing: .2px !important;
+    transform: none !important;
+    transition: color 260ms ease !important;
+    word-break: normal;
+    overflow-wrap: normal;
+    hyphens: none;
+}
+
+/* Never move a heading independently from its card body. */
+.experience-card-v31:hover h2,
+.experience-card-v31:hover h3,
+.experience-card-v31:hover h4,
+.experience-card-v31:hover h5,
+.experience-card-v31:hover h6 {
+    transform: none !important;
+}
+
+/* Keep user-facing public copy readable even when long Indonesian words wrap. */
+#struktur h3,
+#visi-misi h3,
+#proker h4,
+#pengumuman h3,
+#pengumuman h4,
+#galeri h3,
+#galeri h4,
+#kritik-saran h2,
+#kontak h2,
+#kontak h3,
+#kontak strong {
+    line-height: 1.3;
+    word-break: normal;
+    hyphens: none;
+}
+
+/* Mobile typography: prioritize clean wrapping over spectacle. */
+@media (max-width: 767px) {
+    header h1.hero-title-safe-v33 {
+        width: min(94vw, 620px);
+        font-size: clamp(1.72rem, 7.7vw, 2.35rem) !important;
+        line-height: 1.14 !important;
+        letter-spacing: 0 !important;
+        text-wrap: balance;
+    }
+
+    header #typing-text {
+        width: min(90vw, 560px);
+        font-size: .98rem !important;
+        line-height: 1.55;
+    }
+
+    .section-title h2 {
+        line-height: 1.18;
+    }
+}
+
+@media (max-width: 420px) {
+    header h1.hero-title-safe-v33 {
+        font-size: clamp(1.62rem, 7.5vw, 2rem) !important;
+        width: 92vw;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    header h1.hero-title-safe-v33 {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+    }
+}

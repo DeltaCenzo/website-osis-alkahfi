@@ -1,0 +1,12 @@
+# Robots.txt untuk website OSIS SMA Al-Kahfi
+# GANTI https://osis-alkahfi.sch.id dengan domain asli website kamu
+
+User-agent: *
+Allow: /
+
+Disallow: /js/
+Disallow: /css/
+Disallow: /icons/
+Disallow: /push/
+
+Sitemap: https://osis-alkahfi.sch.id/sitemap.xml

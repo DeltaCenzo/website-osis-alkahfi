@@ -1,0 +1,470 @@
+/* =========================================================
+   OSIS AL-KAHFI — V39 POLISHED SCHOOL HERO
+   - real school photograph, framed like the earlier design
+   - clean logo treatment (no orbit reactor)
+   - curtain loader with deliberate reveal
+   - removes leaked legacy hero/rail ornaments
+   ========================================================= */
+
+:root{
+  --v39-ease:cubic-bezier(.16,1,.3,1);
+  --v39-curtain:cubic-bezier(.76,0,.24,1);
+  --v39-navy:#091a3c;
+  --v39-blue:#3b82f6;
+  --v39-blue-soft:#93c5fd;
+  --v39-gold:#f6b94f;
+}
+
+html.v39-js body.v39-loader-lock{overflow:hidden}
+
+/* ---------- Loader: deliberate curtain opening ---------- */
+.v38-loader{
+  position:fixed;
+  inset:0;
+  z-index:25000;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  isolation:isolate;
+  color:#fff;
+  background:#061022;
+  perspective:1600px;
+}
+html:not(.v39-js) .v38-loader{display:none!important}
+@keyframes v39LoaderFailsafe{to{visibility:hidden;pointer-events:none}}
+.v38-loader{animation:v39LoaderFailsafe 0s linear 8s forwards}
+
+.v38-curtain-panel{
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:50.2%;
+  z-index:1;
+  overflow:hidden;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),transparent 14%,transparent 86%,rgba(0,0,0,.18)),
+    repeating-linear-gradient(90deg,#071426 0 11%,#0b1c34 12% 21%,#071426 23% 34%,#0d223e 35% 44%,#071426 46% 58%),
+    #071426;
+  box-shadow:inset 0 0 110px rgba(0,0,0,.45);
+  will-change:transform;
+  transition:transform 1.18s var(--v39-curtain) .14s,filter .95s ease;
+}
+.v38-curtain-panel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  opacity:.32;
+  background:
+    linear-gradient(90deg,transparent 0 18%,rgba(117,181,255,.045) 20%,transparent 23% 47%,rgba(255,255,255,.035) 49%,transparent 52% 76%,rgba(246,185,79,.03) 78%,transparent 81%);
+  filter:blur(1px);
+}
+.v38-curtain-panel::after{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:2px;
+  background:linear-gradient(180deg,transparent 3%,rgba(255,255,255,.13) 23%,rgba(147,197,253,.82) 49%,rgba(246,185,79,.54) 66%,transparent 96%);
+  box-shadow:0 0 24px rgba(96,165,250,.26);
+}
+.v38-curtain-left{left:0;transform-origin:left center}
+.v38-curtain-right{right:0;transform-origin:right center}
+.v38-curtain-left::after{right:0}
+.v38-curtain-right::after{left:0}
+.v38-loader.is-opening .v38-curtain-left{transform:translate3d(-101.4%,0,0) rotateY(4deg);filter:brightness(.72)}
+.v38-loader.is-opening .v38-curtain-right{transform:translate3d(101.4%,0,0) rotateY(-4deg);filter:brightness(.72)}
+
+.v38-curtain-seam{
+  position:absolute;
+  left:50%;
+  top:0;
+  bottom:0;
+  z-index:3;
+  width:1px;
+  transform:translateX(-50%);
+  background:linear-gradient(180deg,transparent 4%,rgba(255,255,255,.24) 26%,rgba(147,197,253,.94) 50%,rgba(246,185,79,.48) 73%,transparent 96%);
+  box-shadow:0 0 28px rgba(96,165,250,.3);
+  transition:opacity .2s ease,transform .65s var(--v39-ease);
+}
+.v38-loader.is-opening .v38-curtain-seam{opacity:0;transform:translateX(-50%) scaleY(.22)}
+
+.v38-loader-inner{
+  position:relative;
+  z-index:4;
+  width:min(650px,88vw);
+  display:grid;
+  justify-items:center;
+  gap:17px;
+  text-align:center;
+  transition:opacity .34s ease,transform .54s var(--v39-ease),filter .42s ease;
+}
+.v38-loader.is-opening .v38-loader-inner{opacity:0;transform:scale(.93);filter:blur(7px);pointer-events:none}
+
+.v38-loader-crest{
+  position:relative;
+  width:clamp(100px,9.2vw,132px);
+  aspect-ratio:1;
+  display:grid;
+  place-items:center;
+  animation:v39LoaderCrest .82s var(--v39-ease) both;
+}
+.v38-loader-crest::before{
+  content:"";
+  position:absolute;
+  inset:-22px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(96,165,250,.23),rgba(59,130,246,.08) 48%,transparent 72%);
+  filter:blur(7px);
+  animation:v39LoaderGlow 1.7s ease-in-out infinite alternate;
+  z-index:-1;
+}
+.v38-loader-crest::after{
+  content:"";
+  position:absolute;
+  inset:-9px;
+  border-radius:50%;
+  border:1px solid rgba(147,197,253,.34);
+  opacity:.65;
+}
+.v38-loader-crest img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+  background:#fff;
+  border:2px solid rgba(255,255,255,.9);
+  box-shadow:0 20px 56px rgba(0,0,0,.42),0 0 32px rgba(96,165,250,.18);
+}
+.v38-loader-dot{display:none!important}
+@keyframes v39LoaderCrest{from{opacity:0;transform:scale(.68);filter:blur(8px)}to{opacity:1;transform:scale(1);filter:none}}
+@keyframes v39LoaderGlow{from{opacity:.48;transform:scale(.92)}to{opacity:.9;transform:scale(1.08)}}
+
+.v38-loader-copy{display:grid;gap:5px;justify-items:center}
+.v38-loader-kicker{font-size:.7rem;font-weight:800;letter-spacing:.25em;text-transform:uppercase;color:rgba(246,185,79,.94)}
+.v38-loader-title{font-family:'Poppins','Inter',sans-serif;font-size:clamp(1.65rem,3.5vw,2.7rem);line-height:1.06;font-weight:800;letter-spacing:-.04em}
+.v38-loader-sub{font-size:.72rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:rgba(203,213,225,.68)}
+.v38-loader-progress{width:min(390px,78vw);display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:14px;row-gap:9px;margin-top:5px}
+.v38-loader-track{height:2px;position:relative;overflow:hidden;border-radius:999px;background:rgba(255,255,255,.14)}
+.v38-loader-bar{position:absolute;inset:0 auto 0 0;width:0%;border-radius:inherit;background:linear-gradient(90deg,#60a5fa,#d9f3ff 55%,#f6b94f);box-shadow:0 0 16px rgba(96,165,250,.36)}
+.v38-loader-percent{font-variant-numeric:tabular-nums;font-size:.76rem;font-weight:800;letter-spacing:.08em;color:rgba(255,255,255,.82)}
+.v38-loader-status{grid-column:1/-1;text-align:left;font-size:.66rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:rgba(148,163,184,.66)}
+
+/* ---------- Kill legacy decorations that leaked into V38 ---------- */
+header .hero-grid-v31,
+header .hero-sheen-v31,
+header .hero-orbits-v32,
+header .hero-scan-v32,
+body > .motion-rail-v32,
+.v37-hero-glint,
+.v37-hero-wave,
+.v37-liquid-canvas,
+.v37-liquid-fallback{display:none!important}
+
+/* ---------- School-photo hero: close to the earlier composition ---------- */
+header{
+  min-height:clamp(540px,72svh,690px)!important;
+  padding:clamp(82px,10vh,112px) 1rem clamp(70px,9vh,92px)!important;
+  display:grid!important;
+  align-content:center!important;
+  justify-items:center!important;
+  text-align:center!important;
+  background:#0a1c40!important;
+  color:#fff;
+  overflow:hidden!important;
+  isolation:isolate;
+  perspective:none!important;
+  box-shadow:0 10px 34px rgba(2,6,23,.16)!important;
+}
+
+header .hero-bg-v32{
+  position:absolute!important;
+  inset:0!important;
+  z-index:0!important;
+  pointer-events:none;
+  opacity:1!important;
+  margin:0!important;
+  mix-blend-mode:normal!important;
+  filter:none!important;
+  background-image:image-set(url('../images/bg-sekolah.webp') type('image/webp'),url('../images/bg-sekolah.jpg') type('image/jpeg'))!important;
+  background-position:center center!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
+  transform:scale(1.004);
+  animation:v39SchoolBreath 20s ease-in-out infinite alternate!important;
+  will-change:transform;
+}
+@keyframes v39SchoolBreath{
+  0%{transform:scale(1.004) translate3d(0,0,0)}
+  100%{transform:scale(1.018) translate3d(.12%,-.18%,0)}
+}
+
+header::before{
+  content:"";
+  position:absolute!important;
+  inset:0!important;
+  z-index:1!important;
+  width:auto!important;
+  height:auto!important;
+  background:
+    linear-gradient(90deg,rgba(5,15,39,.90) 0%,rgba(19,53,120,.72) 48%,rgba(11,31,72,.83) 100%),
+    linear-gradient(180deg,rgba(9,29,74,.16),rgba(8,28,69,.38))!important;
+  pointer-events:none;
+}
+header::after{
+  content:"";
+  position:absolute!important;
+  inset:-10%!important;
+  z-index:1!important;
+  width:auto!important;
+  height:auto!important;
+  pointer-events:none;
+  opacity:.52!important;
+  background:
+    radial-gradient(circle at 50% 40%,rgba(96,165,250,.16),transparent 36%),
+    linear-gradient(180deg,transparent 62%,rgba(3,11,28,.28))!important;
+  animation:v39HeroLight 10s ease-in-out infinite alternate!important;
+}
+@keyframes v39HeroLight{to{opacity:.68;transform:translate3d(0,-.6%,0)}}
+
+header > .logo-container,
+header > .hero-badge,
+header > h1,
+header > #typing-text,
+header > .hero-actions,
+header > .hero-scroll-cue-v32{
+  position:relative!important;
+  z-index:3!important;
+}
+
+/* ---------- Logos: clean, balanced, no reactor/orbit ---------- */
+header .logo-stage-v39{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:22px!important;
+  min-height:0!important;
+  margin:0 auto 24px!important;
+  transform:none!important;
+  transition:none!important;
+  perspective:none!important;
+}
+header .logo-stage-v39::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:250px;
+  height:110px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(96,165,250,.16),transparent 70%);
+  filter:blur(10px);
+  pointer-events:none;
+  z-index:-1;
+}
+.hero-logo-v39{
+  position:relative;
+  display:grid;
+  place-items:center;
+  flex:0 0 auto;
+  transform:none;
+  transition:transform .34s var(--v39-ease),filter .34s ease;
+}
+.hero-logo-school-v39{width:82px;height:82px}
+.hero-logo-osis-v39{width:96px;height:96px}
+.hero-logo-v39 .logo-img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  display:block;
+  border-radius:50%;
+  animation:none!important;
+  transform:none!important;
+  transition:filter .34s ease!important;
+  filter:drop-shadow(0 13px 18px rgba(1,7,20,.42))!important;
+}
+.hero-logo-osis-v39 .logo-img{background:#fff;object-fit:cover!important;border:2px solid rgba(255,255,255,.92)}
+@media(hover:hover) and (pointer:fine){
+  .hero-logo-v39:hover{transform:translateY(-4px) scale(1.025)}
+  .hero-logo-v39:hover .logo-img{filter:drop-shadow(0 18px 24px rgba(1,7,20,.48)) drop-shadow(0 0 14px rgba(147,197,253,.14))!important}
+}
+
+/* ---------- Hero copy: centered, readable, stable ---------- */
+header .hero-badge{
+  margin:0 auto 18px!important;
+  width:max-content!important;
+  max-width:calc(100vw - 32px)!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  color:#f6b94f!important;
+  font-size:.74rem!important;
+  font-weight:800!important;
+  letter-spacing:.18em!important;
+  text-transform:uppercase!important;
+}
+header .hero-badge-dot-v31{width:5px!important;height:5px!important;background:#f6b94f!important;box-shadow:0 0 12px rgba(246,185,79,.7)!important}
+
+header h1.hero-title-safe-v33,
+header h1{
+  width:min(1250px,94vw)!important;
+  max-width:1250px!important;
+  margin:0 auto 18px!important;
+  font-family:'Poppins','Inter',sans-serif!important;
+  font-size:clamp(2.05rem,3vw,3.35rem)!important;
+  line-height:1.08!important;
+  font-weight:800!important;
+  letter-spacing:.005em!important;
+  text-align:center!important;
+  text-wrap:balance!important;
+  word-break:normal!important;
+  overflow-wrap:normal!important;
+  transform:none!important;
+  transition:none!important;
+  animation:none!important;
+  filter:none!important;
+  background:linear-gradient(90deg,#fff 0%,#dbeafe 58%,#bfdbfe 100%)!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+  text-shadow:0 14px 40px rgba(1,7,20,.24)!important;
+}
+@media(min-width:1280px){header h1.hero-title-safe-v33,header h1{white-space:nowrap!important}}
+
+header #typing-text{
+  width:min(760px,92vw)!important;
+  max-width:760px!important;
+  min-height:1.8em!important;
+  margin:0 auto!important;
+  color:rgba(255,255,255,.9)!important;
+  font-size:clamp(.98rem,1.25vw,1.16rem)!important;
+  line-height:1.6!important;
+  font-weight:650!important;
+  letter-spacing:.01em!important;
+  text-align:center!important;
+  transform:none!important;
+  transition:none!important;
+  text-shadow:0 6px 24px rgba(0,0,0,.28)!important;
+}
+
+header .hero-actions{
+  margin:28px auto 0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:14px!important;
+  transform:none!important;
+  transition:none!important;
+}
+header .hero-btn{
+  min-height:54px;
+  padding:14px 24px!important;
+  border-radius:999px!important;
+  font-weight:750!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  box-shadow:0 15px 35px rgba(2,6,23,.2)!important;
+}
+header .hero-btn:not(.secondary){background:linear-gradient(135deg,#4f9bff,#377df4)!important;color:#fff!important}
+header .hero-btn.secondary{background:rgba(255,255,255,.12)!important;color:#fff!important;border-color:rgba(255,255,255,.30)!important;backdrop-filter:blur(10px)!important}
+@media(hover:hover) and (pointer:fine){
+  header .hero-btn:hover{transform:translateY(-3px)!important;box-shadow:0 20px 40px rgba(2,6,23,.28)!important}
+}
+
+header .hero-scroll-cue-v32{display:none!important}
+
+/* ---------- Hero reveal after curtain ---------- */
+html.v39-js body:not(.v39-hero-live) header .logo-stage-v39,
+html.v39-js body:not(.v39-hero-live) header .hero-badge,
+html.v39-js body:not(.v39-hero-live) header h1,
+html.v39-js body:not(.v39-hero-live) header #typing-text,
+html.v39-js body:not(.v39-hero-live) header .hero-actions{
+  opacity:0!important;
+  transform:translate3d(0,22px,0)!important;
+  filter:blur(6px)!important;
+  animation:none!important;
+}
+body.v39-hero-live header .logo-stage-v39{animation:v39HeroReveal .82s var(--v39-ease) .02s both!important}
+body.v39-hero-live header .hero-badge{animation:v39HeroReveal .76s var(--v39-ease) .10s both!important}
+body.v39-hero-live header h1{animation:v39HeroReveal .92s var(--v39-ease) .17s both!important}
+body.v39-hero-live header #typing-text{animation:v39HeroReveal .82s var(--v39-ease) .28s both!important}
+body.v39-hero-live header .hero-actions{animation:v39HeroReveal .82s var(--v39-ease) .38s both!important}
+@keyframes v39HeroReveal{from{opacity:0;transform:translate3d(0,24px,0);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+
+/* ---------- Main navigation: sticky AFTER hero, never a full-screen motion rail ---------- */
+body > nav[aria-label="Navigasi utama"]{
+  position:sticky!important;
+  top:0!important;
+  left:auto!important;
+  right:auto!important;
+  width:100%!important;
+  transform:none!important;
+  z-index:1200!important;
+  padding:13px max(22px,calc((100vw - 1180px)/2))!important;
+  background:color-mix(in srgb,var(--nav-bg) 94%,transparent)!important;
+  border:0!important;
+  border-bottom:1px solid var(--border-color)!important;
+  border-radius:0!important;
+  box-shadow:0 10px 30px rgba(15,23,42,.08)!important;
+  backdrop-filter:blur(18px) saturate(1.1)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(1.1)!important;
+}
+body > nav[aria-label="Navigasi utama"] .brand-label{font-family:'Poppins','Inter',sans-serif;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+body > nav[aria-label="Navigasi utama"] .v39-brand-dot{color:var(--primary)}
+
+/* ---------- Floating controls: never touch viewport edge ---------- */
+.float-container{right:max(22px,env(safe-area-inset-right))!important;bottom:max(22px,env(safe-area-inset-bottom))!important}
+
+@media(max-width:900px){
+  header{min-height:clamp(560px,78svh,680px)!important;padding-top:82px!important}
+  header h1.hero-title-safe-v33,header h1{font-size:clamp(2rem,6.3vw,3rem)!important;white-space:normal!important;width:min(820px,92vw)!important}
+  header .logo-stage-v39{gap:18px!important;margin-bottom:21px!important}
+  .hero-logo-school-v39{width:74px;height:74px}
+  .hero-logo-osis-v39{width:88px;height:88px}
+}
+
+@media(max-width:767px){
+  .v38-loader-inner{width:min(92vw,580px);gap:14px}
+  .v38-loader-crest{width:94px}
+  .v38-loader-sub{font-size:.62rem;letter-spacing:.07em}
+  header{min-height:650px!important;padding:86px 18px 78px!important}
+  header .hero-bg-v32{background-position:52% center!important}
+  header::before{background:linear-gradient(180deg,rgba(6,18,48,.80),rgba(16,48,112,.68) 48%,rgba(6,18,45,.88))!important}
+  header .logo-stage-v39{gap:14px!important}
+  .hero-logo-school-v39{width:66px;height:66px}
+  .hero-logo-osis-v39{width:78px;height:78px}
+  header .hero-badge{font-size:.66rem!important;letter-spacing:.13em!important}
+  header h1.hero-title-safe-v33,header h1{width:100%!important;max-width:100%!important;font-size:clamp(1.9rem,8.4vw,2.65rem)!important;line-height:1.08!important}
+  header #typing-text{width:100%!important;max-width:100%!important;font-size:.96rem!important}
+  header .hero-actions{width:100%!important;max-width:430px!important;gap:10px!important}
+  header .hero-btn{flex:1 1 180px;min-height:50px;padding:12px 18px!important}
+  body > nav[aria-label="Navigasi utama"]{padding:12px max(16px,env(safe-area-inset-left))!important}
+}
+
+@media(max-width:420px){
+  header{min-height:620px!important}
+  header .logo-stage-v39{margin-bottom:18px!important}
+  .hero-logo-school-v39{width:60px;height:60px}
+  .hero-logo-osis-v39{width:72px;height:72px}
+  header .hero-actions{flex-direction:column!important}
+  header .hero-btn{width:100%;flex:0 0 auto}
+}
+
+html.perf-lite header .hero-bg-v32,
+html.perf-lite header::after{animation:none!important}
+
+@media(prefers-reduced-motion:reduce){
+  .v38-curtain-panel,.v38-loader-inner,.v38-loader-crest,.v38-loader-crest::before,
+  header .hero-bg-v32,header::after,
+  body.v39-hero-live header .logo-stage-v39,body.v39-hero-live header .hero-badge,
+  body.v39-hero-live header h1,body.v39-hero-live header #typing-text,body.v39-hero-live header .hero-actions{
+    animation:none!important;
+    transition-duration:.12s!important;
+    transform:none!important;
+    filter:none!important;
+  }
+  .v38-loader.is-opening .v38-curtain-left{transform:translateX(-102%)!important}
+  .v38-loader.is-opening .v38-curtain-right{transform:translateX(102%)!important}
+}

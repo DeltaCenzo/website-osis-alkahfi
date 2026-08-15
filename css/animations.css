@@ -1,0 +1,1241 @@
+/* ============================================================
+   OSIS REDESIGN — Animations & Visual Effects
+   Animasi memukau untuk website OSIS SMA Al-Kahfi
+   ============================================================ */
+
+/* ---- Floating Orbs / Gradient Blobs ---- */
+.floating-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.35;
+    animation: orbFloat 20s ease-in-out infinite;
+    will-change: transform, opacity;
+}
+
+.floating-orb:nth-child(1) {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(59,130,246,0.3), transparent);
+    top: -10%; left: -8%;
+    animation-delay: 0s;
+    animation-duration: 22s;
+}
+
+.floating-orb:nth-child(2) {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(139,92,246,0.25), transparent);
+    bottom: -5%; right: -5%;
+    animation-delay: -5s;
+    animation-duration: 25s;
+}
+
+.floating-orb:nth-child(3) {
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, rgba(245,158,11,0.2), transparent);
+    top: 40%; left: 50%;
+    animation-delay: -10s;
+    animation-duration: 18s;
+}
+
+.floating-orb:nth-child(4) {
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(16,185,129,0.2), transparent);
+    bottom: 20%; left: 10%;
+    animation-delay: -7s;
+    animation-duration: 24s;
+}
+
+[data-theme="dark"] .floating-orb { opacity: 0.18; }
+[data-theme="dark"] .floating-orb:nth-child(1) { background: radial-gradient(circle, rgba(96,165,250,0.25), transparent); }
+[data-theme="dark"] .floating-orb:nth-child(2) { background: radial-gradient(circle, rgba(167,139,250,0.2), transparent); }
+[data-theme="dark"] .floating-orb:nth-child(3) { background: radial-gradient(circle, rgba(251,191,36,0.15), transparent); }
+
+@keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    25% { transform: translate(30px, -40px) scale(1.05) rotate(5deg); }
+    50% { transform: translate(-20px, 20px) scale(0.95) rotate(-3deg); }
+    75% { transform: translate(40px, 30px) scale(1.02) rotate(4deg); }
+}
+
+/* ---- Gradient Mesh Background ---- */
+.gradient-mesh {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+        radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(245,158,11,0.05) 0%, transparent 50%);
+    animation: meshShift 15s ease-in-out infinite alternate;
+}
+
+@keyframes meshShift {
+    0% { transform: scale(1) rotate(0deg); }
+    100% { transform: scale(1.05) rotate(2deg); }
+}
+
+[data-theme="dark"] .gradient-mesh {
+    background:
+        radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(245,158,11,0.06) 0%, transparent 50%);
+}
+
+/* ---- Magnetic Glow Buttons ---- */
+.magnetic-wrap {
+    display: inline-flex;
+    position: relative;
+}
+
+.hero-btn, .aspirasi-btn {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.3s ease;
+}
+
+.hero-btn::after, .aspirasi-btn::after {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3), transparent 60%);
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+}
+
+.hero-btn:hover::after, .aspirasi-btn:hover::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* ---- Glow Border Cards ---- */
+.glow-card {
+    position: relative;
+    isolation: isolate;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.4s ease;
+}
+
+.glow-card::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(135deg,
+        var(--primary),
+        transparent 40%,
+        transparent 60%,
+        var(--accent, #f59e0b));
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.4s ease;
+    animation: glowRotate 3s linear infinite;
+}
+
+.glow-card:hover::before {
+    opacity: 1;
+}
+
+@keyframes glowRotate {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+}
+
+.glow-card:hover {
+    transform: translateY(-8px) scale(1.02);
+}
+
+/* ---- Hero Gradient Overlay Enhancement ---- */
+header {
+    position: relative;
+}
+
+header .hero-particles-container {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+header .hero-particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    animation: particleRise linear infinite;
+}
+
+@keyframes particleRise {
+    0% {
+        transform: translateY(100%) translateX(0) scale(1);
+        opacity: 0;
+    }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% {
+        transform: translateY(-100vh) translateX(50px) scale(0);
+        opacity: 0;
+    }
+}
+
+/* ---- Reveal Animations ---- */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1),
+                transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-60px);
+    transition: opacity 0.7s cubic-bezier(0.165, 0.84, 0.44, 1),
+                transform 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.reveal-left.revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-right {
+    opacity: 0;
+    transform: translateX(60px);
+    transition: opacity 0.7s cubic-bezier(0.165, 0.84, 0.44, 1),
+                transform 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.reveal-right.revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-scale {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.reveal-scale.revealed {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.reveal-stagger.revealed > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.revealed > *:nth-child(2) { transition-delay: 0.08s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.revealed > *:nth-child(3) { transition-delay: 0.16s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.revealed > *:nth-child(4) { transition-delay: 0.24s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.revealed > *:nth-child(5) { transition-delay: 0.32s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.revealed > *:nth-child(6) { transition-delay: 0.40s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.revealed > *:nth-child(7) { transition-delay: 0.48s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.revealed > *:nth-child(8) { transition-delay: 0.56s; opacity: 1; transform: translateY(0); }
+
+/* ---- Card Shimmer Effect ---- */
+.shimmer-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.shimmer-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255,255,255,0.08) 50%,
+        transparent 70%
+    );
+    transform: translateX(-100%) rotate(25deg);
+    transition: transform 0.8s ease;
+    pointer-events: none;
+}
+
+.shimmer-card:hover::after {
+    transform: translateX(100%) rotate(25deg);
+}
+
+[data-theme="dark"] .shimmer-card::after {
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255,255,255,0.04) 50%,
+        transparent 70%
+    );
+}
+
+/* ---- Text Gradient Animation ---- */
+.text-gradient-animate {
+    background: linear-gradient(
+        90deg,
+        var(--primary),
+        #8b5cf6,
+        #f59e0b,
+        var(--primary)
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: textGradientShift 4s ease infinite;
+}
+
+@keyframes textGradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ---- Typing Blinking Cursor Enhancement ---- */
+#typing-text::after {
+    content: '|';
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+    color: var(--primary);
+    font-weight: 300;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* ---- Section Divider Wave ---- */
+.section-wave {
+    position: relative;
+    margin-bottom: -2px;
+}
+
+.section-wave svg {
+    display: block;
+    width: 100%;
+    height: 60px;
+}
+
+/* ---- 3D Perspective Tilt Container ---- */
+.tilt-container {
+    perspective: 1000px;
+}
+
+.tilt-element {
+    transition: transform 0.3s ease;
+    transform-style: preserve-3d;
+}
+
+/* ---- Counter Animation Pulse ---- */
+.stat-number.counting {
+    animation: countPulse 0.3s ease;
+}
+
+@keyframes countPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+/* ---- Smooth Section Transitions ---- */
+.section-transition {
+    position: relative;
+}
+
+.section-transition::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(to top, var(--bg-light), transparent);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ---- Animated Border for Active Elements ---- */
+.animated-border {
+    position: relative;
+}
+
+.animated-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--primary), #8b5cf6, #f59e0b, var(--primary));
+    background-size: 300% 300%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: borderGlow 3s ease infinite;
+    pointer-events: none;
+}
+
+@keyframes borderGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ---- Sparkle Effect ---- */
+.sparkle-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: white;
+    animation: sparkleFade 1.5s ease-out forwards;
+}
+
+@keyframes sparkleFade {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(0) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* ---- Scroll Indicator ---- */
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    animation: scrollBounce 2s ease-in-out infinite;
+}
+
+.scroll-indicator .scroll-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: white;
+    animation: scrollDot 2s ease-in-out infinite;
+}
+
+@keyframes scrollBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+}
+
+@keyframes scrollDot {
+    0%, 100% { opacity: 0.4; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* ---- Loading Screen ---- */
+.loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--secondary, #0f172a);
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loading-logo {
+    width: 80px;
+    height: 80px;
+    animation: loadingPulse 1.5s ease-in-out infinite;
+}
+
+.loading-bar {
+    width: 200px;
+    height: 3px;
+    margin-top: 24px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.1);
+    overflow: hidden;
+}
+
+.loading-bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--primary), #8b5cf6);
+    animation: loadingFill 1.5s ease-in-out forwards;
+}
+
+@keyframes loadingFill {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+
+@keyframes loadingPulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.08); opacity: 1; }
+}
+
+/* ---- Cursor Glow (Desktop only) ---- */
+@media (hover: hover) and (pointer: fine) {
+    #cursorGlow {
+        position: fixed;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(59,130,246,0.08), transparent 60%);
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        transition: opacity 0.3s ease;
+        opacity: 0;
+        will-change: transform;
+    }
+
+    #cursorGlow.visible {
+        opacity: 1;
+    }
+}
+
+/* ---- Navbar Glass Effect Enhancement ---- */
+nav {
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(255,255,255,0.75) !important;
+    border-bottom: 1px solid rgba(226,232,240,0.5);
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] nav {
+    background: rgba(15,23,42,0.8) !important;
+    border-bottom: 1px solid rgba(51,65,85,0.4);
+}
+
+/* ---- Nav Link Underline Animation ---- */
+nav a, nav button {
+    position: relative;
+}
+
+nav a::after, nav button:not(.hamburger)::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: width 0.3s ease, left 0.3s ease;
+    border-radius: 2px;
+}
+
+nav a:hover::after, nav button:not(.hamburger):hover::after {
+    width: 70%;
+    left: 15%;
+}
+
+/* ---- Image Reveal on Load ---- */
+.img-reveal {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.img-reveal.loaded {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* ---- Smooth Float Hover for Cards ---- */
+.float-hover {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.4s ease;
+}
+
+.float-hover:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px rgba(37, 99, 235, 0.15);
+}
+
+/* ---- Gallery Item Hover Enhancement ---- */
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.4s ease;
+}
+
+.gallery-item:hover {
+    transform: scale(1.03);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.gallery-item img {
+    transition: transform 0.6s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.08);
+}
+
+.gallery-overlay {
+    background: linear-gradient(to top,
+        rgba(0,0,0,0.85) 0%,
+        rgba(0,0,0,0.4) 40%,
+        transparent 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.gallery-item:hover .gallery-overlay {
+    opacity: 1;
+}
+
+/* ---- Responsive Animation Adjustments ---- */
+@media (prefers-reduced-motion: reduce) {
+    .floating-orb,
+    .gradient-mesh,
+    .reveal,
+    .reveal-left,
+    .reveal-right,
+    .reveal-scale,
+    .loading-screen,
+    #cursorGlow {
+        display: none !important;
+    }
+
+    .scroll-indicator {
+        display: none;
+    }
+
+    .glow-card::before,
+    .animated-border::before {
+        display: none;
+    }
+
+    header .hero-particle {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .floating-orb {
+        filter: blur(50px);
+    }
+
+    .floating-orb:nth-child(1) {
+        width: 300px; height: 300px;
+    }
+
+    .floating-orb:nth-child(2) {
+        width: 250px; height: 250px;
+    }
+
+    .floating-orb:nth-child(3),
+    .floating-orb:nth-child(4) {
+        display: none;
+    }
+
+    #cursorGlow {
+        display: none !important;
+    }
+
+    .scroll-indicator {
+        display: none;
+    }
+}
+.card-box,
+.leadership-card-v12,
+.division-card-v12,
+.contact-card-v13,
+.gallery-item {
+    position: relative;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.tilt-shine {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    border-radius: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tilt-shine {
+        display: none !important;
+    }
+}
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+   ============================================================ */
+#scrollProgress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #2563eb, #8b5cf6, #f59e0b);
+    z-index: 10001;
+    width: 0%;
+    transition: width 0.15s ease-out;
+    pointer-events: none;
+}
+
+/* ============================================================
+   LIVE CLOCK — Footer
+   ============================================================ */
+#liveClock {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.3px;
+}
+
+#liveClock i {
+    font-size: 0.7rem;
+    color: #34d399;
+}
+
+#liveClock .clock-separator {
+    animation: clockBlink 1s step-end infinite;
+}
+
+@keyframes clockBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* ============================================================
+   MOBILE TYPING TEXT FIX
+   ============================================================ */
+@media (max-width: 700px) {
+    #typing-text {
+        min-height: 2.6em !important;
+    }
+}
+
+/* ============================================================
+   PERFORMANCE: Adaptive Low-Power Mode
+   Perangkat low-end otomatis mematikan efek berat
+   ============================================================ */
+body[data-low-power] .floating-orb {
+    display: none !important;
+}
+
+body[data-low-power] .gradient-mesh {
+    animation: none !important;
+}
+
+body[data-low-power] #cursorGlow {
+    display: none !important;
+}
+
+body[data-low-power] .hero-particles-container {
+    opacity: 0.6;
+}
+
+body[data-extreme-low] .hero-particles-container {
+    display: none !important;
+}
+
+body[data-extreme-low] .tilt-shine {
+    display: none !important;
+}
+
+/* ============================================================
+   GALLERY ERROR FALLBACK
+   ============================================================ */
+.gallery-error-state {
+    min-height: 240px;
+    text-align: center;
+    padding: 34px 20px !important;
+}
+
+.gallery-error-state .empty-icon-v12 {
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(245,158,11,.12), rgba(239,68,68,.08));
+    color: #d97706;
+    font-size: 1.3rem;
+}
+
+.gallery-error-state small {
+    max-width: 420px;
+    line-height: 1.6;
+    margin-top: 6px;
+}
+
+.gallery-retry-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 10px 22px;
+    min-height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--primary, #2563eb);
+    background: rgba(37,99,235,.08);
+    color: var(--primary, #2563eb);
+    font: inherit;
+    font-size: .84rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+}
+
+.gallery-retry-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(37,99,235,.16);
+    box-shadow: 0 10px 24px rgba(37,99,235,.15);
+}
+
+.gallery-retry-btn:active {
+    transform: scale(.97);
+}
+
+/* ============================================================
+   ACCESSIBILITY: Enhanced Focus Ring
+   ============================================================ */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: 3px solid var(--primary, #2563eb) !important;
+    outline-offset: 3px !important;
+    border-radius: 4px;
+}
+
+/* ============================================================
+   MOBILE UI — MAKSIMAL UNTUK SEMUA JENIS HP
+   ============================================================ */
+
+/* Pastikan semua interaksi touch-friendly */
+button, a, input, select, textarea, .gallery-item, .contact-action-v13 {
+    touch-action: manipulation;
+}
+
+/* ============== HP SANGAT KECIL (320px - 374px) ============== */
+@media (max-width: 374px) {
+    body {
+        font-size: 15px;
+    }
+
+    /* Header compact */
+    header {
+        padding: 4rem 0.8rem 2.5rem !important;
+    }
+
+    header h1 {
+        font-size: 1.5rem !important;
+        line-height: 1.2;
+    }
+
+    .logo-img {
+        width: 60px !important;
+        height: 60px !important;
+    }
+
+    .logo-container {
+        gap: 14px !important;
+    }
+
+    .hero-btn {
+        font-size: 0.85rem !important;
+        padding: 12px 18px !important;
+        min-height: 44px;
+    }
+
+    /* Container padding minimal */
+    .container {
+        padding: 0 12px !important;
+        margin: 35px auto !important;
+    }
+
+    .section-title {
+        margin-bottom: 24px !important;
+    }
+
+    .section-title h2 {
+        font-size: 1.4rem !important;
+    }
+
+    /* Card compact */
+    .card-box {
+        padding: 18px !important;
+        border-radius: 16px !important;
+    }
+
+    .card-box i.icon-big {
+        font-size: 1.8rem !important;
+        margin-bottom: 12px !important;
+    }
+
+    .card-box p {
+        font-size: 0.85rem !important;
+    }
+
+    /* Grid satu kolom */
+    .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr !important;
+        gap: 14px;
+    }
+
+    /* Countdown */
+    .countdown-grid span {
+        font-size: 1.4rem !important;
+    }
+
+    .countdown-grid > div {
+        min-width: 50px !important;
+    }
+
+    /* Navigation */
+    nav {
+        padding: 12px 14px !important;
+    }
+
+    .brand-label {
+        font-size: 0.85rem !important;
+    }
+
+    /* Form elements */
+    .form-group {
+        padding: 10px 12px !important;
+    }
+
+    .aspirasi-card {
+        padding: 18px !important;
+    }
+
+    .aspirasi-counter .stat-number {
+        font-size: 2.2rem !important;
+    }
+
+    .aspirasi-btn {
+        min-height: 46px !important;
+        font-size: 0.9rem !important;
+        padding: 12px 20px !important;
+    }
+
+    /* Footer compact */
+    footer.footer-v13 {
+        padding: 32px 16px 20px !important;
+    }
+
+    .footer-bottom-v13 {
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    #liveClock {
+        font-size: 0.7rem !important;
+    }
+
+    .countdown-card {
+        max-width: 100% !important;
+    }
+
+    .grid-layout {
+        gap: 14px;
+    }
+}
+
+/* ============== HP SEDANG (375px - 430px) ============== */
+@media (min-width: 375px) and (max-width: 430px) {
+    .container {
+        padding: 0 16px !important;
+    }
+
+    .card-box {
+        padding: 22px !important;
+    }
+
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    .section-title h2 {
+        font-size: 1.5rem !important;
+    }
+}
+
+/* ============== MODAL FULLSCREEN DI HP ============== */
+@media (max-width: 500px) {
+    .modal-overlay {
+        align-items: flex-end !important;
+    }
+
+    .modal-box {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        border-radius: 22px 22px 0 0 !important;
+        max-height: 92vh !important;
+        padding: 20px 18px !important;
+        margin: 0 !important;
+        overflow-y: auto;
+        animation: modalSlideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes modalSlideUp {
+        from { transform: translateY(100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* PWA install modal jangan fullscreen */
+    .pwa-install-modal-v20 {
+        border-radius: 22px !important;
+        margin: auto 8px !important;
+        width: calc(100% - 16px) !important;
+    }
+
+    .album-modal-box {
+        border-radius: 22px 22px 0 0 !important;
+        max-height: 85vh !important;
+    }
+
+    .gallery-viewer {
+        border-radius: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-height: 100vh !important;
+    }
+}
+
+/* ============== DASHBOARD ADMIN DI HP ============== */
+@media (max-width: 600px) {
+    .dashboard-stat {
+        min-height: 72px !important;
+        padding: 10px !important;
+    }
+
+    .dashboard-stat strong {
+        font-size: 1.3rem !important;
+    }
+
+    .dashboard-grid-2 {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+    }
+
+    .command-stats-v12 {
+        gap: 8px !important;
+    }
+
+    .command-stat-v12 {
+        min-height: 68px !important;
+        padding: 10px !important;
+        gap: 8px !important;
+    }
+
+    .command-stat-icon-v12 {
+        width: 32px !important;
+        height: 32px !important;
+        flex-basis: 32px !important;
+        font-size: 0.85rem !important;
+    }
+
+    .command-stat-v12 strong {
+        font-size: 1.1rem !important;
+    }
+
+    .command-stat-v12 span:not(.command-stat-icon-v12) {
+        font-size: 0.65rem !important;
+    }
+
+    .command-center-grid-v12 {
+        gap: 8px !important;
+    }
+
+    .command-actions-v13 button {
+        min-height: 60px !important;
+        padding: 10px !important;
+    }
+
+    .announcement-stats-v11 {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px;
+    }
+
+    .announcement-stat-v11 {
+        padding: 12px !important;
+    }
+
+    .announcement-stat-v11 strong {
+        font-size: 1.2rem !important;
+    }
+
+    .announcement-toolbar-v11 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .gallery-admin-layout {
+        grid-template-columns: 1fr !important;
+        gap: 14px;
+    }
+
+    .contact-actions-v13 {
+        flex-direction: column;
+    }
+
+    .contact-action-v13 {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ============== HP LANSKAP (landscape mode) ============== */
+@media (max-height: 500px) and (orientation: landscape) {
+    header {
+        padding: 3rem 1rem 1.8rem !important;
+    }
+
+    .logo-img {
+        width: 50px !important;
+        height: 50px !important;
+    }
+
+    .logo-container {
+        margin-bottom: 8px !important;
+        gap: 12px !important;
+    }
+
+    header h1 {
+        font-size: 1.4rem !important;
+        margin-bottom: 4px !important;
+    }
+
+    .hero-actions {
+        margin-top: 12px !important;
+    }
+
+    .hero-btn {
+        padding: 10px 18px !important;
+        font-size: 0.82rem !important;
+        min-height: 40px;
+    }
+
+    .container {
+        margin: 30px auto !important;
+    }
+
+    .leadership-card-v12 {
+        padding: 16px !important;
+        gap: 12px !important;
+    }
+
+    .leadership-icon-v12 {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .scroll-indicator {
+        display: none !important;
+    }
+}
+
+/* ============== SAFE AREA UNTUK HP NOTCH ============== */
+@supports (padding: env(safe-area-inset-bottom)) {
+    .modal-box {
+        padding-bottom: calc(18px + env(safe-area-inset-bottom)) !important;
+    }
+
+    footer.footer-v13 {
+        padding-bottom: calc(20px + env(safe-area-inset-bottom)) !important;
+    }
+
+    .float-container {
+        bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+    }
+
+    body {
+        padding-top: env(safe-area-inset-top);
+    }
+}
+
+/* ============== PREVENT OVERLAP DENGAN HOMEBAR ANDROID ============== */
+@media (max-width: 600px) {
+    .float-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
+    }
+
+    .float-container {
+        gap: 10px;
+        right: 14px;
+    }
+
+    /* Dashboard tabs lebih touch-friendly */
+    .dashboard-tabs .tab-button,
+    .dashboard-tabs-primary-v14 .tab-button {
+        min-height: 46px !important;
+        font-size: 0.78rem !important;
+    }
+
+    /* Gallery item touch */
+    .gallery-item {
+        min-height: 120px;
+    }
+
+    /* Social channel touch */
+    .social-channel-v13 {
+        min-height: 56px;
+    }
+}

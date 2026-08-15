@@ -1,0 +1,376 @@
+/* =========================================================
+   OSIS AL-KAHFI — V41 SILK MOTION + LIGHT THEME POLISH
+   Smoother split reveal, coordinated hero arrival, refined
+   light theme, and lower-jank motion primitives.
+   ========================================================= */
+
+:root{
+  --v41-ease:cubic-bezier(.22,1,.36,1);
+  --v41-cinema:cubic-bezier(.65,0,.18,1);
+  --v41-soft:cubic-bezier(.25,.1,.25,1);
+  --v41-fast:360ms;
+  --v41-mid:620ms;
+  --v41-long:1180ms;
+}
+
+/* ---------------------------------------------------------
+   01 / SPLIT REVEAL — smoother, more cinematic, less abrupt
+   --------------------------------------------------------- */
+.v40-loader{
+  background:#0a4fc8;
+  contain:layout paint;
+}
+.v40-loader::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  opacity:.34;
+  background:
+    radial-gradient(46% 58% at 50% 49%,rgba(182,239,255,.14),transparent 70%),
+    linear-gradient(180deg,rgba(255,255,255,.035),transparent 28%,transparent 72%,rgba(0,15,70,.08));
+  transition:opacity 1.1s ease;
+}
+.v40-split-panel{
+  width:50.12%;
+  backface-visibility:hidden;
+  transform:translateZ(0);
+  transition:
+    transform 1.46s var(--v41-cinema),
+    filter 1.15s var(--v41-soft),
+    opacity .95s ease;
+}
+.v40-split-left,
+.v40-split-right{
+  background:#0b55d6;
+}
+.v40-split-left{
+  background:
+    radial-gradient(90% 100% at 22% 42%,rgba(31,129,255,.31),transparent 64%),
+    linear-gradient(120deg,#0859e6 0%,#0750d4 58%,#0b4cc4 100%);
+}
+.v40-split-right{
+  background:
+    radial-gradient(92% 100% at 78% 46%,rgba(68,104,255,.22),transparent 65%),
+    linear-gradient(240deg,#253f8f 0%,#173992 38%,#0a4dcc 100%);
+}
+.v40-split-left::after,
+.v40-split-right::after{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:34px;
+  opacity:.22;
+  pointer-events:none;
+  transition:opacity .55s ease,transform 1.46s var(--v41-cinema);
+}
+.v40-split-left::after{
+  right:-1px;
+  background:linear-gradient(90deg,transparent,rgba(179,238,255,.18));
+}
+.v40-split-right::after{
+  left:-1px;
+  background:linear-gradient(90deg,rgba(179,238,255,.15),transparent);
+}
+.v40-split-seam{
+  width:2px;
+  opacity:.48;
+  box-shadow:0 0 18px rgba(127,221,255,.48),0 0 52px rgba(74,171,255,.22);
+  transition:
+    opacity .5s ease,
+    transform .78s var(--v41-ease),
+    filter .5s ease,
+    width .5s var(--v41-ease);
+}
+.v40-loader.is-charged .v40-split-seam{
+  width:3px;
+  filter:brightness(1.25);
+}
+.v40-loader-lockup{
+  transition:opacity .52s ease,transform .78s var(--v41-ease),filter .58s ease;
+}
+.v40-loader.is-opening .v40-loader-lockup{
+  opacity:0;
+  transform:translate3d(0,-4px,0) scale(.965);
+  filter:blur(2.5px);
+}
+.v40-loader.is-opening::before{opacity:0}
+.v40-loader.is-opening .v40-split-left{transform:translate3d(-101%,0,0);filter:brightness(.92)}
+.v40-loader.is-opening .v40-split-right{transform:translate3d(101%,0,0);filter:brightness(.92)}
+.v40-loader.is-opening .v40-split-left::after{opacity:0;transform:translateX(-18px)}
+.v40-loader.is-opening .v40-split-right::after{opacity:0;transform:translateX(18px)}
+.v40-loader.is-opening .v40-split-seam{
+  opacity:0;
+  width:8px;
+  transform:translateX(-50%) scaleY(.16);
+  filter:blur(2px) brightness(1.35);
+}
+
+/* Hero is already alive under the panels. The scene eases into its final
+   composition while the center gap widens, instead of popping in afterward. */
+body.v40-loader-lock header .hero-bg-v32.v40-bg-shell{
+  transform:translate3d(0,0,0) scale(1.055)!important;
+}
+body.v41-reveal-start header .hero-bg-v32.v40-bg-shell{
+  transform:translate3d(var(--v40-bg-x),var(--v40-bg-y),0) scale(1.012)!important;
+  transition:transform 1.72s var(--v41-ease)!important;
+}
+.v41-hero-veil{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  opacity:.52;
+  background:linear-gradient(180deg,rgba(4,14,43,.3),rgba(5,18,54,.2));
+  transition:opacity 1.65s var(--v41-soft);
+}
+body.v41-reveal-start .v41-hero-veil,
+body.v40-hero-live .v41-hero-veil{opacity:0}
+body.v41-reveal-complete .v41-hero-veil{display:none}
+
+/* ---------------------------------------------------------
+   02 / HERO ARRIVAL — transform + opacity only (less jank)
+   --------------------------------------------------------- */
+html.v40-js body:not(.v40-hero-live) header .logo-stage-v39,
+html.v40-js body:not(.v40-hero-live) header .hero-badge,
+html.v40-js body:not(.v40-hero-live) header h1,
+html.v40-js body:not(.v40-hero-live) header #typing-text,
+html.v40-js body:not(.v40-hero-live) header .hero-actions{
+  opacity:0!important;
+  transform:translate3d(0,18px,0)!important;
+  filter:none!important;
+  clip-path:none!important;
+}
+body.v40-hero-live header .logo-stage-v39{animation:v41HeroEnter .88s var(--v41-ease) .02s both!important}
+body.v40-hero-live header .hero-badge{animation:v41HeroEnter .84s var(--v41-ease) .10s both!important}
+body.v40-hero-live header h1{animation:v41HeroTitle .94s var(--v41-ease) .17s both!important}
+body.v40-hero-live header #typing-text{animation:v41HeroEnter .86s var(--v41-ease) .28s both!important}
+body.v40-hero-live header .hero-actions{animation:v41HeroEnter .88s var(--v41-ease) .38s both!important}
+@keyframes v41HeroEnter{
+  from{opacity:0;transform:translate3d(0,18px,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+@keyframes v41HeroTitle{
+  from{opacity:0;transform:translate3d(0,24px,0) scale(.992)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1)}
+}
+.v40-hero-frame{
+  transform:scaleX(.955);
+  transition:transform 1.55s var(--v41-ease) .04s,opacity 1.25s ease .04s;
+}
+body.v40-hero-live .v40-hero-frame{transform:scaleX(1);opacity:.52}
+body.v40-hero-live .v40-hero-lightpass{animation:v41HeroLightPass 2.2s var(--v41-ease) .42s both}
+@keyframes v41HeroLightPass{
+  0%{opacity:0;transform:rotate(13deg) translate3d(-145%,0,0)}
+  18%{opacity:.35}
+  50%{opacity:.7}
+  100%{opacity:0;transform:rotate(13deg) translate3d(430%,0,0)}
+}
+
+/* Cleaner buttons: no snapping at the end of magnetic movement. */
+.experience-magnetic-v31{
+  transition:transform .38s var(--v41-ease),box-shadow .38s ease,border-color .32s ease,background-color .32s ease!important;
+}
+header .hero-btn{
+  transition:transform .42s var(--v41-ease),box-shadow .42s ease,background-color .32s ease,border-color .32s ease,opacity .32s ease!important;
+}
+
+/* ---------------------------------------------------------
+   03 / SMOOTHER PAGE MOTION
+   --------------------------------------------------------- */
+.v40-section-stage .section-title h2{
+  clip-path:none!important;
+  opacity:0;
+  transform:translate3d(0,15px,0);
+  transition:opacity .8s ease,transform .9s var(--v41-ease)!important;
+}
+.v40-section-stage.v40-section-live .section-title h2{opacity:1;transform:translate3d(0,0,0)}
+.v40-section-stage .section-title .subtitle{
+  opacity:0;
+  transform:translate3d(0,10px,0);
+  transition:opacity .82s ease .08s,transform .9s var(--v41-ease) .08s;
+}
+.v40-section-stage.v40-section-live .section-title .subtitle{opacity:1;transform:none}
+.v40-section-stage .section-title::before{
+  transition:transform 1.2s var(--v41-ease),opacity .85s ease;
+}
+
+.experience-card-v31{
+  transition:transform .3s var(--v41-ease),box-shadow .46s ease,border-color .38s ease,background-color .4s ease!important;
+}
+@media(hover:hover) and (pointer:fine){.experience-card-v31:hover{--lift-y:-4px}}
+
+.v40-motion-card::after{filter:none;width:23%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.20),rgba(125,211,252,.08),transparent)}
+.v40-motion-card.v40-card-live::after{animation:v41CardSweep 1.25s var(--v41-ease) both}
+@keyframes v41CardSweep{
+  0%{opacity:0;transform:skewX(-12deg) translate3d(-185%,0,0)}
+  24%{opacity:.42}
+  100%{opacity:0;transform:skewX(-12deg) translate3d(650%,0,0)}
+}
+.gallery-item img,.gallery-card img,.album-grid img{transition:transform .95s var(--v41-ease),filter .65s ease!important}
+.form-control{transition:border-color .3s ease,box-shadow .36s var(--v41-ease),background-color .36s ease,color .36s ease!important}
+.float-btn{transition:transform .42s var(--v41-ease),box-shadow .42s ease,background-color .38s ease,color .38s ease,border-color .38s ease!important}
+body > nav[aria-label="Navigasi utama"]{
+  transition:box-shadow .52s ease,background-color .52s ease,border-color .52s ease,backdrop-filter .52s ease!important;
+}
+body > nav[aria-label="Navigasi utama"] .nav-links a,
+body > nav[aria-label="Navigasi utama"] .nav-links button{
+  transition:transform .36s var(--v41-ease),background-color .34s ease,color .34s ease,box-shadow .34s ease!important;
+}
+
+/* ---------------------------------------------------------
+   04 / LIGHT THEME — designed, not merely "not dark"
+   --------------------------------------------------------- */
+body:not([data-theme="dark"]){
+  --primary:#2563eb;
+  --primary-light:#4f8df7;
+  --secondary:#0b1736;
+  --bg-light:#f5f8fe;
+  --bg-soft:#edf3fb;
+  --text-dark:#13213b;
+  --text-muted:#66758d;
+  --card-bg:rgba(255,255,255,.88);
+  --border-color:rgba(116,142,178,.18);
+  --nav-bg:rgba(255,255,255,.86);
+  --shadow:0 18px 46px rgba(28,55,94,.075);
+  background-color:#f5f8fe;
+  background-image:
+    radial-gradient(780px circle at 8% 5%,rgba(59,130,246,.085),transparent 62%),
+    radial-gradient(680px circle at 94% 30%,rgba(34,211,238,.055),transparent 62%),
+    linear-gradient(180deg,#f8fbff 0%,#f4f7fc 42%,#f8fafc 100%);
+  background-attachment:fixed;
+}
+body:not([data-theme="dark"]) main{position:relative}
+body:not([data-theme="dark"]) main::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.55;
+  background:
+    linear-gradient(rgba(37,99,235,.024) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(37,99,235,.024) 1px,transparent 1px);
+  background-size:48px 48px;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 18%,#000 78%,transparent 100%);
+  mask-image:linear-gradient(180deg,transparent 0,#000 18%,#000 78%,transparent 100%);
+}
+
+body:not([data-theme="dark"]) > nav[aria-label="Navigasi utama"]{
+  background:rgba(255,255,255,.84)!important;
+  border-bottom:1px solid rgba(96,125,164,.15)!important;
+  box-shadow:0 10px 34px rgba(27,54,94,.055)!important;
+  backdrop-filter:blur(18px) saturate(1.18)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(1.18)!important;
+}
+body:not([data-theme="dark"]).v40-scrolled > nav[aria-label="Navigasi utama"]{
+  background:rgba(255,255,255,.93)!important;
+  box-shadow:0 16px 42px rgba(27,54,94,.09)!important;
+}
+body:not([data-theme="dark"]) .v39-brand-label{color:#12213d!important}
+body:not([data-theme="dark"]) > nav[aria-label="Navigasi utama"] .nav-links a,
+body:not([data-theme="dark"]) > nav[aria-label="Navigasi utama"] .nav-links button{color:#263751}
+@media(hover:hover) and (pointer:fine){
+  body:not([data-theme="dark"]) > nav[aria-label="Navigasi utama"] .nav-links a:hover,
+  body:not([data-theme="dark"]) > nav[aria-label="Navigasi utama"] .nav-links button:hover{
+    color:#164ca8!important;
+    background:rgba(37,99,235,.075)!important;
+    transform:translateY(-1px)!important;
+  }
+}
+
+body:not([data-theme="dark"]) .card-box,
+body:not([data-theme="dark"]) .leadership-card-v12,
+body:not([data-theme="dark"]) .board-support-card-v12,
+body:not([data-theme="dark"]) .division-card-v12,
+body:not([data-theme="dark"]) .contact-card-v13,
+body:not([data-theme="dark"]) .social-hub-v13,
+body:not([data-theme="dark"]) .interactive-box,
+body:not([data-theme="dark"]) .dashboard-shell,
+body:not([data-theme="dark"]) .dashboard-stat,
+body:not([data-theme="dark"]) .aspirasi-card{
+  background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(251,253,255,.89))!important;
+  border-color:rgba(107,135,174,.16)!important;
+  box-shadow:0 16px 45px rgba(31,58,99,.07)!important;
+}
+@media(hover:hover) and (pointer:fine){
+  body:not([data-theme="dark"]) .experience-card-v31:hover{
+    box-shadow:0 22px 58px rgba(36,76,132,.115)!important;
+  }
+}
+body:not([data-theme="dark"]) .experience-card-v31::before{
+  background:radial-gradient(360px circle at var(--spot-x) var(--spot-y),rgba(59,130,246,.105),transparent 64%);
+}
+body:not([data-theme="dark"]) .v40-section-stage::before{
+  background:radial-gradient(ellipse,rgba(59,130,246,.075),rgba(103,232,249,.026) 42%,transparent 69%);
+}
+body:not([data-theme="dark"]) .v40-section-stage .section-title::before{
+  background:linear-gradient(90deg,transparent,rgba(37,99,235,.62) 34%,rgba(34,211,238,.64) 50%,rgba(37,99,235,.62) 66%,transparent);
+}
+body:not([data-theme="dark"]) .section-title h2{color:#15233d}
+body:not([data-theme="dark"]) .section-title p.subtitle{color:#66758d}
+body:not([data-theme="dark"]) .form-control,
+body:not([data-theme="dark"]) input,
+body:not([data-theme="dark"]) select,
+body:not([data-theme="dark"]) textarea{
+  background-color:rgba(255,255,255,.94);
+}
+body:not([data-theme="dark"]) .form-control:focus{
+  background:#fff!important;
+  border-color:rgba(37,99,235,.48)!important;
+  box-shadow:0 0 0 4px rgba(37,99,235,.095),0 10px 28px rgba(37,99,235,.07)!important;
+}
+body:not([data-theme="dark"]) .theme-float-btn,
+body:not([data-theme="dark"]) .top-btn{
+  background:rgba(255,255,255,.92)!important;
+  color:#1e3a5f!important;
+  border:1px solid rgba(106,135,174,.2)!important;
+  box-shadow:0 12px 32px rgba(31,58,99,.11)!important;
+  backdrop-filter:blur(14px);
+}
+
+/* Theme change fallback when View Transitions are unavailable. */
+html.v41-theme-fallback body,
+html.v41-theme-fallback body > nav,
+html.v41-theme-fallback .card-box,
+html.v41-theme-fallback .leadership-card-v12,
+html.v41-theme-fallback .board-support-card-v12,
+html.v41-theme-fallback .division-card-v12,
+html.v41-theme-fallback .contact-card-v13,
+html.v41-theme-fallback .aspirasi-card,
+html.v41-theme-fallback .form-control,
+html.v41-theme-fallback .float-btn{
+  transition-property:background-color,border-color,color,box-shadow!important;
+  transition-duration:.45s!important;
+  transition-timing-function:var(--v41-soft)!important;
+}
+
+/* View Transition API: theme switches reveal from the floating theme button. */
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(root){z-index:1}
+::view-transition-new(root){z-index:2}
+html.v41-theme-transition::view-transition-new(root){
+  clip-path:circle(0 at var(--v41-theme-x,95vw) var(--v41-theme-y,94vh));
+  animation:v41ThemeReveal .66s var(--v41-ease) forwards;
+}
+@keyframes v41ThemeReveal{
+  to{clip-path:circle(var(--v41-theme-r,150vmax) at var(--v41-theme-x,95vw) var(--v41-theme-y,94vh))}
+}
+
+/* ---------------------------------------------------------
+   05 / SMALL SCREEN + ACCESSIBILITY
+   --------------------------------------------------------- */
+@media(max-width:767px){
+  .v40-split-panel{transition-duration:1.14s}
+  body.v41-reveal-start header .hero-bg-v32.v40-bg-shell{transition-duration:1.35s!important}
+  .v41-hero-veil{transition-duration:1.25s}
+  body:not([data-theme="dark"]) main::before{background-size:38px 38px;opacity:.38}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .v41-hero-veil{transition-duration:.12s!important}
+  html.v41-theme-transition::view-transition-new(root){animation-duration:.12s!important}
+  body:not([data-theme="dark"]) main::before{display:none}
+}
