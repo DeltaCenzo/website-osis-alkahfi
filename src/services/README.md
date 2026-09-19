@@ -1,0 +1,1 @@
+Service layer boundary for backend migration (Supabase/API).
