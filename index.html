@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="id" class="scroll-smooth" data-aspirasi-integration="google-sheets-v2">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>OSIS SMA Al-Kahfi Islamic School | Website Resmi</title>
+  <meta name="description" content="Website resmi OSIS SMA Al-Kahfi Islamic School. Info program kerja, struktur pengurus, agenda kegiatan, galeri, dan kotak aspirasi warga sekolah." />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="author" content="OSIS SMA Al-Kahfi Islamic School" />
+  <meta name="application-name" content="OSIS Al-Kahfi" />
+  <meta name="theme-color" content="#07152f" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="OSIS Al-Kahfi" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png" />
+  <meta property="og:title" content="OSIS SMA Al-Kahfi Islamic School" />
+  <meta property="og:description" content="Aspiratif • Inovatif • Kolaboratif • Islami — Website resmi OSIS SMA Al-Kahfi Islamic School." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="id_ID" />
+  <meta property="og:site_name" content="OSIS SMA Al-Kahfi Islamic School" />
+  <meta property="og:image" content="/images/bg-sekolah.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="OSIS SMA Al-Kahfi Islamic School" />
+  <meta name="twitter:description" content="Website resmi OSIS SMA Al-Kahfi Islamic School untuk pengumuman, program kerja, galeri, dan aspirasi warga sekolah." />
+  <meta name="twitter:image" content="/images/bg-sekolah.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preload" href="/images/bg-sekolah.webp" as="image" type="image/webp" fetchpriority="high" />
+  <link rel="preload" href="/legacy/app.js" as="script" />
+  <script>document.documentElement.classList.add('v40-js');</script>
+  <script src="/gallery-config.js"></script>
+  <script src="/aspirasi-config.js"></script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Organization","name":"OSIS SMA Al-Kahfi Islamic School","email":"edu@aisbatam.sch.id","address":{"@type":"PostalAddress","streetAddress":"Ruko The Capitol Imperium Block A No.42B-47, Jl. Jend. Soedirman","addressLocality":"Batam","addressRegion":"Kepulauan Riau","addressCountry":"ID"},"sameAs":["https://www.instagram.com/osis.smais/"]}
+  </script>
+</head>
+<body class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-950 antialiased dark:bg-slate-950 dark:text-slate-100">
+  <script>
+    try {
+      const saved = localStorage.getItem('theme');
+      const dark = saved === 'dark' || (!saved && matchMedia('(prefers-color-scheme: dark)').matches);
+      if (dark) document.body.setAttribute('data-theme','dark');
+    } catch (_) {}
+  </script>
+  <div id="root"></div>
+  <script>
+    // React owns the loader DOM lifecycle. Do not remove #v42-loader here.
+    // External DOM removal causes React reconciliation failures (removeChild).
+    window.setTimeout(function(){
+      document.body.classList.remove('v42-loader-lock');
+      document.body.classList.add('v40-hero-live','v42-hero-live','v42-logo-landed');
+      document.dispatchEvent(new CustomEvent('osis:hero-live'));
+    }, 6500);
+  </script>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>
