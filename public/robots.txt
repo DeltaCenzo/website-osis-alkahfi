@@ -1,6 +1,0 @@
-# OSIS SMA Al-Kahfi Islamic School
-# Keep CSS/JS/image assets crawlable so search engines can render the React site correctly.
-User-agent: *
-Allow: /
-
-Sitemap: https://osis-alkahfi.sch.id/sitemap.xml
